@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "779096210262",
+    "project_id": "famzytourz-production",
+    "storage_bucket": "famzytourz-production.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779096210262:android:1b6dbf9949dd0e4f9434f7",
+        "android_client_info": {
+          "package_name": "com.example.famzy_tourz_v2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779096210262-b39od3sb064d929cdldp6moj13vll63l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.famzy_tourz_v2",
+            "certificate_hash": "6b08284eac15c9ef5780ae7780cc87df58b73d5c"
+          }
+        },
+        {
+          "client_id": "779096210262-5tc0rr1t9dlbl20ht8uvip1n121co9vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgHYbx9cme-8nqjD2AZXcU2sEXztQ9CQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779096210262-5tc0rr1t9dlbl20ht8uvip1n121co9vd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "779096210262-lg2v9dlidcd1ho7nqh3540oku5fltt5s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.famzyTourzV2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779096210262:android:f04320cb17ada0d89434f7",
+        "android_client_info": {
+          "package_name": "com.famzy.tourz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779096210262-5tc0rr1t9dlbl20ht8uvip1n121co9vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgHYbx9cme-8nqjD2AZXcU2sEXztQ9CQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779096210262-5tc0rr1t9dlbl20ht8uvip1n121co9vd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "779096210262-lg2v9dlidcd1ho7nqh3540oku5fltt5s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.famzyTourzV2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
