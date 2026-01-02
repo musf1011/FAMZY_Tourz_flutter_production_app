@@ -208,8 +208,11 @@
 
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_drop_down_field.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_text_form_field.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -264,16 +267,9 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        height: 1.sh,
-        width: 1.sw,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/bg_app.jpg'),
-            fit: BoxFit.fill,
-          ),
-        ),
+    return PopScope(
+      canPop: false,
+      child: AppBackground(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -303,11 +299,8 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: .circular(15.r),
-                    color: AppConstants.transGColor,
-                    border: .all(
-                      color: AppConstants.tertiaryColor,
-                      width: .5.r,
-                    ),
+                    color: AppConstants.primaryTransGColor,
+                    border: .all(color: Colors.white, width: .5.w),
                   ),
                   child: Form(
                     key: _formKey,
@@ -341,62 +334,74 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
                           SizedBox(height: 15.h),
 
                           // gender
-                          DropdownButtonFormField<String>(
-                            validator: (value) {
-                              if (value == null) {
+                          // DropdownButtonFormField<String>(
+                          //   validator: (value) {
+                          //     if (value == null) {
+                          //       return 'Please select gender';
+                          //     }
+                          //     return null;
+                          //   },
+                          //   decoration: InputDecoration(
+                          //     label: const Text(
+                          //       'Gender',
+                          //       style: TextStyle(color: Colors.white),
+                          //     ),
+                          //     hint: Text(
+                          //       'Not Selected',
+                          //       style: TextStyle(
+                          //         color: AppConstants.whiteColorP5,
+                          //       ),
+                          //     ),
+                          //     enabledBorder: const UnderlineInputBorder(
+                          //       borderSide: BorderSide(color: Colors.grey),
+                          //     ),
+                          //     focusedBorder: const UnderlineInputBorder(
+                          //       borderSide: BorderSide(
+                          //         color: AppConstants.tertiaryColor,
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   dropdownColor: AppConstants.primaryTransGColor,
+                          //   iconEnabledColor: AppConstants.tertiaryColor,
+                          //   borderRadius: .circular(15.r),
+                          //   initialValue: selectedGender,
+                          //   items: [
+                          //     const DropdownMenuItem(
+                          //       value: 'male',
+                          //       child: Text(
+                          //         'Male',
+                          //         style: TextStyle(
+                          //           color: AppConstants.accentColor,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     DropdownMenuItem(
+                          //       value: 'female',
+                          //       child: Text(
+                          //         'Female',
+                          //         style: TextStyle(color: Colors.pink[200]),
+                          //       ),
+                          //     ),
+                          //     DropdownMenuItem(
+                          //       value: 'other',
+                          //       child: Text(
+                          //         'Other',
+                          //         style: TextStyle(color: Colors.yellow[200]),
+                          //       ),
+                          //     ),
+                          //   ],
+                          //   onChanged: (v) {
+                          //     setState(() => selectedGender = v);
+                          //   },
+                          // ),
+                          GenderDropdownField(
+                            value: selectedGender,
+                            validator: (v) {
+                              if (v == null) {
                                 return 'Please select gender';
                               }
                               return null;
                             },
-                            decoration: InputDecoration(
-                              label: const Text(
-                                'Gender',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              hint: Text(
-                                'Not Selected',
-                                style: TextStyle(
-                                  color: AppConstants.whiteColorP5,
-                                ),
-                              ),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: AppConstants.tertiaryColor,
-                                ),
-                              ),
-                            ),
-                            dropdownColor: AppConstants.transGColor,
-                            iconEnabledColor: AppConstants.tertiaryColor,
-                            borderRadius: .circular(15.r),
-                            initialValue: selectedGender,
-                            items: [
-                              const DropdownMenuItem(
-                                value: 'male',
-                                child: Text(
-                                  'Male',
-                                  style: TextStyle(
-                                    color: AppConstants.accentColor,
-                                  ),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: 'female',
-                                child: Text(
-                                  'Female',
-                                  style: TextStyle(color: Colors.pink[200]),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: 'other',
-                                child: Text(
-                                  'Other',
-                                  style: TextStyle(color: Colors.yellow[200]),
-                                ),
-                              ),
-                            ],
                             onChanged: (v) {
                               setState(() => selectedGender = v);
                             },
@@ -422,6 +427,48 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
               ),
 
               SizedBox(height: 30.h),
+              // Consumer<AuthProvider>(
+              //   builder: (context, auth, child) {
+              //     return CustomLoadingButton(
+              //       onPressed: () {
+              //         print('******auth loading ${auth.loading}');
+              //         auth.loading ? null : auth.emailSignOut();
+              //       },
+              //       isLoading: auth.loading,
+              //       child: auth.loading
+              //           ? const SpinKitSpinningLines(color: Colors.white)
+              //           : Row(
+              //               mainAxisAlignment: .spaceEvenly,
+              //               children: [
+              //                 Text(
+              //                   'Sign Out',
+              //                   style: AppConstants.elevatedButtonTextStyle,
+              //                 ),
+              //                 Icon(
+              //                   Icons.logout,
+              //                   color: Colors.white,
+              //                   size: 30.r,
+              //                 ),
+              //               ],
+              //             ),
+              //     );
+              //   },
+              // ),
+              Consumer<AuthProvider>(
+                builder: (context, auth, _) {
+                  return ConfirmActionButton(
+                    buttonText: 'Sign Out',
+                    icon: Icons.logout_rounded,
+                    dialogTitle: 'Sign Out',
+                    dialogMessage:
+                        'Are you sure you want to log out of FAMZY Tourz?',
+                    isDanger: true,
+                    confirmColor: Colors.red,
+                    isLoading: auth.loading,
+                    onConfirmed: () => auth.emailSignOut(),
+                  );
+                },
+              ),
             ],
           ),
         ),

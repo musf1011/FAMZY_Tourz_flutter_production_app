@@ -46,6 +46,7 @@
 // }
 
 import 'package:famzy_tourz_v2/presentation/providers/splash_provider.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -70,33 +71,25 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/bg_app.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: .center,
-            children: [
-              Text(
-                'Welcome',
-                style: TextStyle(
-                  fontSize: 30.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              SpinKitSpinningLines(
+    return AppBackground(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: .center,
+          children: [
+            Text(
+              'Welcome',
+              style: TextStyle(
+                fontSize: 30.sp,
+                fontWeight: FontWeight.bold,
                 color: Colors.white,
-                size: 70.r,
-                lineWidth: 2.r,
               ),
-            ],
-          ),
+            ),
+            SpinKitSpinningLines(
+              color: Colors.white,
+              size: 70.r,
+              lineWidth: 2.r,
+            ),
+          ],
         ),
       ),
     );

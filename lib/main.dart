@@ -40,7 +40,7 @@ class FamzyApp extends StatelessWidget {
 
               textSelectionTheme: const TextSelectionThemeData(
                 cursorColor: AppConstants.tertiaryColor,
-                selectionColor: AppConstants.transGColor,
+                selectionColor: AppConstants.primaryTransGColor,
                 selectionHandleColor: AppConstants.tertiaryColor,
               ),
             ),

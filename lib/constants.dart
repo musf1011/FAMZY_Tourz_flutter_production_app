@@ -11,8 +11,11 @@ class AppConstants {
   static const Color primaryColor = Color.fromARGB(255, 0, 57, 2);
   static const Color secondaryColor = Color.fromARGB(150, 0, 100, 0);
   static const Color tertiaryColor = Color.fromARGB(150, 0, 200, 0);
-  static const Color transGColor = Color.fromARGB(150, 0, 30, 0);
-  static const Color underline = Color.fromARGB(255, 180, 145, 30);
+  static const Color primaryTransGColor = Color.fromARGB(150, 0, 30, 0);
+  static const Color secondaryTransGColor = Color.fromARGB(225, 0, 30, 0);
+  static const Color lightGreen = Color.fromARGB(150, 100, 200, 100);
+  static const Color lightRed = Color.fromARGB(150, 255, 40, 30);
+  static const Color underline = Color.fromARGB(255, 180, 150, 30);
   // Using getters instead of static variables for dynamic colors (as it first need to fully initialize before assigning it)
   static Color get blackColorP7 => Colors.black.withAlpha((255 * 0.7).round());
   static Color get blackColorP5 => Colors.black.withAlpha((255 * 0.5).round());

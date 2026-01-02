@@ -297,7 +297,7 @@
 // }
 
 import 'package:famzy_tourz_v2/data/models/google_signin_model.dart';
-import 'package:famzy_tourz_v2/data/services/firestor_user_service.dart';
+import 'package:famzy_tourz_v2/data/services/auth-services/firestor_user_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

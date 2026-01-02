@@ -514,10 +514,11 @@
 
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -551,177 +552,116 @@ class _EmailVerificationPendingScreenState
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        body: Container(
-          height: 1.sh,
-          width: 1.sw,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/bg_app.jpg'),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 30.h),
+      child: AppBackground(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 30.h),
 
-                /// LOGO
-                Image.asset(
-                  'assets/logos/FAMZYLogo.png',
-                  width: .8.sw,
-                  height: .2.sh,
+              /// LOGO
+              Image.asset(
+                'assets/logos/FAMZYLogo.png',
+                width: .8.sw,
+                height: .2.sh,
+              ),
+
+              SizedBox(height: 20.h),
+
+              /// TITLE
+              Text(
+                'Verify Your Email',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 28.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppConstants.primaryColor,
                 ),
+              ),
 
-                SizedBox(height: 20.h),
+              SizedBox(height: 30.h),
 
-                /// TITLE
-                Text(
-                  'Verify Your Email',
-                  style: GoogleFonts.playfairDisplay(
-                    fontSize: 28.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppConstants.primaryColor,
+              /// CARD
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: .06.sw),
+                child: Container(
+                  padding: EdgeInsets.all(20.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.r),
+                    border: Border.all(color: Colors.white, width: .5.w),
+                    color: AppConstants.primaryTransGColor,
                   ),
-                ),
+                  child: Consumer<AuthProvider>(
+                    builder: (context, auth, _) {
+                      return Column(
+                        children: [
+                          Text(
+                            'We’ve sent a verification email to your inbox.\n\n'
+                            'Please verify your email to continue.',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 15.sp,
+                              color: Colors.white,
+                            ),
+                          ),
 
-                SizedBox(height: 30.h),
+                          SizedBox(height: 30.h),
 
-                /// CARD
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: .06.sw),
-                  child: Container(
-                    padding: EdgeInsets.all(20.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.r),
-                      border: Border.all(color: AppConstants.tertiaryColor),
-                      color: AppConstants.transGColor,
-                    ),
-                    child: Consumer<AuthProvider>(
-                      builder: (context, auth, _) {
-                        return Column(
-                          children: [
-                            Text(
-                              'We’ve sent a verification email to your inbox.\n\n'
-                              'Please verify your email to continue.',
-                              textAlign: TextAlign.center,
+                          /// RESEND BUTTON
+                          CustomLoadingButton(
+                            text: auth.canResendEmail
+                                ? 'Resend Verification Email'
+                                : 'Resend in ${auth.resendCooldown}s',
+                            isLoading: auth.loading,
+                            onPressed: auth.canResendEmail
+                                ? auth.resendVerificationEmail
+                                : () {},
+                          ),
+
+                          SizedBox(height: 20.h),
+
+                          /// MANUAL CHECK
+                          TextButton(
+                            onPressed: auth.emailChecking
+                                ? null
+                                // : auth.checkEmailVerification,
+                                : () {
+                                    auth.checkEmailVerification;
+                                  },
+                            child: Text(
+                              auth.emailChecking
+                                  ? 'Checking...'
+                                  : 'Already verified? Refresh status',
                               style: GoogleFonts.poppins(
-                                fontSize: 15.sp,
+                                fontSize: 14.sp,
                                 color: Colors.white,
+                                decoration: TextDecoration.underline,
                               ),
                             ),
-
-                            SizedBox(height: 30.h),
-
-                            /// RESEND BUTTON
-                            CustomLoadingButton(
-                              text: auth.canResendEmail
-                                  ? 'Resend Verification Email'
-                                  : 'Resend in ${auth.resendCooldown}s',
-                              isLoading: auth.loading,
-                              onPressed: auth.canResendEmail
-                                  ? auth.resendVerificationEmail
-                                  : () {},
-                            ),
-
-                            SizedBox(height: 20.h),
-
-                            /// MANUAL CHECK
-                            TextButton(
-                              onPressed: auth.emailChecking
-                                  ? null
-                                  // : auth.checkEmailVerification,
-                                  : () {
-                                      print('*********refresh button pressed');
-                                      auth.checkEmailVerification;
-                                    },
-                              child: Text(
-                                auth.emailChecking
-                                    ? 'Checking...'
-                                    : 'Already verified? Refresh status',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14.sp,
-                                  color: Colors.white,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
+              ),
 
-                SizedBox(height: 60.h),
+              SizedBox(height: 60.h),
 
-                /// LOGOUT / BACK
-                // TextButton(
-                //   onPressed:
-                //   child: Text(
-                //     'Back to Welcome',
-                //     style: GoogleFonts.poppins(
-                //       color: Colors.white70,
-                //       fontSize: 14.sp,
-                //     ),
-                //   ),
-                // ),
-                Consumer<AuthProvider>(
-                  builder: (context, auth, child) {
-                    return CustomLoadingButton(
-                      onPressed: () {
-                        print('******auth loading ${auth.loading}');
-                        // auth.loading
-                        //     ? null
-                        //     : () {
-                        print(
-                          '*************************sign out button pressed',
-                        );
-                        auth.emailSignOut(context);
-                        // }
-                      },
-                      isLoading: auth.loading,
-                      child: auth.loading
-                          ? const SpinKitSpinningLines(color: Colors.white)
-                          : Row(
-                              mainAxisAlignment: .spaceEvenly,
-                              children: [
-                                Text(
-                                  'Sign Out',
-                                  style: AppConstants.elevatedButtonTextStyle,
-                                ),
-                                Icon(
-                                  Icons.logout,
-                                  color: Colors.white,
-                                  size: 30.r,
-                                ),
-                              ],
-                            ),
-                    );
-                  },
-                ),
-                // return IconButton(
-                //   onPressed: auth.loading
-                //       ? null
-                //       : () => auth.emailSignOut(context),
-                //   icon: auth.loading
-                //       ? const SpinKitSpinningLines(color: Colors.white)
-                //       : Icon(Icons.logout, color: Colors.white, size: 50.r),
-                // );
-                // Consumer<AuthProvider>(
-                //   builder: (context, auth, child) {
-                //     return IconButton(
-                //       onPressed: auth.loading
-                //           ? null
-                //           : () => auth.emailSignOut(context),
-                //       icon: auth.loading
-                //           ? const SpinKitSpinningLines(color: Colors.white)
-                //           : Icon(Icons.logout, color: Colors.white, size: 50.r),
-                //     );
-                //   },
-                // ),
-              ],
-            ),
+              Consumer<AuthProvider>(
+                builder: (context, auth, _) {
+                  return ConfirmActionButton(
+                    buttonText: 'Sign Out',
+                    icon: Icons.logout_rounded,
+                    dialogTitle: 'Sign Out',
+                    dialogMessage:
+                        'Are you sure you want to log out of FAMZY Tourz?',
+                    isDanger: true,
+                    confirmColor: Colors.red,
+                    isLoading: auth.loading,
+                    onConfirmed: () => auth.emailSignOut(),
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

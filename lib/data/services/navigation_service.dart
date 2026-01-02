@@ -107,16 +107,17 @@ class NavigationService {
     required String title,
     required String message,
     ContentType type = ContentType.success,
+    int duration = 5,
   }) {
-    if (context == null) return;
+    // if (context == null) return;
     // Guard: If the context is null or the widget is unmounted, stop.
-    // if (currentContext == null || !currentContext.mounted) return
+    if (context == null || !context!.mounted) return;
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
-      // dismissDirection: DismissDirection.horizontal,
-      duration: const Duration(seconds: 3),
+      dismissDirection: DismissDirection.horizontal,
+      duration: Duration(seconds: duration),
       content: AwesomeSnackbarContent(
         titleTextStyle: AppConstants.snackbarTitle,
         title: title,

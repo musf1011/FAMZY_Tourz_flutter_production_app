@@ -221,11 +221,10 @@
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
@@ -248,38 +247,53 @@ class MainScreen extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 Center(
+                  // child: Consumer<AuthProvider>(
+                  //   builder: (context, auth, child) {
+                  //     return CustomLoadingButton(
+                  //       onPressed: () {
+                  //         print('******auth loading ${auth.loading}');
+                  //         auth.loading
+                  //             ? null
+                  //             :
+                  //               // () {
+                  //               print(
+                  //                 '*************************sign out button pressed',
+                  //               );
+                  //         auth.emailSignOut();
+                  //         // };
+                  //       },
+                  //       isLoading: auth.loading,
+                  //       child: auth.loading
+                  //           ? const SpinKitSpinningLines(color: Colors.white)
+                  //           : Row(
+                  //               mainAxisAlignment: .spaceEvenly,
+                  //               children: [
+                  //                 Text(
+                  //                   'Sign Out',
+                  //                   style: AppConstants.elevatedButtonTextStyle,
+                  //                 ),
+                  //                 Icon(
+                  //                   Icons.logout,
+                  //                   color: Colors.white,
+                  //                   size: 30.r,
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //     );
+                  //   },
+                  // ),
                   child: Consumer<AuthProvider>(
-                    builder: (context, auth, child) {
-                      return CustomLoadingButton(
-                        onPressed: () {
-                          print('******auth loading ${auth.loading}');
-                          // auth.loading
-                          //     ? null
-                          //     :
-                          // () {
-                          print(
-                            '*************************sign out button pressed',
-                          );
-                          auth.emailSignOut(context);
-                          // };
-                        },
+                    builder: (context, auth, _) {
+                      return ConfirmActionButton(
+                        buttonText: 'Sign Out',
+                        icon: Icons.logout_rounded,
+                        dialogTitle: 'Sign Out',
+                        dialogMessage:
+                            'Are you sure you want to log out of FAMZY Tourz?',
+                        isDanger: true,
+                        confirmColor: Colors.red,
                         isLoading: auth.loading,
-                        child: auth.loading
-                            ? const SpinKitSpinningLines(color: Colors.white)
-                            : Row(
-                                mainAxisAlignment: .spaceEvenly,
-                                children: [
-                                  Text(
-                                    'Sign Out',
-                                    style: AppConstants.elevatedButtonTextStyle,
-                                  ),
-                                  Icon(
-                                    Icons.logout,
-                                    color: Colors.white,
-                                    size: 30.r,
-                                  ),
-                                ],
-                              ),
+                        onConfirmed: () => auth.emailSignOut(),
                       );
                     },
                   ),

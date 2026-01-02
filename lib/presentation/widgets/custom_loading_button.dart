@@ -38,7 +38,7 @@ class CustomLoadingButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? AppConstants.transGColor,
+          backgroundColor: backgroundColor ?? AppConstants.primaryTransGColor,
 
           minimumSize: Size(0.75.sw, .07.sh),
           textStyle: TextStyle(
@@ -46,7 +46,7 @@ class CustomLoadingButton extends StatelessWidget {
             fontSize: 20.sp,
             fontWeight: FontWeight.w600,
           ),
-          side: BorderSide(color: Colors.white, width: 1.w),
+          side: BorderSide(color: Colors.white, width: .5.w),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.r),
           ),

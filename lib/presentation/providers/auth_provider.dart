@@ -508,11 +508,13 @@ import 'dart:async';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:famzy_tourz_v2/data/services/email_auth_service.dart';
-import 'package:famzy_tourz_v2/data/services/firestor_user_service.dart';
-import 'package:famzy_tourz_v2/data/services/google_auth_service.dart';
+import 'package:famzy_tourz_v2/data/services/auth-services/email_auth_service.dart';
+import 'package:famzy_tourz_v2/data/services/auth-services/firestor_user_service.dart';
+import 'package:famzy_tourz_v2/data/services/auth-services/google_auth_service.dart';
+import 'package:famzy_tourz_v2/data/services/auth-services/password_reset_service.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/data/services/session_service.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -524,10 +526,6 @@ class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final NavigationService _navigation = NavigationService();
   final GoogleAuthService _googleAuth = GoogleAuthService.instance;
-
-  // AuthProvider() {
-  //   startEmailVerificationFlow();
-  // }
 
   bool _loading = false;
   bool get loading => _loading;
@@ -554,7 +552,6 @@ class AuthProvider extends ChangeNotifier {
       return hasAge;
     } catch (e) {
       // In production, log this error to a service like Sentry or Crashlytics
-      print('Error syncing profile status: $e');
       return false;
     }
   }
@@ -582,10 +579,7 @@ class AuthProvider extends ChangeNotifier {
 
       final status = await SessionService.getSessionStatus();
 
-      print('*********navigation to be held in sign in');
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        // _navigation.navigateAndClearStack(AppRoutes.main);
         if (!status.isEmailVerified) {
           _navigation.navigateReplacement(AppRoutes.emailVerification);
           return;
@@ -614,175 +608,9 @@ class AuthProvider extends ChangeNotifier {
       );
     } finally {
       _setLoading(false);
-      print('*************finally of sign in button called');
     }
   }
 
-  // //  google sign in for existing users
-  // Future<void> signInWithGoogle() async {
-  //   try {
-  //     _setLoading(true);
-
-  //     // GoogleAuthService class handles firestore saving for new users
-  //     await _googleAuth.signInWithGoogle();
-
-  //     final prefs = await SharedPreferences.getInstance();
-  //     await prefs.setBool('isLoggedIn', true);
-
-  //     HapticFeedback.lightImpact();
-
-  //     _navigation.showSnackBar(
-  //       title: 'Success',
-  //       message: 'Signed in with Google',
-  //       type: ContentType.success,
-  //     );
-
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       _navigation.navigateReplacement(AppRoutes.main);
-  //     });
-  //   } on FirebaseAuthException catch (e) {
-  //     HapticFeedback.mediumImpact();
-  //     _navigation.showSnackBar(
-  //       title: 'Google Sign In Failed',
-  //       message: _getFirebaseErrorMessage(e.code),
-  //       type: ContentType.failure,
-  //     );
-  //   } catch (e) {
-  //     HapticFeedback.mediumImpact();
-  //     _navigation.showSnackBar(
-  //       title: 'Error',
-  //       message: 'Google sign in failed. Please try again',
-  //       type: ContentType.failure,
-  //     );
-  //   } finally {
-  //     _setLoading(false);
-  //   }
-  // }
-
-  // //  google sign in
-  // Future<void> signInWithGoogle() async {
-  //   try {
-  //     _setLoading(true);
-  //     //GoogleAuthService class handles firestore saving for new users
-  //     final result = await _googleAuth.signInWithGoogle();
-
-  //     //user cancelled google signin do nothing
-  //     if (result == null) {
-  //       return;
-  //     }
-
-  //     final prefs = await SharedPreferences.getInstance();
-  //     await prefs.setBool('isLoggedIn', true);
-
-  //     await HapticFeedback.lightImpact();
-
-  //     _navigation.showSnackBar(
-  //       title: 'Success',
-  //       message: 'Signed in with Google',
-  //       type: ContentType.success,
-  //     );
-
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       if (result.isNewUser) {
-  //         _navigation.navigateReplacement(
-  //           AppRoutes.additionalInfoScreen,
-  //           arguments: result.user,
-  //         );
-  //       } else {
-  //         _navigation.navigateReplacement(AppRoutes.main);
-  //       }
-  //     });
-  //   } on FirebaseAuthException catch (e) {
-  //     HapticFeedback.mediumImpact();
-  //     _navigation.showSnackBar(
-  //       title: 'Google Sign In Failed',
-  //       message: _getFirebaseErrorMessage(e.code),
-  //       type: ContentType.failure,
-  //     );
-  //   } catch (_) {
-  //     HapticFeedback.mediumImpact();
-  //     _navigation.showSnackBar(
-  //       title: 'Error',
-  //       message: 'Google sign in failed. Please try again',
-  //       type: ContentType.failure,
-  //     );
-  //   } finally {
-  //     _setLoading(false);
-  //   }
-  // }
-
-  // Future<void> signInWithGoogle() async {
-  //   try {
-  //     _setLoading(true);
-
-  //     final result = await _googleAuth
-  //         .signInWithGoogle()
-  //         .timeout(const Duration(seconds: 15))
-  //         .then((value) {
-  //           return;
-  //         });
-
-  //     // user cancelled google sign in
-  //     if (result == null) {
-  //       return;
-  //     }
-
-  //     final prefs = await SharedPreferences.getInstance();
-  //     await prefs.setBool('isLoggedIn', true);
-
-  //     final hasAddInfo = await checkAndSyncProfileStatus(result.user.uid);
-  //     // // check profile completeness
-  //     // final doc = await FirebaseFirestore.instance
-  //     //     .collection('users')
-  //     //     .doc(result.user.uid)
-  //     //     .get();
-
-  //     // final data = doc.data();
-  //     // final hasAddInfo = data != null && data['age'] != null;
-  //     // // final hasGender = data != null && data['gender'] != null; //one is enough
-  //     // await prefs.setBool('hasAge', hasAddInfo);
-
-  //     await HapticFeedback.lightImpact();
-
-  //     _navigation.showSnackBar(
-  //       title: 'Success',
-  //       message: 'Signed in with Google',
-  //       type: ContentType.success,
-  //     );
-
-  //     WidgetsBinding.instance.addPostFrameCallback((_) async {
-  //       if (!hasAddInfo) {
-  //         await _navigation.navigateReplacement(AppRoutes.additionalInfoScreen);
-  //       } else {
-  //         await prefs.setBool('isProfileCompleted', true);
-  //         await _navigation.navigateReplacement(AppRoutes.main);
-  //       }
-  //     });
-  //   } on TimeoutException {
-  //     await HapticFeedback.mediumImpact();
-  //     _navigation.showSnackBar(
-  //       title: 'Timeout',
-  //       message: 'Google sign in took too long. Please try again',
-  //       type: ContentType.warning,
-  //     );
-  //   } on FirebaseAuthException catch (e) {
-  //     await HapticFeedback.mediumImpact();
-  //     _navigation.showSnackBar(
-  //       title: 'Google Sign In Failed',
-  //       message: _getFirebaseErrorMessage(e.code),
-  //       type: ContentType.failure,
-  //     );
-  //   } catch (_) {
-  //     await HapticFeedback.mediumImpact();
-  //     _navigation.showSnackBar(
-  //       title: 'Error',
-  //       message: 'Google sign in failed. Please try again',
-  //       type: ContentType.failure,
-  //     );
-  //   } finally {
-  //     _setLoading(false);
-  //   }
-  // }
   Future<void> signInWithGoogle() async {
     try {
       _setLoading(true);
@@ -951,7 +779,6 @@ class AuthProvider extends ChangeNotifier {
       );
     } finally {
       _setLoading(false);
-      print('***setloadin before email verify pend screen: $_loading');
     }
   }
 
@@ -1004,7 +831,7 @@ class AuthProvider extends ChangeNotifier {
   void _startVerificationCheck() {
     _verificationTimer?.cancel();
     _verificationTimer = Timer.periodic(
-      const Duration(seconds: 5),
+      const Duration(seconds: 10),
       (_) => checkEmailVerification(),
     );
   }
@@ -1022,44 +849,39 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> checkEmailVerification() async {
-    print('************email checking start loading is now $_loading');
     if (_emailChecking) return;
 
     try {
-      print('************email checking trying');
       _emailChecking = true;
       notifyListeners();
 
-      print('************email checking trying4');
       await _auth.currentUser?.reload();
-      print('************email checking trying1');
       final user = _auth.currentUser;
 
-      print('************email checking trying3');
       if (user != null && user.emailVerified) {
-        print('************email checking trying2');
         _verificationTimer?.cancel();
         _cooldownTimer?.cancel();
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isEmailVerified', true);
         await prefs.setBool('isProfileCompleted', true);
-        print('********isemail in pend scrn:  true');
-        print('********isprofilecompleted in pend scrn: true');
 
-        _setLoading(false);
+        // _setLoading(false);
 
-        // await _navigation.navigateAndClearStack(AppRoutes.main);
         //////******navigate without await to avoid finally block interference
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _navigation.navigateAndClearStack(AppRoutes.main);
         });
       }
-    }
-    ////*****no finally block because it wait for await navigation
-    finally {
+    } catch (e) {
+      _navigation.showSnackBar(
+        title: 'Status Check Failed',
+        message: 'We encountered a minor issue while checking...',
+        type: ContentType.warning,
+      );
+    } finally {
       _emailChecking = false;
-      print('************email checking done loading is $_loading');
+      _setLoading(false);
     }
   }
 
@@ -1088,38 +910,96 @@ class AuthProvider extends ChangeNotifier {
     _verificationTimer?.cancel();
     _cooldownTimer?.cancel();
     checkEmailVerification();
-    print('***setloadin in pend screen after disposal: $_loading');
   }
 
-  Future<void> emailSignOut(BuildContext context) async {
+  Future<void> emailSignOut() async {
     try {
-      print('******sigout access set loading is $_loading');
       _setLoading(true);
+      _navigation.showSnackBar(
+        title: 'Signing you out',
+        message: 'You will be signed out and returned to the welcome screen',
+        type: ContentType.help,
+      );
 
+      //  Sign out from all services
       await _auth.signOut();
-      print('******sign out auth done');
+      await GoogleSignIn.instance.signOut();
 
-      await GoogleSignIn.instance.signOut(); //only gmail signout
-
+      //clear Local Data base
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('isLoggedIn');
-      await prefs.remove('isProfileCompleted');
-      await prefs.clear();
-
-      print('*****sign out shared preference cleared only isLoggedIn');
+      await prefs.clear(); //total reset for safety
 
       await HapticFeedback.lightImpact();
 
       _setLoading(false);
-      print('***** isloading before nav to welcome');
 
-      print('***setloadin before welcome screen: $_loading');
       await _navigation.navigateAndClearStack(AppRoutes.welcome);
     } catch (e) {
-      _navigation.showSnackBar(title: 'Sign out failed:', message: '$e');
+      _setLoading(false);
+      _navigation.showSnackBar(
+        title: 'Sign out failed',
+        message: 'Please check your connection and try again.',
+        type: ContentType.failure,
+      );
+    }
+  }
+
+  //reset password logic
+
+  //vilidate email
+  bool isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  Future<void> resetPassword({
+    required String email,
+    required BuildContext context,
+  }) async {
+    if (!isValidEmail(email)) {
+      _navigation.showSnackBar(
+        title: 'Invalid Email',
+        message: 'Please enter a valid email address',
+        type: ContentType.failure,
+      );
+      return;
+    }
+
+    //  Ask confirmation using your custom dialog
+    final confirmed = await AppConfirmDialog.show(
+      context,
+      title: 'Confirm Email',
+      message: 'Is this email correct?\n\n$email',
+      confirmText: 'Send Reset Link',
+      icon: Icons.mark_email_read_rounded,
+    );
+
+    if (!confirmed) return;
+
+    try {
+      _setLoading(true);
+
+      await PasswordResetService.sendResetEmail(email);
+
+      await HapticFeedback.lightImpact();
+
+      _navigation.showSnackBar(
+        title: 'Email Sent',
+        message: 'Password reset link sent to $email',
+        type: ContentType.success,
+      );
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _navigation.navigateReplacement(AppRoutes.welcome);
+      });
+    } on FirebaseAuthException catch (e) {
+      _navigation.showSnackBar(
+        title: 'Reset Failed',
+        message: _getFirebaseErrorMessage(e.code),
+        type: ContentType.failure,
+      );
     } finally {
       _setLoading(false);
-      print('******loading is false now after nav to welcom done');
     }
   }
 }
