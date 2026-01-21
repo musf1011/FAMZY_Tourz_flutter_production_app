@@ -1,4 +1,5 @@
 import 'package:famzy_tourz_v2/constants.dart';
+import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,12 +22,12 @@ class BackAndLogoRow extends StatelessWidget {
               color: AppConstants.primaryColor,
             ),
             onPressed: () =>
-                Navigator.pushReplacementNamed(context, AppRoutes.welcome),
+                NavigationService().navigateAndClearStack(AppRoutes.welcome),
           ),
 
           Image.asset(
             'assets/logos/FAMZYLogo.png',
-            width: .8.sw,
+            width: .77.sw,
             height: .2.sh,
           ),
         ],

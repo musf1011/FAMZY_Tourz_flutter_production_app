@@ -208,6 +208,7 @@
 
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/back_logo_row.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_drop_down_field.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
@@ -216,7 +217,6 @@ import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
@@ -267,211 +267,195 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: AppBackground(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // logo
-              Padding(
-                padding: .symmetric(vertical: 30.h),
-                child: Image.asset(
-                  'assets/logos/FAMZYLogo.png',
-                  width: .8.sw,
-                  height: .2.sh,
-                ),
-              ),
-
-              // title
-              Text(
-                'Additional Information',
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 32.sp,
-                  fontWeight: .bold,
-                  color: AppConstants.primaryColor,
-                ),
-              ),
-
-              // form card
-              Padding(
-                padding: .fromLTRB(.03.sw, .05.sh, .03.sw, .02.sh),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: .circular(15.r),
-                    color: AppConstants.primaryTransGColor,
-                    border: .all(color: Colors.white, width: .5.w),
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Padding(
-                      padding: .symmetric(horizontal: .025.sw),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 12.h),
-
-                          // age
-                          CustTextFormField(
-                            controller: _ageController,
-                            label: 'Age',
-                            hint: '18',
-                            keyboardType: .number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            validator: (v) {
-                              if (v == null || v.isEmpty) {
-                                return 'Enter age';
-                              }
-                              final n = int.tryParse(v);
-                              if (n == null || n < 13 || n > 130) {
-                                return 'Invalid age';
-                              }
-                              return null;
-                            },
-                          ),
-
-                          SizedBox(height: 15.h),
-
-                          // gender
-                          // DropdownButtonFormField<String>(
-                          //   validator: (value) {
-                          //     if (value == null) {
-                          //       return 'Please select gender';
-                          //     }
-                          //     return null;
-                          //   },
-                          //   decoration: InputDecoration(
-                          //     label: const Text(
-                          //       'Gender',
-                          //       style: TextStyle(color: Colors.white),
-                          //     ),
-                          //     hint: Text(
-                          //       'Not Selected',
-                          //       style: TextStyle(
-                          //         color: AppConstants.whiteColorP5,
-                          //       ),
-                          //     ),
-                          //     enabledBorder: const UnderlineInputBorder(
-                          //       borderSide: BorderSide(color: Colors.grey),
-                          //     ),
-                          //     focusedBorder: const UnderlineInputBorder(
-                          //       borderSide: BorderSide(
-                          //         color: AppConstants.tertiaryColor,
-                          //       ),
-                          //     ),
-                          //   ),
-                          //   dropdownColor: AppConstants.primaryTransGColor,
-                          //   iconEnabledColor: AppConstants.tertiaryColor,
-                          //   borderRadius: .circular(15.r),
-                          //   initialValue: selectedGender,
-                          //   items: [
-                          //     const DropdownMenuItem(
-                          //       value: 'male',
-                          //       child: Text(
-                          //         'Male',
-                          //         style: TextStyle(
-                          //           color: AppConstants.accentColor,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     DropdownMenuItem(
-                          //       value: 'female',
-                          //       child: Text(
-                          //         'Female',
-                          //         style: TextStyle(color: Colors.pink[200]),
-                          //       ),
-                          //     ),
-                          //     DropdownMenuItem(
-                          //       value: 'other',
-                          //       child: Text(
-                          //         'Other',
-                          //         style: TextStyle(color: Colors.yellow[200]),
-                          //       ),
-                          //     ),
-                          //   ],
-                          //   onChanged: (v) {
-                          //     setState(() => selectedGender = v);
-                          //   },
-                          // ),
-                          GenderDropdownField(
-                            value: selectedGender,
-                            validator: (v) {
-                              if (v == null) {
-                                return 'Please select gender';
-                              }
-                              return null;
-                            },
-                            onChanged: (v) {
-                              setState(() => selectedGender = v);
-                            },
-                          ),
-
-                          SizedBox(height: 30.h),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 50.h),
-              // submit button
-              Consumer<AuthProvider>(
-                builder: (context, auth, _) {
-                  return CustomLoadingButton(
-                    text: 'CONTINUE',
-                    isLoading: auth.loading,
-                    onPressed: () => _submit(auth),
-                  );
-                },
-              ),
-
-              SizedBox(height: 30.h),
-              // Consumer<AuthProvider>(
-              //   builder: (context, auth, child) {
-              //     return CustomLoadingButton(
-              //       onPressed: () {
-              //         print('******auth loading ${auth.loading}');
-              //         auth.loading ? null : auth.emailSignOut();
-              //       },
-              //       isLoading: auth.loading,
-              //       child: auth.loading
-              //           ? const SpinKitSpinningLines(color: Colors.white)
-              //           : Row(
-              //               mainAxisAlignment: .spaceEvenly,
-              //               children: [
-              //                 Text(
-              //                   'Sign Out',
-              //                   style: AppConstants.elevatedButtonTextStyle,
-              //                 ),
-              //                 Icon(
-              //                   Icons.logout,
-              //                   color: Colors.white,
-              //                   size: 30.r,
-              //                 ),
-              //               ],
-              //             ),
-              //     );
-              //   },
-              // ),
-              Consumer<AuthProvider>(
-                builder: (context, auth, _) {
-                  return ConfirmActionButton(
-                    buttonText: 'Sign Out',
-                    icon: Icons.logout_rounded,
-                    dialogTitle: 'Sign Out',
-                    dialogMessage:
-                        'Are you sure you want to log out of FAMZY Tourz?',
-                    isDanger: true,
-                    confirmColor: Colors.red,
-                    isLoading: auth.loading,
-                    onConfirmed: () => auth.emailSignOut(),
-                  );
-                },
-              ),
-            ],
+    return AppBackground(
+      allowPop: true,
+      child: Column(
+        children: [
+          const BackAndLogoRow(),
+          // title
+          Text(
+            'Additional Information',
+            style: AppConstants.screenTitleTextStyle,
+            textAlign: .center,
           ),
-        ),
+
+          // form card
+          Padding(
+            padding: .fromLTRB(.03.sw, .03.sh, .03.sw, .05.sh),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: .circular(15.r),
+                color: AppConstants.primaryTransGColor,
+                border: .all(color: Colors.white, width: .5.w),
+              ),
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: .fromLTRB(.05.sw, .02.sh, .05.sw, .02.sh),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 12.h),
+
+                      // age
+                      CustTextFormField(
+                        controller: _ageController,
+                        label: 'Age',
+                        hint: '18',
+                        keyboardType: .number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        validator: (v) {
+                          if (v == null || v.isEmpty) {
+                            return 'Enter age';
+                          }
+                          final n = int.tryParse(v);
+                          if (n == null || n < 13 || n > 130) {
+                            return 'Invalid age';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      SizedBox(height: 15.h),
+
+                      // gender
+                      // DropdownButtonFormField<String>(
+                      //   validator: (value) {
+                      //     if (value == null) {
+                      //       return 'Please select gender';
+                      //     }
+                      //     return null;
+                      //   },
+                      //   decoration: InputDecoration(
+                      //     label: const Text(
+                      //       'Gender',
+                      //       style: TextStyle(color: Colors.white),
+                      //     ),
+                      //     hint: Text(
+                      //       'Not Selected',
+                      //       style: TextStyle(
+                      //         color: AppConstants.whiteColorP5,
+                      //       ),
+                      //     ),
+                      //     enabledBorder: const UnderlineInputBorder(
+                      //       borderSide: BorderSide(color: Colors.grey),
+                      //     ),
+                      //     focusedBorder: const UnderlineInputBorder(
+                      //       borderSide: BorderSide(
+                      //         color: AppConstants.tertiaryColor,
+                      //       ),
+                      //     ),
+                      //   ),
+                      //   dropdownColor: AppConstants.primaryTransGColor,
+                      //   iconEnabledColor: AppConstants.tertiaryColor,
+                      //   borderRadius: .circular(15.r),
+                      //   initialValue: selectedGender,
+                      //   items: [
+                      //     const DropdownMenuItem(
+                      //       value: 'male',
+                      //       child: Text(
+                      //         'Male',
+                      //         style: TextStyle(
+                      //           color: AppConstants.accentColor,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     DropdownMenuItem(
+                      //       value: 'female',
+                      //       child: Text(
+                      //         'Female',
+                      //         style: TextStyle(color: Colors.pink[200]),
+                      //       ),
+                      //     ),
+                      //     DropdownMenuItem(
+                      //       value: 'other',
+                      //       child: Text(
+                      //         'Other',
+                      //         style: TextStyle(color: Colors.yellow[200]),
+                      //       ),
+                      //     ),
+                      //   ],
+                      //   onChanged: (v) {
+                      //     setState(() => selectedGender = v);
+                      //   },
+                      // ),
+                      GenderDropdownField(
+                        value: selectedGender,
+                        validator: (v) {
+                          if (v == null) {
+                            return 'Please select gender';
+                          }
+                          return null;
+                        },
+                        onChanged: (v) {
+                          setState(() => selectedGender = v);
+                        },
+                      ),
+
+                      SizedBox(height: 30.h),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // SizedBox(height: 5sd.h),
+          // submit button
+          Consumer<AuthProvider>(
+            builder: (context, auth, _) {
+              return CustomLoadingButton(
+                text: 'CONTINUE',
+                isLoading: auth.loading,
+                onPressed: () => _submit(auth),
+              );
+            },
+          ),
+
+          SizedBox(height: 30.h),
+          // Consumer<AuthProvider>(
+          //   builder: (context, auth, child) {
+          //     return CustomLoadingButton(
+          //       onPressed: () {
+          //         print('******auth loading ${auth.loading}');
+          //         auth.loading ? null : auth.emailSignOut();
+          //       },
+          //       isLoading: auth.loading,
+          //       child: auth.loading
+          //           ? const SpinKitSpinningLines(color: Colors.white)
+          //           : Row(
+          //               mainAxisAlignment: .spaceEvenly,
+          //               children: [
+          //                 Text(
+          //                   'Sign Out',
+          //                   style: AppConstants.elevatedButtonTextStyle,
+          //                 ),
+          //                 Icon(
+          //                   Icons.logout,
+          //                   color: Colors.white,
+          //                   size: 30.r,
+          //                 ),
+          //               ],
+          //             ),
+          //     );
+          //   },
+          // ),
+          Consumer<AuthProvider>(
+            builder: (context, auth, _) {
+              return ConfirmActionButton(
+                buttonText: 'Sign Out',
+                icon: Icons.logout_rounded,
+                dialogTitle: 'Sign Out',
+                dialogMessage:
+                    'Are you sure you want to log out of FAMZY Tourz?',
+                isDanger: true,
+                confirmColor: Colors.red,
+                isLoading: auth.loading,
+                onConfirmed: () => auth.emailSignOut(),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

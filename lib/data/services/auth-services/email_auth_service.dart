@@ -39,7 +39,8 @@ class EmailAuthService {
   }
 
   //send Email verification
-  Future<void> sendVerificationEmail(User user) async {
-    await user.sendEmailVerification();
+  Future<void> sendVerificationEmail(User? user) async {
+    user ??= _auth.currentUser;
+    await user?.sendEmailVerification();
   }
 }

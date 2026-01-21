@@ -15,6 +15,7 @@ class AppConstants {
   static const Color secondaryTransGColor = Color.fromARGB(225, 0, 30, 0);
   static const Color lightGreen = Color.fromARGB(150, 100, 200, 100);
   static const Color lightRed = Color.fromARGB(150, 255, 40, 30);
+  static const Color transRColor = Color.fromARGB(155, 255, 155, 155);
   static const Color underline = Color.fromARGB(255, 180, 150, 30);
   // Using getters instead of static variables for dynamic colors (as it first need to fully initialize before assigning it)
   static Color get blackColorP7 => Colors.black.withAlpha((255 * 0.7).round());
@@ -38,6 +39,11 @@ class AppConstants {
     fontSize: 25.sp,
     wordSpacing: 5,
     color: Colors.white,
+  );
+  static TextStyle screenTitleTextStyle = GoogleFonts.playfairDisplay(
+    fontSize: 40.sp,
+    fontWeight: FontWeight.bold,
+    color: AppConstants.primaryColor,
   );
 
   static final ThemeData customSelectionTheme = ThemeData.light().copyWith(
@@ -67,6 +73,13 @@ class AppConstants {
     color: AppConstants.accentColor,
     fontWeight: FontWeight.bold,
     fontSize: 18.0,
+  );
+
+  //auth cards style
+  static BoxDecoration glassCardDecoration = BoxDecoration(
+    borderRadius: BorderRadius.circular(15.r),
+    color: AppConstants.primaryTransGColor,
+    border: Border.all(color: Colors.white, width: .5.w),
   );
 
   static final elevatedButtonTextStyle = TextStyle(

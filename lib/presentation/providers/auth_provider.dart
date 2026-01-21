@@ -507,7 +507,6 @@
 import 'dart:async';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:famzy_tourz_v2/data/services/auth-services/email_auth_service.dart';
 import 'package:famzy_tourz_v2/data/services/auth-services/firestor_user_service.dart';
 import 'package:famzy_tourz_v2/data/services/auth-services/google_auth_service.dart';
@@ -519,7 +518,6 @@ import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -535,26 +533,26 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //check profile completeness
-  Future<bool> checkAndSyncProfileStatus(String uid) async {
-    try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
+  // //check profile completeness
+  // Future<bool> checkAndSyncProfileStatus(String uid) async {
+  //   try {
+  //     final doc = await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(uid)
+  //         .get();
 
-      final data = doc.data();
-      final bool hasAge = data != null && data['age'] != null;
+  //     final data = doc.data();
+  //     final bool hasAge = data != null && data['age'] != null;
 
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('hasAge', hasAge);
+  //     final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     await prefs.setBool('hasAge', hasAge);
 
-      return hasAge;
-    } catch (e) {
-      // In production, log this error to a service like Sentry or Crashlytics
-      return false;
-    }
-  }
+  //     return hasAge;
+  //   } catch (e) {
+  //     // In production, log this error to a service like Sentry or Crashlytics
+  //     return false;
+  //   }
+  // }
 
   //email & password signin for existing account
   Future<void> signInWithEmail(String email, String password) async {
@@ -578,20 +576,36 @@ class AuthProvider extends ChangeNotifier {
       );
 
       final status = await SessionService.getSessionStatus();
+      print('****sign in is email verified: ${status.isEmailVerified}');
+      print('****has additioinal info: ${status.hasAdditionalInfo}');
+      print('****is logged in: ${status.isLoggedIn}');
+      print('****is profile completed : ${status.isProfileCompleted}');
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   if (!status.isEmailVerified) {
+      //     _navigation.navigateReplacement(AppRoutes.emailVerification);
+      //     return;
+      //   }
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!status.isEmailVerified) {
-          _navigation.navigateReplacement(AppRoutes.emailVerification);
-          return;
-        }
+      //   if (!status.hasAdditionalInfo) {
+      //     _navigation.navigateReplacement(AppRoutes.additionalInfoScreen);
+      //     return;
+      //   }
 
-        if (!status.hasAdditionalInfo) {
-          _navigation.navigateReplacement(AppRoutes.additionalInfoScreen);
-          return;
-        }
+      //   _navigation.navigateReplacement(AppRoutes.main);
+      // });
+      if (!status.isEmailVerified) {
+        // final User? user = _auth.currentUser;
 
-        _navigation.navigateReplacement(AppRoutes.main);
-      });
+        await handleEmailVerification(null);
+      } else if (!status.hasAdditionalInfo) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _navigation.navigateAndClearStack(AppRoutes.additionalInfoScreen);
+        });
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _navigation.navigateAndClearStack(AppRoutes.main);
+        });
+      }
     } on FirebaseAuthException catch (e) {
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
@@ -628,6 +642,7 @@ class AuthProvider extends ChangeNotifier {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
+      await prefs.setBool('isEmailVerified', true);
 
       await HapticFeedback.lightImpact();
 
@@ -636,22 +651,21 @@ class AuthProvider extends ChangeNotifier {
         message: 'Signed in with Google',
         type: ContentType.success,
       );
+      if (result.isNewUser) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _navigation.navigateAndClearStack(AppRoutes.additionalInfoScreen);
+        });
+      }
 
       //to ask where to go
       final status = await SessionService.getSessionStatus();
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!status.isEmailVerified) {
-          _navigation.navigateReplacement(AppRoutes.emailVerification);
-          return;
-        }
-
         if (!status.hasAdditionalInfo) {
-          _navigation.navigateReplacement(AppRoutes.additionalInfoScreen);
+          _navigation.navigateAndClearStack(AppRoutes.additionalInfoScreen);
           return;
         }
-
-        _navigation.navigateReplacement(AppRoutes.main);
+        _navigation.navigateAndClearStack(AppRoutes.main);
       });
     } on TimeoutException {
       await HapticFeedback.mediumImpact();
@@ -722,16 +736,19 @@ class AuthProvider extends ChangeNotifier {
     try {
       _setLoading(true);
 
+      debugPrint('***1st step');
       //create firebase user
       final userCred = await EmailAuthService.instance.signUpWithEmail(
         email,
         password,
       );
+      debugPrint('***2nd step');
       final user = userCred.user;
       if (user == null) {
         throw Exception('Failed to create user.');
       }
 
+      debugPrint('***3rd step');
       //save user in Firestore
       await EmailAuthService.instance.saveUserToFirestore(
         uid: user.uid,
@@ -742,27 +759,44 @@ class AuthProvider extends ChangeNotifier {
         photoUrl: '',
       );
 
+      debugPrint('***4thst step');
       //logged in saved locally
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
-      // await prefs.setBool('isProfileCompleted', true);
-
-      //send verification email
-      await EmailAuthService.instance.sendVerificationEmail(user);
-
-      await HapticFeedback.lightImpact();
+      await prefs.setBool('hasAdditionalInfo', true);
+      await handleEmailVerification(user);
 
       _navigation.showSnackBar(
         title: 'Account Created',
         message: 'Verification email has been sent',
         type: ContentType.success,
       );
+      debugPrint('***5th step');
+      // await prefs.setBool('isProfileCompleted', true);
+      // print('*****is logged in: ${getbool}');
 
-      _setLoading(false);
-      //navigate to email verification pending screen
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _navigation.navigateAndClearStack(AppRoutes.emailVerification);
-      });
+      // //send verification email
+      // await EmailAuthService.instance.sendVerificationEmail(user);
+
+      // await HapticFeedback.lightImpact();
+
+      // // _navigation.showSnackBar(
+      // //   title: 'Account Created',
+      // //   message: 'Verification email has been sent',
+      // //   type: ContentType.success,
+      // // );
+
+      // // _setLoading(false);
+      // // 2. NORMAL SESSION FLOW
+      // final status = await SessionService.getSessionStatus();
+      // print('******signup screen: is logged in: ${status.isLoggedIn}');
+      // print('******is profile completed: ${status.isProfileCompleted}');
+      // print('******has additional info: ${status.hasAdditionalInfo}');
+      // print('******is email verified: ${status.isEmailVerified}');
+      // //navigate to email verification pending screen
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   _navigation.navigateAndClearStack(AppRoutes.emailVerification);
+      // });
     } on FirebaseAuthException catch (e) {
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
@@ -782,26 +816,52 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // firebase error messages
+  Future<void> handleEmailVerification(User? user) async {
+    try {
+      await EmailAuthService.instance.sendVerificationEmail(user);
+      await HapticFeedback.lightImpact();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _navigation.navigateAndClearStack(AppRoutes.emailVerification);
+      });
+    } catch (e) {
+      _navigation.showSnackBar(
+        title: 'Error in Sending verification Email',
+        message: 'Error: $e',
+      );
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   String _getFirebaseErrorMessage(String code) {
     switch (code) {
+      // --- AUTH SPECIFIC ---
       case 'wrong-password':
+        return 'Incorrect Password';
       case 'invalid-credential':
         return 'Invalid email or password';
       case 'user-not-found':
         return 'No account found with this email';
       case 'user-disabled':
         return 'This account has been disabled';
-      case 'too-many-requests':
-        return 'Too many attempts. Please try again later';
-      case 'network-request-failed':
-        return 'Network error. Please check your connection';
       case 'invalid-email':
         return 'Invalid email format';
       case 'email-already-in-use':
         return 'Email is already registered';
       case 'weak-password':
         return 'Password is too weak';
+      // --- DEEP LINK / ACTION CODE SPECIFIC ---
+      case 'invalid-action-code':
+        return 'This link is invalid, expired, or has already been used.';
+      case 'expired-action-code':
+        return 'This link has expired. Please request a new one.';
+      case 'action-code-settings-invalid':
+        return 'There was a configuration error. Please contact support.';
+      // --- GENERAL ---
+      case 'network-request-failed':
+        return 'No internet connection. Please check your network.';
+      case 'too-many-requests':
+        return 'Too many attempts. Please try again later.';
       default:
         return 'Operation failed. Please try again';
     }
@@ -858,6 +918,13 @@ class AuthProvider extends ChangeNotifier {
       await _auth.currentUser?.reload();
       final user = _auth.currentUser;
 
+      // print('user*****: ${user!.emailVerified}');
+      // 2. NORMAL SESSION FLOW
+      // final status = await SessionService.getSessionStatus();
+      // print('******email pending screen: is logged in: ${status.isLoggedIn}');
+      // print('******is profile completed: ${status.isProfileCompleted}');
+      // print('******has additional info: ${status.hasAdditionalInfo}');
+      // print('******is email verified: ${status.isEmailVerified}');
       if (user != null && user.emailVerified) {
         _verificationTimer?.cancel();
         _cooldownTimer?.cancel();
@@ -923,11 +990,13 @@ class AuthProvider extends ChangeNotifier {
 
       //  Sign out from all services
       await _auth.signOut();
-      await GoogleSignIn.instance.signOut();
+      // await GoogleSignIn.instance.signOut();
+      await GoogleAuthService.instance.googleSignOut();
 
-      //clear Local Data base
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.clear(); //total reset for safety
+      // //clear Local Data base
+      // final prefs = await SharedPreferences.getInstance();
+      // await prefs.clear(); //total reset for safety
+      await SessionService.clearSession();
 
       await HapticFeedback.lightImpact();
 
@@ -965,7 +1034,7 @@ class AuthProvider extends ChangeNotifier {
       return;
     }
 
-    //  Ask confirmation using your custom dialog
+    //ask confirmation using custom dialog
     final confirmed = await AppConfirmDialog.show(
       context,
       title: 'Confirm Email',
@@ -985,21 +1054,76 @@ class AuthProvider extends ChangeNotifier {
 
       _navigation.showSnackBar(
         title: 'Email Sent',
-        message: 'Password reset link sent to $email',
+        // message: 'Password reset link sent to $email',
+        message:
+            'If an account exists for $email, you will receive a reset link shortly.',
         type: ContentType.success,
       );
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _navigation.navigateReplacement(AppRoutes.welcome);
+        _navigation.navigateReplacement(
+          AppRoutes.resetEmailSent,
+          arguments: email,
+        );
       });
     } on FirebaseAuthException catch (e) {
       _navigation.showSnackBar(
-        title: 'Reset Failed',
+        title: 'Reset Email Sending Failed',
         message: _getFirebaseErrorMessage(e.code),
         type: ContentType.failure,
       );
     } finally {
       _setLoading(false);
     }
+  }
+
+  bool _showResetSuccessAnimation = false;
+  bool get showResetSuccessAnimation => _showResetSuccessAnimation;
+  //reset password screen
+  Future<void> confirmResetPassword({
+    required String oobCode,
+    required String newPassword,
+  }) async {
+    try {
+      _setLoading(true);
+
+      await _auth.confirmPasswordReset(code: oobCode, newPassword: newPassword);
+      _showResetSuccessAnimation = true;
+      notifyListeners();
+
+      _navigation.showSnackBar(
+        title: 'Password ',
+        message:
+            'Your password has been reset successfully \nEnter credentials to Log In',
+        type: ContentType.success,
+      );
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _navigation.navigateAndClearStack(AppRoutes.welcome);
+      });
+    } on FirebaseAuthException catch (e) {
+      print('$e');
+      _navigation.showSnackBar(
+        title: 'Reset Failed',
+        message: _getFirebaseErrorMessage(e.code),
+        // message: '$e',
+        type: ContentType.failure,
+      );
+      // If the link is dead, send them back to start the process over
+      if (e.code == 'invalid-action-code') {
+        Future.delayed(const Duration(seconds: 2), () {
+          _navigation.navigateAndClearStack(AppRoutes.welcome);
+        });
+      }
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // Function to handle cleanup after animation finishes
+  void onResetAnimationComplete() {
+    _showResetSuccessAnimation = false;
+    notifyListeners();
+    _navigation.navigateAndClearStack(AppRoutes.login);
   }
 }

@@ -2,6 +2,7 @@ import 'package:famzy_tourz_v2/presentation/screens/Auth/additional_info_screen.
 import 'package:famzy_tourz_v2/presentation/screens/Auth/email_verification_pending_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/enter_email_for_reset_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/reset_email_sent_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/reset_password_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/signup_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/main_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/welcome/welcome_screen.dart';
@@ -20,6 +21,7 @@ class AppRoutes {
   static const String emailVerification = '/email_verification';
   static const String enterEmail = '/enter_email';
   static const String resetEmailSent = '/reset_email_sent';
+  static const String resetPassword = '/reset_password';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -42,7 +44,13 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => ResetEmailSentScreen(email: email),
         );
-      case AppRoutes.emailVerification:
+      case resetPassword:
+        final oob = settings.arguments;
+        if (oob == null || oob is! String) {
+          return MaterialPageRoute(builder: (_) => const SplashScreen());
+        }
+        return MaterialPageRoute(builder: (_) => ResetPasswordScreen(oob: oob));
+      case emailVerification:
         return MaterialPageRoute(
           builder: (_) => const EmailVerificationPendingScreen(),
         );

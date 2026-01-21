@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.example.famzy_tourz_v2",
+      "sha256_cert_fingerprints": [
+        "BD:89:E3:D9:86:96:CF:63:79:31:73:83:39:4F:11:03:4B:2D:44:1A:22:BC:72:99:A8:D4:5F:02:2C:DA:11:D5"
+      ]
+    }
+  }
+]

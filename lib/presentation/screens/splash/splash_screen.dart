@@ -65,8 +65,18 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SplashProvider>().initialize();
+      if (mounted) {
+        context.read<SplashProvider>().initialize();
+      }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    // PRE-CACHE: Loads the optimized background image into memory
+    // immediately to prevent the "white flash" or frame skipping.
+    precacheImage(const AssetImage('assets/images/bg_app.webp'), context);
+    super.didChangeDependencies();
   }
 
   @override
@@ -84,6 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: Colors.white,
               ),
             ),
+            SizedBox(height: 20.h),
             SpinKitSpinningLines(
               color: Colors.white,
               size: 70.r,

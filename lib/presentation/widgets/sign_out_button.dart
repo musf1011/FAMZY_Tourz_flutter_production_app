@@ -97,23 +97,25 @@ class ConfirmActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomLoadingButton(
       isLoading: isLoading,
-      onPressed: isLoading
-          ? () {}
-          : () async {
-              final confirmed = await AppConfirmDialog.show(
-                context,
-                title: dialogTitle,
-                message: dialogMessage,
-                confirmText: buttonText,
-                confirmColor: confirmColor,
-                icon: icon,
-                isDanger: isDanger,
-              );
+      onPressed:
+          // isLoading
+          //     ? () {}
+          //     :
+          () async {
+            final confirmed = await AppConfirmDialog.show(
+              context,
+              title: dialogTitle,
+              message: dialogMessage,
+              confirmText: buttonText,
+              confirmColor: confirmColor,
+              icon: icon,
+              isDanger: isDanger,
+            );
 
-              if (confirmed) {
-                await onConfirmed();
-              }
-            },
+            if (confirmed) {
+              await onConfirmed();
+            }
+          },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

@@ -54,6 +54,14 @@ class NavigationService {
 
   BuildContext? get context => navigatorKey.currentContext;
 
+  String? _currentRouteName;
+  String? get currentRouteName => _currentRouteName;
+
+  //method so the observer can update the name
+  void updateRouteName(String? name) {
+    _currentRouteName = name;
+  }
+
   Future<void> navigateTo(String routeName, {Object? arguments}) async {
     if (context != null) {
       await Navigator.pushNamed(context!, routeName, arguments: arguments);
@@ -65,6 +73,7 @@ class NavigationService {
     Object? arguments,
   }) async {
     if (context != null) {
+      _currentRouteName = routeName;
       await Navigator.pushReplacementNamed(
         context!,
         routeName,
@@ -82,6 +91,7 @@ class NavigationService {
   //pop until specified route
   void popUntil(String routeName) {
     if (context != null) {
+      _currentRouteName = routeName;
       Navigator.popUntil(context!, (route) => route.settings.name == routeName);
     }
   }
@@ -93,6 +103,7 @@ class NavigationService {
     bool Function(Route<dynamic>)? predicate,
   }) async {
     if (context != null) {
+      _currentRouteName = routeName;
       await Navigator.pushNamedAndRemoveUntil(
         context!,
         routeName,

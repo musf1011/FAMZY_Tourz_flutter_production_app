@@ -144,11 +144,11 @@ import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_drop_down_field.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_text_form_field.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/google_button_inkwell.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
@@ -186,22 +186,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Text(
               ' Sign Up',
               textAlign: .center,
-              style: GoogleFonts.playfairDisplay(
-                fontSize: 40.sp,
-                fontWeight: .bold,
-                color: AppConstants.primaryColor,
-              ),
+              style: AppConstants.screenTitleTextStyle,
             ),
 
             //form container
             Padding(
-              padding: .fromLTRB(.03.sw, .02.sh, .03.sw, .03.sh),
+              padding: .fromLTRB(.05.sw, .02.sh, .05.sw, .03.sh),
               child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: .circular(15.r),
-                  color: AppConstants.primaryTransGColor,
-                  border: .all(color: Colors.white, width: .5.w),
-                ),
+                decoration: AppConstants.glassCardDecoration,
+                // decoration: BoxDecoration(
+                //   borderRadius: .circular(15.r),
+                //   color: AppConstants.primaryTransGColor,
+                //   border: .all(color: Colors.white, width: .5.w),
+                // ),
                 child: Form(
                   key: _formKey,
                   child: Padding(
@@ -305,90 +302,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             Padding(
                               padding: .only(left: .03.sw),
                               child: SizedBox(
-                                width: .35.sw,
-                                child:
-                                    // DropdownButtonFormField<String>(
-                                    //   validator: (value) {
-                                    //     if (value == null || value.isEmpty) {
-                                    //       return 'Please select your gender';
-                                    //     }
-                                    //     return null;
-                                    //   },
-                                    //   decoration: InputDecoration(
-                                    //     label: const Text(
-                                    //       'Gender',
-                                    //       style: TextStyle(color: Colors.white),
-                                    //     ),
-                                    //     hint: Text(
-                                    //       'Not Selected',
-                                    //       style: TextStyle(
-                                    //         color: AppConstants.whiteColorP5,
-                                    //       ),
-                                    //     ),
-                                    //     enabledBorder: const UnderlineInputBorder(
-                                    //       borderSide: BorderSide(
-                                    //         color: Colors.grey,
-                                    //         width: 1.0,
-                                    //       ),
-                                    //     ),
-                                    //     focusedBorder: const UnderlineInputBorder(
-                                    //       borderSide: BorderSide(
-                                    //         color: AppConstants.tertiaryColor,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    //   borderRadius: .circular(15.r),
-                                    //   dropdownColor:
-                                    //       AppConstants.primaryTransGColor,
-                                    //   iconEnabledColor: AppConstants.tertiaryColor,
-                                    //   initialValue: selectedGender,
-                                    //   items: [
-                                    //     const DropdownMenuItem(
-                                    //       value: 'male',
-                                    //       child: Text(
-                                    //         'Male',
-                                    //         style: TextStyle(
-                                    //           color: AppConstants.accentColor,
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //     DropdownMenuItem(
-                                    //       value: 'female',
-                                    //       child: Text(
-                                    //         'Female',
-                                    //         style: TextStyle(
-                                    //           color: Colors.pink[200],
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //     DropdownMenuItem(
-                                    //       value: 'other',
-                                    //       child: Text(
-                                    //         'other',
-                                    //         style: TextStyle(
-                                    //           color: Colors.yellow[200],
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    //   onChanged: (String? newVal) {
-                                    //     setState(() {
-                                    //       selectedGender = newVal;
-                                    //     });
-                                    //   },
-                                    // ),
-                                    GenderDropdownField(
-                                      value: selectedGender,
-                                      validator: (v) {
-                                        if (v == null || v.isEmpty) {
-                                          return 'Please select your gender';
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (v) {
-                                        setState(() => selectedGender = v);
-                                      },
-                                    ),
+                                width: .25.sw,
+                                child: GenderDropdownField(
+                                  value: selectedGender,
+                                  validator: (v) {
+                                    if (v == null || v.isEmpty) {
+                                      return 'Please select your gender';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (v) {
+                                    setState(() => selectedGender = v);
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -435,24 +361,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             SizedBox(height: 10.h),
-            // google button
+            // // google button
+            // Consumer<AuthProvider>(
+            //   builder: (context, auth, child) {
+            //     return InkWell(
+            //       onTap: auth.loading ? null : () => auth.signInWithGoogle(),
+            //       borderRadius: .circular(12),
+            //       child: Opacity(
+            //         opacity: auth.loading ? 0.5 : 1.0,
+            //         child: Image.asset(
+            //           'assets/logos/google_logo.png',
+            //           height: 50.h,
+            //           width: 50.h,
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // ),
+            // // google button
             Consumer<AuthProvider>(
               builder: (context, auth, child) {
-                return InkWell(
-                  onTap: auth.loading ? null : () => auth.signInWithGoogle(),
-                  borderRadius: .circular(12),
-                  child: Opacity(
-                    opacity: auth.loading ? 0.5 : 1.0,
-                    child: Image.asset(
-                      'assets/logos/google_logo.png',
-                      height: 50.h,
-                      width: 50.h,
-                    ),
-                  ),
-                );
+                return GoogleButtonInkWell(auth: auth);
               },
             ),
-
             SizedBox(height: 10.h),
             const Text(
               'G O O G L E',

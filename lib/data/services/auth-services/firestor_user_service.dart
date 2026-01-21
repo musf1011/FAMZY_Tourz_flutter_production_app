@@ -22,6 +22,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirestoreUserService {
   static final _firestore = FirebaseFirestore.instance;
@@ -46,6 +47,8 @@ class FirestoreUserService {
       'age': age,
       'gender': gender,
     });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasAdditionalInfo', true);
   }
 
   static Future<void> updateUserInfo(Map<String, dynamic> data) async {

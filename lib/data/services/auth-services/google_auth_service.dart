@@ -456,7 +456,7 @@ class GoogleAuthService {
 
     // timeout handling
     final account = await GoogleSignIn.instance.authenticate().timeout(
-      const Duration(seconds: 10),
+      const Duration(seconds: 30),
     );
 
     // // user cancelled google picker
