@@ -221,6 +221,7 @@
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations_screen.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -247,41 +248,6 @@ class MainScreen extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 Center(
-                  // child: Consumer<AuthProvider>(
-                  //   builder: (context, auth, child) {
-                  //     return CustomLoadingButton(
-                  //       onPressed: () {
-                  //         print('******auth loading ${auth.loading}');
-                  //         auth.loading
-                  //             ? null
-                  //             :
-                  //               // () {
-                  //               print(
-                  //                 '*************************sign out button pressed',
-                  //               );
-                  //         auth.emailSignOut();
-                  //         // };
-                  //       },
-                  //       isLoading: auth.loading,
-                  //       child: auth.loading
-                  //           ? const SpinKitSpinningLines(color: Colors.white)
-                  //           : Row(
-                  //               mainAxisAlignment: .spaceEvenly,
-                  //               children: [
-                  //                 Text(
-                  //                   'Sign Out',
-                  //                   style: AppConstants.elevatedButtonTextStyle,
-                  //                 ),
-                  //                 Icon(
-                  //                   Icons.logout,
-                  //                   color: Colors.white,
-                  //                   size: 30.r,
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //     );
-                  //   },
-                  // ),
                   child: Consumer<AuthProvider>(
                     builder: (context, auth, _) {
                       return ConfirmActionButton(
@@ -298,7 +264,7 @@ class MainScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                const Center(child: Text('Tour Packages')),
+                const DestinationsScreen(),
                 const Center(child: Text('Chat List')),
                 const Center(child: Text('Profile')),
               ],

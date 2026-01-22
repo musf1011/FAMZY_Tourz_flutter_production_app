@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/services/navigation_service.dart';
-import '../../../routes/app_routes.dart';
 
 class DestinationsScreen extends StatelessWidget {
   const DestinationsScreen({super.key});

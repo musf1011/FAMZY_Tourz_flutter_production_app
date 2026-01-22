@@ -1,5 +1,6 @@
 //created by: FAMZY CodeWorks
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +16,7 @@ class SessionService {
       final prefs = await SharedPreferences.getInstance();
 
       final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-      final isProfileCompleted = prefs.getBool('isProfileCompleted') ?? false;
+      bool isProfileCompleted = prefs.getBool('isProfileCompleted') ?? false;
 
       if (!isLoggedIn) {
         return UserSessionStatus(
@@ -39,31 +40,54 @@ class SessionService {
       //false or null means internet connection is required to send verification email
       if (isEmailVerified == null || isEmailVerified == false) {
         // Reload user
-        await _auth.currentUser!.reload();
+        // await _auth.currentUser!.reload();
+
         final user = _auth.currentUser!;
+        await user.reload();
         isEmailVerified = user.emailVerified;
         debugPrint('****firebase auth is email:$isEmailVerified');
         await prefs.setBool('isEmailVerified', isEmailVerified);
       }
 
       // Check cached additional info
-      bool? hasAge = prefs.getBool('hasAge');
+      bool hasAge = prefs.getBool('hasAge') ?? false;
       debugPrint('***getsession hasAge never false?: $hasAge');
 
-      if (hasAge == null) {
-        print('******checking age in firebas:');
-        // Reload user
-        await _auth.currentUser!.reload();
-        final user = _auth.currentUser!;
-        final doc = await _db.collection('usersInfo').doc(user.uid).get();
-        hasAge = doc.data()?['age'] != null;
-        await prefs.setBool('hasAge', hasAge);
-        await prefs.setBool('hasAdditionalInfo', hasAge);
-        print('******checked age in firebas:$hasAge');
+      if (!hasAge) {
+        try {
+          // ADD THIS: Small delay (200-500ms) to let the Auth Token sync with Firestore
+          await Future.delayed(const Duration(milliseconds: 500));
+          debugPrint('******checking age in firebas99');
+          final user = _auth.currentUser!;
+
+          debugPrint('******checking age in firebas99 user got user: $user');
+          await user.reload();
+
+          debugPrint(
+            '******checking age in firebas99 reloaded: usr: $user ***',
+          );
+          final doc = await _db.collection('usersInfo').doc(user.uid).get();
+          debugPrint('******checking age in firebas99 doc got');
+          hasAge = doc.data()?['age'] != null;
+          debugPrint('******checking age in firebas99 age got');
+          await prefs.setBool('hasAge', hasAge);
+          await prefs.setBool('hasAdditionalInfo', hasAge);
+          debugPrint('******checked age in firebas:$hasAge');
+        } catch (e) {
+          hasAge = false;
+          NavigationService().showSnackBar(
+            title: 'Network Error',
+            message: 'Make Sure You Are Connected To The Internet',
+          );
+        }
       }
 
+      debugPrint(
+        '**** near to set is profile completed as is email= $isEmailVerified and hasAge = $hasAge',
+      );
       if (isEmailVerified && hasAge) {
         await prefs.setBool('isProfileCompleted', true);
+        isProfileCompleted = true;
       }
 
       return UserSessionStatus(
@@ -73,6 +97,10 @@ class SessionService {
         hasAdditionalInfo: hasAge,
       );
     } catch (e) {
+      NavigationService().showSnackBar(
+        title: 'Network Error',
+        message: 'Make Sure You Are Connected To The Internet',
+      );
       return UserSessionStatus(
         isLoggedIn: false,
         isEmailVerified: false,

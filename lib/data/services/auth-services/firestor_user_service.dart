@@ -22,6 +22,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FirestoreUserService {
@@ -42,11 +43,14 @@ class FirestoreUserService {
 
   static Future<void> addInfo(int age, String gender) async {
     final user = _auth.currentUser;
+    debugPrint('*****submitting user got user: $user');
     if (user == null) return;
     await _firestore.collection('usersInfo').doc(user.uid).update({
       'age': age,
       'gender': gender,
+      'updatedAt': FieldValue.serverTimestamp(),
     });
+    debugPrint('*****submitting sone');
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasAdditionalInfo', true);
   }

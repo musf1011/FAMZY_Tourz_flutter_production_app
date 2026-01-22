@@ -268,7 +268,7 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return AppBackground(
-      allowPop: true,
+      notAllowPop: true,
       child: Column(
         children: [
           const BackAndLogoRow(),

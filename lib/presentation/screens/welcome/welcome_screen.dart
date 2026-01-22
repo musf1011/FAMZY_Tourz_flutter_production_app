@@ -14,7 +14,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBackground(
-      allowPop: true,
+      notAllowPop: true,
       child: Column(
         children: [
           SizedBox(height: 40.h),

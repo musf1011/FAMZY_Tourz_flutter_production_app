@@ -533,6 +533,11 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetLoading() {
+    _loading = false;
+    notifyListeners();
+  }
+
   // //check profile completeness
   // Future<bool> checkAndSyncProfileStatus(String uid) async {
   //   try {
@@ -554,8 +559,21 @@ class AuthProvider extends ChangeNotifier {
   //   }
   // }
 
+  int _requestSessionId = 0; // The "Cancel Token" counter
+  // Call this when the user clicks "Back"
+  void cancelAuthentication() {
+    _requestSessionId++; // This invalidates the current signInWithEmail "session"
+    _setLoading(false);
+    debugPrint('******loading in cancel auth= $loading');
+    notifyListeners();
+  }
+
   //email & password signin for existing account
   Future<void> signInWithEmail(String email, String password) async {
+    // // Increment counter to mark a NEW request session
+    // final int sessionId = ++_activeRequestCounter;
+    // Capture the ID at the start of THIS specific function call
+    final int currentSessionId = _requestSessionId;
     try {
       _setLoading(true);
 
@@ -563,6 +581,10 @@ class AuthProvider extends ChangeNotifier {
         email: email.trim(),
         password: password.trim(),
       );
+      // --- THE CANCEL CHECK ---
+      // If the user pressed 'Back', cancelAuthentication() was called,
+      // incrementing _requestSessionId. Now currentId != _requestSessionId.
+      if (currentSessionId != _requestSessionId) return;
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
@@ -580,31 +602,20 @@ class AuthProvider extends ChangeNotifier {
       print('****has additioinal info: ${status.hasAdditionalInfo}');
       print('****is logged in: ${status.isLoggedIn}');
       print('****is profile completed : ${status.isProfileCompleted}');
-      // WidgetsBinding.instance.addPostFrameCallback((_) {
-      //   if (!status.isEmailVerified) {
-      //     _navigation.navigateReplacement(AppRoutes.emailVerification);
-      //     return;
-      //   }
 
-      //   if (!status.hasAdditionalInfo) {
-      //     _navigation.navigateReplacement(AppRoutes.additionalInfoScreen);
-      //     return;
-      //   }
-
-      //   _navigation.navigateReplacement(AppRoutes.main);
-      // });
-      if (!status.isEmailVerified) {
-        // final User? user = _auth.currentUser;
-
-        await handleEmailVerification(null);
-      } else if (!status.hasAdditionalInfo) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _navigation.navigateAndClearStack(AppRoutes.additionalInfoScreen);
-        });
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _navigation.navigateAndClearStack(AppRoutes.main);
-        });
+      // 2. Final check before we trigger ANY navigation side effects
+      if (currentSessionId == _requestSessionId) {
+        if (!status.isEmailVerified) {
+          await handleEmailVerification(null);
+        } else if (!status.hasAdditionalInfo) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _navigation.navigateAndClearStack(AppRoutes.additionalInfoScreen);
+          });
+        } else {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _navigation.navigateAndClearStack(AppRoutes.main);
+          });
+        }
       }
     } on FirebaseAuthException catch (e) {
       await HapticFeedback.mediumImpact();
@@ -614,6 +625,7 @@ class AuthProvider extends ChangeNotifier {
         type: ContentType.failure,
       );
     } catch (e) {
+      if (currentSessionId != _requestSessionId) return;
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
         title: 'Error',
@@ -621,18 +633,19 @@ class AuthProvider extends ChangeNotifier {
         type: ContentType.failure,
       );
     } finally {
-      _setLoading(false);
+      // Only set loading to false if this is still the active session
+      if (currentSessionId == _requestSessionId) {
+        _setLoading(false);
+      }
     }
   }
 
   Future<void> signInWithGoogle() async {
+    final currentSessionId = _requestSessionId;
     try {
       _setLoading(true);
 
       final result = await _googleAuth.signInWithGoogle();
-      // .timeout(
-      //   const Duration(seconds: 15),
-      // );
 
       //user cancelled
       if (result == null) {
@@ -640,6 +653,7 @@ class AuthProvider extends ChangeNotifier {
         return;
       }
 
+      if (currentSessionId != _requestSessionId) return;
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
       await prefs.setBool('isEmailVerified', true);
@@ -660,13 +674,15 @@ class AuthProvider extends ChangeNotifier {
       //to ask where to go
       final status = await SessionService.getSessionStatus();
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!status.hasAdditionalInfo) {
-          _navigation.navigateAndClearStack(AppRoutes.additionalInfoScreen);
-          return;
-        }
-        _navigation.navigateAndClearStack(AppRoutes.main);
-      });
+      if (currentSessionId == _requestSessionId) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!status.hasAdditionalInfo) {
+            _navigation.navigateAndClearStack(AppRoutes.additionalInfoScreen);
+            return;
+          }
+          _navigation.navigateAndClearStack(AppRoutes.main);
+        });
+      }
     } on TimeoutException {
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
@@ -697,11 +713,14 @@ class AuthProvider extends ChangeNotifier {
     required int age,
     required String gender,
   }) async {
+    final currentSessionId = _requestSessionId;
     try {
       _setLoading(true);
 
+      debugPrint('*****submitting');
       await FirestoreUserService.addInfo(age, gender);
-
+      if (currentSessionId != _requestSessionId) return;
+      debugPrint('*****submitted');
       await HapticFeedback.lightImpact();
 
       _navigation.showSnackBar(
@@ -709,6 +728,9 @@ class AuthProvider extends ChangeNotifier {
         message: 'Your information has been saved',
         type: ContentType.success,
       );
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('hasAge', true);
+      await prefs.setBool('isProfileCompleted', true);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _navigation.navigateReplacement(AppRoutes.main);
@@ -733,6 +755,7 @@ class AuthProvider extends ChangeNotifier {
     required int age,
     required String? gender,
   }) async {
+    final currentSessionId = _requestSessionId;
     try {
       _setLoading(true);
 
@@ -742,6 +765,7 @@ class AuthProvider extends ChangeNotifier {
         email,
         password,
       );
+      if (currentSessionId != _requestSessionId) return;
       debugPrint('***2nd step');
       final user = userCred.user;
       if (user == null) {
@@ -759,6 +783,7 @@ class AuthProvider extends ChangeNotifier {
         photoUrl: '',
       );
 
+      if (currentSessionId != _requestSessionId) return;
       debugPrint('***4thst step');
       //logged in saved locally
       final prefs = await SharedPreferences.getInstance();
@@ -986,6 +1011,7 @@ class AuthProvider extends ChangeNotifier {
         title: 'Signing you out',
         message: 'You will be signed out and returned to the welcome screen',
         type: ContentType.help,
+        duration: 2,
       );
 
       //  Sign out from all services
@@ -1112,7 +1138,9 @@ class AuthProvider extends ChangeNotifier {
       // If the link is dead, send them back to start the process over
       if (e.code == 'invalid-action-code') {
         Future.delayed(const Duration(seconds: 2), () {
-          _navigation.navigateAndClearStack(AppRoutes.welcome);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _navigation.navigateAndClearStack(AppRoutes.welcome);
+          });
         });
       }
     } finally {

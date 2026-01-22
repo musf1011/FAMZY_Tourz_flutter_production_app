@@ -1,8 +1,10 @@
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class BackAndLogoRow extends StatelessWidget {
   const BackAndLogoRow({super.key});
@@ -21,8 +23,11 @@ class BackAndLogoRow extends StatelessWidget {
               size: 40.h,
               color: AppConstants.primaryColor,
             ),
-            onPressed: () =>
-                NavigationService().navigateAndClearStack(AppRoutes.welcome),
+            onPressed: () {
+              // 1. Tell the provider to stop loading and invalidate the current session
+              context.read<AuthProvider>().cancelAuthentication();
+              NavigationService().navigateAndClearStack(AppRoutes.welcome);
+            },
           ),
 
           Image.asset(

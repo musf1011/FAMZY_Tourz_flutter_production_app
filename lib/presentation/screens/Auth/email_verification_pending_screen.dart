@@ -551,7 +551,7 @@ class _EmailVerificationPendingScreenState
   @override
   Widget build(BuildContext context) {
     return AppBackground(
-      allowPop: false,
+      notAllowPop: true,
       child: Column(
         children: [
           SizedBox(height: 30.h),

@@ -101,6 +101,7 @@ import 'package:famzy_tourz_v2/data/services/link_service.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/firebase_options.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/splash_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
@@ -154,6 +155,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => SplashProvider()),
         ChangeNotifierProvider(create: (_) => MainProvider()),
+        ChangeNotifierProvider(create: (_) => DestinationsProvider()),
       ],
       child: const FamzyApp(),
     ),
@@ -223,6 +225,7 @@ class _FamzyAppState extends State<FamzyApp> {
         return MaterialApp(
           title: 'FAMZY Tourz',
           theme: ThemeData(
+            scaffoldBackgroundColor: AppConstants.primaryTransGColor,
             useMaterial3: false, // Ensures consistent UI for your design
             textSelectionTheme: const TextSelectionThemeData(
               cursorColor: AppConstants.tertiaryColor,
