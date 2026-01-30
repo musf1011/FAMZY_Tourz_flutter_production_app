@@ -221,7 +221,7 @@
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
-import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/destinations_screen.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

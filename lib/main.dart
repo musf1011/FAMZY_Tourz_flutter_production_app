@@ -101,7 +101,7 @@ import 'package:famzy_tourz_v2/data/services/link_service.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/firebase_options.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
-import 'package:famzy_tourz_v2/presentation/providers/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/splash_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
@@ -112,6 +112,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -232,6 +233,25 @@ class _FamzyAppState extends State<FamzyApp> {
               selectionColor: AppConstants.primaryTransGColor,
               selectionHandleColor: AppConstants.tertiaryColor,
             ),
+            // // 1. APPLY MONTSERRAT GLOBALLY
+            // textTheme:
+            //     GoogleFonts.montserratTextTheme(
+            //       Theme.of(context).textTheme,
+            //     ).copyWith(
+            //       // 2. DEFINE YOUR 60.sp HERO STYLE HERE
+            //       displayLarge: GoogleFonts.montserrat(
+            //         fontSize: 60.sp,
+            //         fontWeight: FontWeight.bold,
+            //         color: Colors.white,
+            //         shadows: [
+            //           Shadow(
+            //             blurRadius: 100.0,
+            //             color: AppConstants.blackColorP5,
+            //             offset: const Offset(2, 2),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
           ),
           debugShowCheckedModeBanner: false,
           navigatorKey: NavigationService().navigatorKey,

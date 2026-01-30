@@ -45,7 +45,19 @@ class AppConstants {
     fontWeight: FontWeight.bold,
     color: AppConstants.primaryColor,
   );
-
+  static TextStyle destNameTextStyle =
+      //  TextStyle(
+      //   fontSize: 60.sp,
+      //   fontWeight: FontWeight.bold,
+      //   color: Colors.white,
+      // );
+      GoogleFonts.playpenSansArabic(
+        // Or GoogleFonts.anton, etc.an
+        fontSize: 50.sp,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+        letterSpacing: -1.5, // Tight spacing looks better for large titles
+      );
   static final ThemeData customSelectionTheme = ThemeData.light().copyWith(
     textSelectionTheme: const TextSelectionThemeData(
       selectionColor: tertiaryColor,
@@ -69,8 +81,8 @@ class AppConstants {
     side: const BorderSide(color: Colors.black12),
   );
 
-  static const TextStyle sendButtonTextStyle = TextStyle(
-    color: AppConstants.accentColor,
+  static TextStyle sendButtonTextStyle = TextStyle(
+    color: AppConstants.whiteColorP5,
     fontWeight: FontWeight.bold,
     fontSize: 18.0,
   );
