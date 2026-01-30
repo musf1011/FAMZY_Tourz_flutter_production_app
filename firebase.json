@@ -1,0 +1,41 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "famzytourz-production",
+          "appId": "1:779096210262:android:1b6dbf9949dd0e4f9434f7",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "famzytourz-production",
+          "configurations": {
+            "android": "1:779096210262:android:1b6dbf9949dd0e4f9434f7",
+            "ios": "1:779096210262:ios:18a758f14eacbd4e9434f7",
+            "web": "1:779096210262:web:06dda168532856c49434f7"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "web",
+    "ignore": [
+      "firebase.json",
+      "**/node_modules/**"
+    ],
+    "headers": [
+      {
+        "source": "/.well-known/assetlinks.json",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ]
+      }
+    ]
+  }
+}
