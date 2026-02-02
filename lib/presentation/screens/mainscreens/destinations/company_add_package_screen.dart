@@ -174,7 +174,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                           builder: (context, child) {
                             return Theme(
                               data: Theme.of(context).copyWith(
-                                colorScheme: ColorScheme.dark(
+                                colorScheme: const ColorScheme.dark(
                                   primary: AppConstants.underline, // FAMZY Gold
                                   onPrimary: Colors.white,
                                   surface: AppConstants
