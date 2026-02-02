@@ -1,3 +1,5 @@
+import 'package:famzy_tourz_v2/data/models/package_model.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/add_package_provider.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/additional_info_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/email_verification_pending_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/enter_email_for_reset_screen.dart';
@@ -10,6 +12,7 @@ import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/pac
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/main_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../presentation/screens/auth/login_screen.dart';
 import '../presentation/screens/splash/splash_screen.dart';
@@ -71,17 +74,20 @@ class AppRoutes {
       case packages:
         return MaterialPageRoute(builder: (_) => const PackagesScreen());
       case companyAddPackage:
-        // 1. Cast the arguments as a Map
-        final args = settings.arguments as Map<String, dynamic>;
-
-        // 2. Extract the values using the keys you defined
-        final destinationName = args['name'] as String;
-        final destinationImage = args['image'] as String;
+        final args = settings.arguments;
 
         return MaterialPageRoute(
-          builder: (_) => CompanyAddPackageScreen(
-            destinationName: destinationName,
-            destinationImage: destinationImage,
+          builder: (_) => ChangeNotifierProvider(
+            create: (_) {
+              final provider = AddPackageProvider();
+
+              if (args != null && args is PackageModel) {
+                provider.loadForEdit(args); // ✅ EDIT MODE
+              }
+
+              return provider;
+            },
+            child: const CompanyAddPackageScreen(),
           ),
         );
       case _:

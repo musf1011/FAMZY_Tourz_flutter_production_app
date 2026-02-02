@@ -5,9 +5,9 @@ import 'package:famzy_tourz_v2/presentation/widgets/back_logo_row.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_text_form_field.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/lottie_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -148,25 +148,34 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         //     ),
         //   ),
         // ✅ SUCCESS OVERLAY (Controlled by Provider)
+        // if (auth.showResetSuccessAnimation)
+        //   Container(
+        //     height: 1.sh,
+        //     width: 1.sw,
+        //     color: AppConstants.blackColorP7,
+        //     child: Center(
+        //       child: Lottie.asset(
+        //         'assets/animations/success.json',
+        //         width: 150.w,
+        //         height: 150.h,
+        //         repeat: false,
+        //         onLoaded: (composition) {
+        //           // Wait for the animation duration, then tell Provider we are done
+        //           Future.delayed(composition.duration, () {
+        //             auth.onResetAnimationComplete();
+        //           });
+        //         },
+        //       ),
+        //     ),
+        //   ),
+        // ✅ SUCCESS OVERLAY (Now using the reusable component)
         if (auth.showResetSuccessAnimation)
-          Container(
-            height: 1.sh,
-            width: 1.sw,
-            color: AppConstants.blackColorP7,
-            child: Center(
-              child: Lottie.asset(
-                'assets/animations/success.json',
-                width: 150.w,
-                height: 150.h,
-                repeat: false,
-                onLoaded: (composition) {
-                  // Wait for the animation duration, then tell Provider we are done
-                  Future.delayed(composition.duration, () {
-                    auth.onResetAnimationComplete();
-                  });
-                },
-              ),
-            ),
+          LottieOverlay(
+            assetPath: 'assets/animations/success.json',
+            size: 150.w, // Matches your original design
+            onAnimationComplete: () {
+              auth.onResetAnimationComplete();
+            },
           ),
       ],
     );

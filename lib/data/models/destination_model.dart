@@ -8,6 +8,7 @@ class DestinationModel {
   final String fullDescription; // expandable full text
   final double latitude;
   final double longitude;
+  final String insights;
 
   const DestinationModel({
     // required this.id,
@@ -17,5 +18,6 @@ class DestinationModel {
     required this.fullDescription,
     required this.latitude,
     required this.longitude,
+    required this.insights,
   });
 }
