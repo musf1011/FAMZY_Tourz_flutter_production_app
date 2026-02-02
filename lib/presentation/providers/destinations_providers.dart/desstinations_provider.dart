@@ -163,7 +163,6 @@ class DestinationsProvider extends ChangeNotifier {
   }
 
   /// ================= SERVICES =================
-
   final PackagesService _packagesService = PackagesService();
   final WeatherService _weatherService = WeatherService();
 
@@ -176,13 +175,12 @@ class DestinationsProvider extends ChangeNotifier {
   bool get isLoadingPackages => _isLoadingPackages;
 
   Future<void> loadPackages() async {
+    _packages = [];
     _isLoadingPackages = true;
     notifyListeners();
 
     final raw = await _packagesService.fetchPackages(selectedDestination.name);
-
     _packages = raw.map((e) => PackageModel.fromMap(e)).toList();
-
     _isLoadingPackages = false;
     notifyListeners();
   }
@@ -220,7 +218,6 @@ class DestinationsProvider extends ChangeNotifier {
 
   /// ================= WEATHER STATE =================
   /// (Your WeatherService returns MapString,dynamic)
-
   Map<String, dynamic>? _weather;
   Map<String, dynamic>? get weather => _weather;
 
@@ -244,14 +241,6 @@ class DestinationsProvider extends ChangeNotifier {
   }
 
   /// ================= ADMIN STATE =================
-
-  // bool _isAdmin = false;
-  // bool get isAdmin => _isAdmin;
-
-  // Future<void> checkAdmin() async {
-  //   _isAdmin = await AdminService.isAdmin();
-  //   notifyListeners();
-  // }
   String? _userRole;
   String? get userRole => _userRole;
 
@@ -269,20 +258,13 @@ class DestinationsProvider extends ChangeNotifier {
   }
 
   /// ================= PACKAGE DELETE =================
-
-  // Future<void> deletePackage(String id) async {
-  //   await _packagesService.deletePackage(id);
-  //   await loadPackages(); // refresh list
-  // }
   Future<void> deletePackage(PackageModel package) async {
     await _packagesService.deletePackage(package.id);
     await loadPackages();
   }
 
   /// ================= INIT FOR PACKAGE SCREEN =================
-
   Future<void> initPackagesScreen() async {
-    // await checkAdmin();
     await checkUserRole();
     await loadPackages();
     await loadWeather();

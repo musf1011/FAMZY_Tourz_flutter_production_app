@@ -21,7 +21,8 @@ class DestinationsScreen extends StatelessWidget {
 
     return Scaffold(
       body: PageView.builder(
-        controller: provider.pageController,
+        // controller: provider.pageController,
+        controller: PageController(initialPage: provider.currentIndex),
         scrollDirection: Axis.vertical,
         itemCount: destinations.length,
         onPageChanged: provider.onPageChanged,
@@ -166,7 +167,7 @@ class _DestinationPageState extends State<_DestinationPage> {
                       borderRadius: BorderRadius.circular(10),
                       color: widget.index != indexDots
                           ? AppConstants.transRColor
-                          : AppConstants.primaryColor,
+                          : AppConstants.whiteColorP5,
                     ),
                   ),
                 ),

@@ -58,8 +58,11 @@ class AppConfirmDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: AppConstants.secondaryTransGColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(22.r),
-        side: BorderSide(color: Colors.white, width: 1.r), //white p3 needed
+        borderRadius: BorderRadius.circular(25.r),
+        side: BorderSide(
+          color: AppConstants.whiteColorP9,
+          width: 1.r,
+        ), //white p3 needed
       ),
       titlePadding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 30.h),
       contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -71,7 +74,7 @@ class AppConfirmDialog extends StatelessWidget {
           if (icon != null) ...[
             Icon(
               icon,
-              color: isDanger ? Colors.red : Colors.white,
+              color: isDanger ? AppConstants.lightRed : Colors.white,
               size: 28.sp,
             ),
             SizedBox(width: 10.w),
@@ -79,40 +82,23 @@ class AppConfirmDialog extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              // style: TextStyle(
-              //   fontSize: 18.sp,
-              //   fontWeight: FontWeight.w600,
-              //   color: Colors.white,
-              // ),
               style: GoogleFonts.montserrat(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
-                letterSpacing:
-                    0.5, // Montserrat looks best with a tiny bit of extra space
+                letterSpacing: 0.5,
               ),
-              // style: GoogleFonts.lexend(
-              //   fontSize: 18.sp,
-              //   fontWeight: FontWeight.w600,
-              //   color: Colors.white,
-              // ),
             ),
           ),
         ],
       ),
-
-      /// MESSAGE
-      // content: Text(
-      //   message,
-      //   style: TextStyle(fontSize: 14.sp, color: AppConstants.whiteColorP9),
-      // ),
       content: Text(
         message,
         style: GoogleFonts.poppins(
           fontSize: 14.sp,
           color: AppConstants.whiteColorP9,
-          fontWeight: .w500,
-          letterSpacing: 0.2, // Slightly more space makes it easier to read
+          // fontWeight: .w500,
+          letterSpacing: 0.4,
         ),
       ),
 
@@ -157,124 +143,3 @@ class AppConfirmDialog extends StatelessWidget {
     );
   }
 }
-
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:tg_walk/model/location.dart';
-// enum WalkRequestStatus {
-//   pending, // Walker created request, waiting for guide
-//   // guideAccepted, // Guide accepted, waiting for walker confirmation
-//   accepted, // Walker confirmed guide acceptance
-//   inProgress,
-//   completed,
-//   cancelled,
-// }
-// class WalkRequest {
-//   String? id;
-//   String? walkerId;
-//   String? guideId;
-//   String? serviceType;
-//   // Walk details
-//   DateTime? scheduledDate;
-//   String? scheduledTime;
-//   String? duration;
-//   Location? location;
-//   double? distance;
-//   // Request details
-//   WalkRequestStatus? status;
-//   DateTime? createdAt;
-//   DateTime? updatedAt;
-//   DateTime? walkStartedAt; // Timestamp when walk status changed to inProgress
-//   List<String>?
-//       declinedGuides; // List of guide IDs who have declined this request
-//   WalkRequest({
-//     this.serviceType,
-//     this.id,
-//     this.walkerId,
-//     this.guideId,
-//     this.scheduledDate,
-//     this.scheduledTime,
-//     this.duration,
-//     this.location,
-//     this.distance,
-//     this.status,
-//     this.createdAt,
-//     this.updatedAt,
-//     this.walkStartedAt,
-//     this.declinedGuides,
-//   });
-//   factory WalkRequest.fromJson(Map<String, dynamic> json, String id) {
-//     return WalkRequest(
-//       id: id,
-//       serviceType: json['service_type'],
-//       walkerId: json['walker_id'] ?? '',
-//       guideId: json['guide_id'],
-//       scheduledDate: (json['scheduled_date'] as Timestamp).toDate(),
-//       scheduledTime: json['scheduled_time'] ?? '',
-//       duration: json['duration'] ?? '',
-//       location: Location.fromJson(json['location'] ?? {}),
-//       distance: (json['distance_km'] as num?)?.toDouble(),
-//       status: WalkRequestStatus.values.firstWhere(
-//         (e) => e.name == json['status'],
-//         orElse: () => WalkRequestStatus.pending,
-//       ),
-//       createdAt: (json['created_at'] as Timestamp).toDate(),
-//       updatedAt: json['updated_at'] != null
-//           ? (json['updated_at'] as Timestamp).toDate()
-//           : null,
-//       walkStartedAt: json['walk_started_at'] != null
-//           ? (json['walk_started_at'] as Timestamp).toDate()
-//           : null,
-//       declinedGuides:
-//           (json['declined_guides'] as List?)?.map((e) => e.toString()).toList(),
-//     );
-//   }
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'walker_id': walkerId,
-//       'guide_id': guideId,
-//       'scheduled_date': Timestamp.fromDate(scheduledDate!),
-//       'scheduled_time': scheduledTime,
-//       'duration': duration,
-//       'service_type': serviceType,
-//       'location': location?.toJson(),
-//       'distance_km': distance,
-//       'status': status?.name ?? '',
-//       'created_at': Timestamp.fromDate(createdAt!),
-//       'updated_at': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-//       'walk_started_at':
-//           walkStartedAt != null ? Timestamp.fromDate(walkStartedAt!) : null,
-//       'declined_guides': declinedGuides,
-//     };
-//   }
-//   WalkRequest copyWith({
-//     String? id,
-//     String? walkerId,
-//     String? guideId,
-//     DateTime? scheduledDate,
-//     String? scheduledTime,
-//     String? duration,
-//     Location? location,
-//     double? distance,
-//     WalkRequestStatus? status,
-//     DateTime? createdAt,
-//     DateTime? updatedAt,
-//     DateTime? walkStartedAt,
-//     List<String>? declinedGuides,
-//   }) {
-//     return WalkRequest(
-//       id: id ?? this.id,
-//       walkerId: walkerId ?? this.walkerId,
-//       guideId: guideId ?? this.guideId,
-//       scheduledDate: scheduledDate ?? this.scheduledDate,
-//       scheduledTime: scheduledTime ?? this.scheduledTime,
-//       duration: duration ?? this.duration,
-//       location: location ?? this.location,
-//       distance: distance ?? this.distance,
-//       status: status ?? this.status,
-//       createdAt: createdAt ?? this.createdAt,
-//       updatedAt: updatedAt ?? this.updatedAt,
-//       walkStartedAt: walkStartedAt ?? this.walkStartedAt,
-//       declinedGuides: declinedGuides ?? this.declinedGuides,
-//     );
-//   }
-// }
