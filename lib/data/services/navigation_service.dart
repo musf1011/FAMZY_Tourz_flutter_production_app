@@ -88,6 +88,12 @@ class NavigationService {
     }
   }
 
+  Future<void> maybePop() async {
+    if (navigatorKey.currentState != null) {
+      await navigatorKey.currentState!.maybePop();
+    }
+  }
+
   //pop until specified route
   void popUntil(String routeName) {
     if (context != null) {

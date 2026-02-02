@@ -190,6 +190,7 @@ import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/hotel_se
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/osm_map_card.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/package_card.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/weather_block.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -226,8 +227,8 @@ class _PackagesScreenState extends State<PackagesScreen> {
         onRefresh: provider.initPackagesScreen,
         actions: [
           Consumer<DestinationsProvider>(
-            builder: (context, provider, _) {
-              if (!provider.canManagePackages) return const SizedBox.shrink();
+            builder: (_, provider, __) {
+              if (!provider.canManagePackages) return const SizedBox();
 
               return Row(
                 children: [
@@ -253,116 +254,115 @@ class _PackagesScreenState extends State<PackagesScreen> {
             },
           ),
         ],
-        child:
-            // child: Scaffold(
-            //   body: RefreshIndicator(
-            //     color: AppConstants.tertiaryColor,
-            //     onRefresh: provider.initPackagesScreen,
-            //     child: Container(
-            //       height: 1.sh,
-            //       width: 1.sw,
-            //       decoration: BoxDecoration(
-            //         image: DecorationImage(
-            //           image: AssetImage(destination.image),
-            //           fit: BoxFit.cover,
-            //         ),
+
+        child: Column(
+          children: [
+            /// 🔵 TRAVEL INSIGHTS BUTTON
+            // CustomLoadingButton(
+            //   onPressed: () async {
+            //     // simulate loading insight fetch
+            //     await showDialog(
+            //       context: context,
+            //       builder: (_) => const Center(
+            //         child: SpinKitSpinningLines(color: Colors.white, size: 50),
             //       ),
-            //       child: Container(
-            //         decoration: BoxDecoration(
-            //           gradient: LinearGradient(
-            //             colors: [
-            //               AppConstants.secondaryTransGColor,
-            //               AppConstants.blackColorP7,
-            //             ],
-            //             begin: Alignment.bottomCenter,
-            //             end: Alignment.topCenter,
-            //           ),
-            //         ),
-            //         child: Column(
-            //           children: [
-            //             SizedBox(height: 50.h),
-            //             Text(destination.name, style: AppConstants.destNameTextStyle),
-            //             IconButton(
-            //               icon: const Icon(Icons.add_box_rounded),
-            //               onPressed: () {
-            //                 // TODO: Navigate to AddPackageScreen
-            //               },
-            //             ),
-            //             SizedBox(height: 10.h),
-            Column(
-              children: [
-                /// 🔵 TRAVEL INSIGHTS BUTTON
-                CustomLoadingButton(
-                  onPressed: () async {
-                    // simulate loading insight fetch
-                    await showDialog(
-                      context: context,
-                      builder: (_) => const Center(
-                        child: SpinKitFadingCircle(
-                          color: Colors.white,
-                          size: 50,
-                        ),
-                      ),
-                    );
+            //     );
 
-                    await Future.delayed(const Duration(seconds: 1));
-                    NavigationService().pop();
+            //     await Future.delayed(const Duration(seconds: 1));
+            //     NavigationService().pop();
 
-                    // TODO: Show manual travel insights screen
-                  },
-                  text: 'Travel Insight',
-                ),
-                const TabBar(
-                  labelColor: Colors.white,
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    Tab(text: 'Packages'),
-                    Tab(text: 'Explore'),
-                  ],
-                ),
-
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      /// ================= PACKAGES TAB =================
-                      provider.isLoadingPackages
-                          ? const Center(
-                              child: SpinKitFadingCircle(
-                                color: Colors.white,
-                                size: 50,
-                              ),
-                            )
-                          : provider.packages.isEmpty
-                          ? const Center(
-                              child: Text(
-                                'No packages available yet',
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                            )
-                          : ListView.builder(
-                              itemCount: provider.packages.length,
-                              itemBuilder: (context, index) =>
-                                  PackageCard(provider.packages[index]),
-                            ),
-
-                      /// ================= EXPLORE TAB =================
-                      const SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        child: Column(
-                          children: [
-                            WeatherBlock(),
-                            SizedBox(height: 20),
-                            OSMMapWidget(),
-                            SizedBox(height: 20),
-                            HotelSection(),
-                          ],
-                        ),
-                      ),
-                    ],
+            //     // TODO: Show manual travel insights screen
+            //   },
+            //   text: 'Travel Insight',
+            // ),
+            /// 🔵 TRAVEL INSIGHTS BUTTON
+            CustomLoadingButton(
+              onPressed: () async {
+                // 1. Show a quick loading overlay
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) => const Center(
+                    child: SpinKitSpinningLines(color: Colors.white, size: 50),
                   ),
-                ),
+                );
+
+                // 2. Simulate a network fetch or processing time
+                await Future.delayed(const Duration(seconds: 1));
+
+                // 3. CHECK ASYNC GAP: If the user left the screen during the delay, stop!
+                if (!mounted) return;
+
+                // 4. Pop the loading spinner
+                NavigationService().pop();
+
+                // 5. Show the Insight using your Custom Dialog
+                await AppConfirmDialog.show(
+                  // ignore: use_build_context_synchronously
+                  context,
+                  title: '${destination.name} Insights',
+                  message: destination.insights,
+                  confirmText: 'Got it!',
+                  cancelText: 'Close',
+                  icon: Icons.lightbulb_outline_rounded,
+                  confirmColor: AppConstants.primaryColor,
+                );
+              },
+              text: 'Travel Insight',
+            ),
+            const TabBar(
+              labelColor: Colors.white,
+              indicatorColor: Colors.white,
+              tabs: [
+                Tab(text: 'Packages'),
+                Tab(text: 'Explore'),
               ],
             ),
+
+            Expanded(
+              child: TabBarView(
+                children: [
+                  /// ================= PACKAGES TAB =================
+                  // provider.isLoadingPackages
+                  // ?
+                  // const Center(
+                  //     child: SpinKitSpinningLines(
+                  //       color: Colors.white,
+                  //       size: 50,
+                  //     ),
+                  //   )
+                  // :
+                  provider.packages.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No packages available yet',
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: provider.packages.length,
+                          itemBuilder: (context, index) =>
+                              PackageCard(provider.packages[index]),
+                        ),
+
+                  /// ================= EXPLORE TAB =================
+                  const SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        WeatherBlock(),
+                        SizedBox(height: 20),
+                        OSMMapWidget(),
+                        SizedBox(height: 20),
+                        HotelSection(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

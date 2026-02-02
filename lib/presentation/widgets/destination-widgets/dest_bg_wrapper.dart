@@ -84,7 +84,8 @@ class DestinationBackgroundWrapper extends StatelessWidget {
       // resizeToAvoidBottomInset: false,
       body: onRefresh != null
           ? RefreshIndicator(
-              color: AppConstants.tertiaryColor,
+              color: AppConstants.primaryColor,
+              backgroundColor: AppConstants.whiteColorP5,
               onRefresh: onRefresh!,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),

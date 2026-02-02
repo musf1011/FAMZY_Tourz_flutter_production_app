@@ -25,4 +25,14 @@ class PackagesService {
         .doc(package.id)
         .set(package.toMap(), SetOptions(merge: true));
   }
+
+  Future<void> updatePackage(PackageModel package) async {
+    await _firestore
+        .collection('tourPackages')
+        .doc(package.id)
+        .update(
+          package.toMap()
+            ..['packageEditedAt'] = DateTime.now().toIso8601String(),
+        );
+  }
 }
