@@ -68,7 +68,7 @@
 
 import 'dart:async';
 import 'package:famzy_tourz_v2/constants.dart';
-import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';

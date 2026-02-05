@@ -220,7 +220,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
-import '../../providers/auth_provider.dart';
+import '../../providers/auth_providers/auth_provider.dart';
 
 class AdditionalInfoScreen extends StatefulWidget {
   const AdditionalInfoScreen({super.key});

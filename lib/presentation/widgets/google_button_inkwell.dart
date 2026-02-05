@@ -1,4 +1,4 @@
-import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

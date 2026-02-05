@@ -131,16 +131,23 @@
 // }
 
 import 'package:famzy_tourz_v2/data/models/package_model.dart';
+import 'package:famzy_tourz_v2/data/models/user_model.dart';
 import 'package:famzy_tourz_v2/data/services/packages-services/packages_service.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:flutter/material.dart';
 
 class AddPackageProvider extends ChangeNotifier {
+  final UserProvider _userProvider = UserProvider();
+  AddPackageProvider(this._userProvider);
+
   final formKey = GlobalKey<FormState>();
 
   final PackagesService _service = PackagesService();
 
   /// FORM FIELDS
   String packageName = '';
+  String packageId = '';
   String duration = '';
   String departureDate = '';
   String departureTime = '';
@@ -152,6 +159,10 @@ class AddPackageProvider extends ChangeNotifier {
   /// COMPANY INFO (auto-filled)
   String companyName = '';
   String companyPhotoURL = '';
+  //   final user = userProvider.user!;
+
+  // companyName = user.name;
+  // companyPhotoURL = user.photoUrl;
 
   /// EDIT MODE
   PackageModel? editingPackage;
@@ -162,8 +173,20 @@ class AddPackageProvider extends ChangeNotifier {
   bool showSuccess = false;
   bool showError = false;
 
+  /// Set Company Info from UserProvider
+  void setCompanyInfo(AppUser user) {
+    // We only set this if we aren't in edit mode
+    // (In edit mode, we want to keep the original creator's name)
+    if (!isEditMode) {
+      companyName = user.name;
+      companyPhotoURL = user.photoUrl;
+      // No notifyListeners() needed here if called during build/init
+    }
+  }
+
   /// INIT (for edit)
   void loadForEdit(PackageModel pkg) {
+    packageId = pkg.id;
     editingPackage = pkg;
     packageName = pkg.packageName;
     duration = pkg.duration;
@@ -186,17 +209,45 @@ class AddPackageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// MAIN SUBMIT
+  // /// MAIN SUBMIT
+  // Future<void> submitWithConfirmation({
+  //   required String destinationName,
+  //   required AppUser user,
+  //   required bool confirmed,
+  // }) async {
+  //   if (!confirmed) return;
+
+  //   await submit(destinationName, user);
+  // }
   Future<void> submitWithConfirmation({
     required String destinationName,
     required bool confirmed,
   }) async {
     if (!confirmed) return;
 
-    await submit(destinationName);
+    final user = _userProvider.user;
+    if (user == null) {
+      showError = true;
+      notifyListeners();
+      return;
+    }
+
+    await submit(destinationName, user);
   }
 
-  Future<void> submit(String destinationName) async {
+  // 1. Updated setter that actually notifies the UI to rebuild
+  void setPackageName(String value) {
+    packageName = value;
+    notifyListeners();
+  }
+
+  // 2. Stable Preview ID (No timestamp here so it doesn't flicker)
+  String get previewId {
+    if (packageName.isEmpty) return '';
+    return '${packageName.toLowerCase().replaceAll(' ', '_')}_${DestinationsProvider().selectedDestination.name}_uniquecode';
+  }
+
+  Future<void> submit(String destinationName, AppUser user) async {
     if (!formKey.currentState!.validate()) return;
     formKey.currentState!.save();
 
@@ -204,12 +255,17 @@ class AddPackageProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final id = isEditMode
+      // 3. FINAL ID LOGIC: Keep existing if editing, otherwise create unique
+      final String finalId = isEditMode
           ? editingPackage!.id
-          : "${packageName.toLowerCase().replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}";
+          : '${packageName.toLowerCase().replaceAll(' ', '_')}_${companyName.toLowerCase().replaceAll(' ', '_')}_${destinationName}_${DateTime.now().millisecondsSinceEpoch}';
+      setCompanyInfo(user);
+      debugPrint(
+        '***id:$finalId,\n***company: $companyName,\n***companyphoto: $companyPhotoURL,\n***duration:$duration,\n***depTime:$departureTime,\n***depDate:$departureDate,\n***keyspot:$keySpots,\n***vehicle:$vehicle,\n***description:$description,\n***destinationName:$destinationName',
+      );
 
       final package = PackageModel(
-        id: id,
+        id: finalId,
         companyName: companyName,
         companyPhotoURL: companyPhotoURL,
         packageName: packageName,

@@ -1,5 +1,5 @@
 import 'package:famzy_tourz_v2/constants.dart';
-import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/google_button_inkwell.dart';

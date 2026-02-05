@@ -2,7 +2,7 @@
 
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/models/destination_model.dart';
-import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -133,7 +133,9 @@ class _DestinationPageState extends State<_DestinationPage> {
                       child: Text(
                         expanded ? 'Show less' : 'Read more',
                         style: TextStyle(
-                          color: AppConstants.transRColor,
+                          color: expanded
+                              ? AppConstants.underline
+                              : AppConstants.googleBlue,
                           fontSize: 15.sp,
                         ),
                       ),
@@ -144,7 +146,6 @@ class _DestinationPageState extends State<_DestinationPage> {
 
                   CustomLoadingButton(
                     onPressed: () {
-                      //nav
                       nav.navigateTo(AppRoutes.packages);
                     },
                     text: 'View Packages',
@@ -166,7 +167,7 @@ class _DestinationPageState extends State<_DestinationPage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: widget.index != indexDots
-                          ? AppConstants.transRColor
+                          ? AppConstants.tertiaryColor
                           : AppConstants.whiteColorP5,
                     ),
                   ),

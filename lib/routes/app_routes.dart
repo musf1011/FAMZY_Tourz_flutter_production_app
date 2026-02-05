@@ -1,5 +1,6 @@
 import 'package:famzy_tourz_v2/data/models/package_model.dart';
-import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/add_package_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/additional_info_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/email_verification_pending_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/enter_email_for_reset_screen.dart';
@@ -67,7 +68,7 @@ class AppRoutes {
       case main:
         return MaterialPageRoute(builder: (_) => const MainScreen());
       case hotelPlaceholder:
-        final destination = settings.arguments as String;
+        // final destination = settings.arguments as String;
         return MaterialPageRoute(
           builder: (_) => const HotelPlaceholderScreen(),
         );
@@ -79,10 +80,10 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
             create: (_) {
-              final provider = AddPackageProvider();
+              final provider = AddPackageProvider(UserProvider());
 
               if (args != null && args is PackageModel) {
-                provider.loadForEdit(args); // ✅ EDIT MODE
+                provider.loadForEdit(args);
               }
 
               return provider;

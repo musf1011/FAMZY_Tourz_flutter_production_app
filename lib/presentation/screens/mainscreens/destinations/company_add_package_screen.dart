@@ -109,8 +109,8 @@
 //                       onSaved: (v) =>
 //                           packageProvider.packageName = v ?? '',
 //                       validator: (v) =>
-//                           v == null || v.isEmpty ? 'Required' : null,
-//                     ),
+//                           v == null || v.isEmpty ? z'Required' : null,
+//                     ),z
 //                     // CustTextFormField(
 //                     //   label: 'Duration',
 //                     //
@@ -384,11 +384,13 @@
 //created by: FAMZY CodeWorks
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
-import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/add_package_provider.dart';
-import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_text_form_field.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/dest_bg_wrapper.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/profile_header.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/lottie_overlay.dart';
 import 'package:flutter/material.dart';
@@ -407,16 +409,50 @@ class CompanyAddPackageScreen extends StatefulWidget {
 class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
+  bool tourId = false;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final packageProvider = context.read<AddPackageProvider>();
+  //   // final userProvider = context.read<UserProvider>();
+  //   // Prefill controllers in EDIT mode
+  //   if (packageProvider.isEditMode) {
+  //     _dateController.text = packageProvider.departureDate;
+  //     _timeController.text = packageProvider.departureTime;
+  //   }
+  //   // final user = userProvider
+  // }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final provider = context.read<AddPackageProvider>();
+
+    final userProvider = context.read<UserProvider>();
+    final packageProvider = context.read<AddPackageProvider>();
+
+    // Load user ONLY if not already loaded
+    if (!userProvider.isLoggedIn) {
+      final uid = userProvider.user?.uid;
+      if (uid != null) {
+        userProvider.loadUser(uid);
+      }
+    }
+
+    // Inject company info once user is available
+    final user = userProvider.user;
+    if (user != null) {
+      packageProvider.setCompanyInfo(user);
+    }
 
     // Prefill controllers in EDIT mode
-    if (provider.isEditMode) {
-      _dateController.text = provider.departureDate;
-      _timeController.text = provider.departureTime;
+    if (packageProvider.isEditMode) {
+      _dateController.text = packageProvider.departureDate;
+      _timeController.text = packageProvider.departureTime;
     }
   }
 
@@ -432,6 +468,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
     final destProvider = context.watch<DestinationsProvider>();
     final packageProvider = context.watch<AddPackageProvider>();
     final destination = destProvider.selectedDestination;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, dynamic result) async {
@@ -465,82 +502,75 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                 key: packageProvider.formKey,
                 child: Column(
                   children: [
+                    // CircleAvatar(
+                    //   radius: 40.r,
+                    //   backgroundColor: AppConstants.secondaryColor,
+                    //   backgroundImage: user!.photoUrl.isNotEmpty
+                    //       ? NetworkImage(user.photoUrl)
+                    //       : null,
+                    //   child: user.photoUrl.isEmpty
+                    //       ? const Icon(
+                    //           Icons.business,
+                    //           color: Colors.white,
+                    //           size: 40,
+                    //         )
+                    //       : null,
+                    // ),
+                    // SizedBox(height: 8.h),
+                    // Text(
+                    //   user.name,
+                    //   style: TextStyle(
+                    //     color: Colors.white,
+                    //     fontSize: 16.sp,
+                    //     fontWeight: FontWeight.w600,
+                    //   ),
+                    // ),
+                    const ProfileHeader(),
                     CustTextFormField(
                       label: 'Package Name',
                       hint: 'e.g. Summer Special',
+                      readOnly: packageProvider.isEditMode ? true : false,
                       initialValue: packageProvider.packageName,
+                      onChanged: (v) {
+                        if (!packageProvider.isEditMode) {
+                          packageProvider.setPackageName(v);
+                        }
+                      },
                       onSaved: (v) => packageProvider.packageName = v ?? '',
                       validator: (v) =>
                           v == null || v.isEmpty ? 'Required' : null,
                     ),
-
-                    // CustTextFormField(
-                    //   label: 'Duration',
-                    //   initialValue: packageProvider.duration,
-                    //   onSaved: (v) =>
-                    //       packageProvider.duration = v ?? '',
-                    //   validator: (v) => v!.isEmpty ? 'Required' : null,
-                    // ),
-                    // CustTextFormField(
-                    //   label: 'Date',
-                    //
-                    //   controller:
-                    //       _dateController, // Use the persistent controller
-                    //   readOnly: true,
-                    //   onTap: () async {
-                    //     final pickedDate = await showDatePicker(
-                    //       // barrierColor: Colors.red, //bg app colour
-                    //       context: context,
-                    //       initialDate: DateTime.now(),
-                    //       firstDate:
-                    //           DateTime.now(), // Usually tours don't start in the past
-                    //       lastDate: DateTime(2050),
-                    //       builder: (context, child) {
-                    //         return Theme(
-                    //           data: Theme.of(context).copyWith(
-                    //             colorScheme: const ColorScheme.dark(
-                    //               primary: AppConstants.underline, // FAMZY Gold
-                    //               onPrimary: Colors.white,
-                    //               surface: AppConstants
-                    //                   .secondaryColor, // Dark Surface
-                    //               onSurface: Colors.white,
-                    //             ),
-                    //             textButtonTheme: TextButtonThemeData(
-                    //               style: TextButton.styleFrom(
-                    //                 foregroundColor: AppConstants.underline,
-                    //               ),
-                    //             ),
-                    //             datePickerTheme: DatePickerThemeData(
-                    //               shape: RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(50.r),
-                    //                 side: BorderSide(
-                    //                   color: Colors.white,
-                    //                   width: 2.r,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //             dialogTheme: const DialogThemeData(
-                    //               backgroundColor:
-                    //                   AppConstants.primaryTransGColor,
-                    //             ),
-                    //           ),
-
-                    //           child: child!,
-                    //         );
-                    //       },
-                    //     );
-
-                    //     if (pickedDate != null) {
-                    //       setState(() {
-                    //         date = DateFormat('yyyy-MM-dd').format(pickedDate);
-                    //         _dateController.text =
-                    //             date!;
-                    //       });
-                    //     }
-                    //   },
-                    //   validator: (val) =>
-                    //       val == null || val.isEmpty ? 'Select a date' : null,
-                    // ),
+                    // 🆔 Tour ID Display (Cleaned up logic)
+                    if (packageProvider.isEditMode)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10.h),
+                        child: Text(
+                          'Editing Tour ID: ${packageProvider.packageId}',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      )
+                    else if (
+                    // packageProvider.generateNewId(
+                    //     packageProvider.packageName,
+                    //     destination.name,
+                    //   ) !=
+                    //   ''
+                    packageProvider.packageName != '')
+                      Text(
+                        // 'Tour ID: ${packageProvider.generateNewId(packageProvider.packageName, destination.name)}',
+                        'Tour ID: ${packageProvider.previewId}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    CustTextFormField(
+                      label: 'Duration',
+                      hint: 'e.g. 2 Days/ 3 Nights',
+                      initialValue: packageProvider.duration,
+                      onSaved: (v) => packageProvider.duration = v ?? '',
+                      validator: (v) => v!.isEmpty ? 'Required' : null,
+                    ),
                     CustTextFormField(
                       label: 'Date',
                       hint: 'YYYY-MM-DD',
@@ -652,12 +682,12 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                           },
                         );
 
-                        if (pickedTime != null) {
-                          // ignore: use_build_context_synchronously
-                          final formatted = pickedTime.format(context);
-                          _timeController.text = formatted;
-                          packageProvider.departureTime = formatted;
-                        }
+                        if (pickedTime == null) return;
+                        // ignore: use_build_context_synchronously
+                        final formatted = pickedTime.format(context);
+                        if (!mounted) return;
+                        _timeController.text = formatted;
+                        packageProvider.departureTime = formatted;
                       },
                       validator: (v) =>
                           v == null || v.isEmpty ? 'Select time' : null,
@@ -694,44 +724,51 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                       validator: (v) => v!.isEmpty ? 'Required' : null,
                     ),
                     SizedBox(height: 20.h),
-                    // CustomElevatedButton(
-                    //   // onPressed: packageProvider.isLoading
-                    //   //     ? null
-                    //   //     : () async {
-                    //   //         final confirmed =
-                    //   //             await AppConfirmDialog.show(
-                    //   //           context,
-                    //   //           title: packageProvider.isEditMode
-                    //   //               ? 'Edit Package?'
-                    //   //               : 'Add Package?',
-                    //   //           message: 'Are you sure you want to save?',
-                    //   //         );
-
-                    //   //         if (confirmed) {
-                    //   //           await packageProvider
-                    //   //               .submit(destination.name);
-                    //   //         }
-                    //   //       },
-                    //  onPressed: () {
-                    //     _handleSubmit(context);
-                    //   },
-                    //   child: packageProvider.isLoading
-                    //       ? const SpinKitFadingCircle(
-                    //           color: Colors.white,
-                    //         )
-                    //       : Text(
-                    //           packageProvider.isEditMode
-                    //               ? 'Edit Package'
-                    //               : 'Add Package',
-                    //           style: TextStyle(fontSize: 18.sp),
-                    //         ),
-                    // ),
                     CustomLoadingButton(
                       isLoading: packageProvider.isLoading,
                       text: packageProvider.isEditMode
                           ? 'Edit Package'
                           : 'Add Package',
                       onPressed: () async {
+                        // // 1. Get the current user from UserProvider
+                        // final isLoggedIn = context
+                        //     .read<UserProvider>()
+                        //     .isLoggedIn;
+                        // if (!isLoggedIn) {
+                        //   debugPrint('********not logged in');
+                        //   // NavigationService().navigateAndClearStack(
+                        //   //   AppRoutes.welcome,
+                        //   // );
+                        // }
+
+                        // final user = context.read<UserProvider>().user;
+                        // if (user == null) {
+                        //   // Show a snackbar if for some reason the user is not loaded
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text(
+                        //         'User profile not found. Please log in again.',
+                        //       ),
+                        //     ),
+                        //   );
+                        //   return;
+                        // }
+                        // final confirmed = await AppConfirmDialog.show(
+                        //   context,
+                        //   title: packageProvider.isEditMode
+                        //       ? 'Edit Package?'
+                        //       : 'Add Package?',
+                        //   message: 'Are you sure you want to save?',
+                        // );
+
+                        // if (!mounted) return;
+
+                        // await packageProvider.submitWithConfirmation(
+                        //   destinationName: destination.name,
+                        //   user: user,
+                        //   confirmed: confirmed,
+                        // );
+
                         final confirmed = await AppConfirmDialog.show(
                           context,
                           title: packageProvider.isEditMode
@@ -740,13 +777,10 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                           message: 'Are you sure you want to save?',
                         );
 
+                        if (!mounted) return;
+
                         await packageProvider.submitWithConfirmation(
-                          destinationName:
-                              // ignore: use_build_context_synchronously
-                              context
-                                  .read<DestinationsProvider>()
-                                  .selectedDestination
-                                  .name,
+                          destinationName: destination.name,
                           confirmed: confirmed,
                         );
                       },

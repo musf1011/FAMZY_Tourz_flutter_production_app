@@ -392,6 +392,7 @@
 // }
 
 import 'package:famzy_tourz_v2/constants.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/back_logo_row.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
@@ -401,8 +402,6 @@ import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
-import '../../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

@@ -183,7 +183,7 @@
 
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
-import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/dest_bg_wrapper.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/hotel_section.dart';
@@ -208,17 +208,18 @@ class _PackagesScreenState extends State<PackagesScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      // ignore: use_build_context_synchronously
-      () => context.read<DestinationsProvider>().initPackagesScreen(),
-    );
+    Future.microtask(() {
+      if (mounted) {
+        context.read<DestinationsProvider>().initPackagesScreen();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<DestinationsProvider>();
     final destination = provider.selectedDestination;
-
+    final nav = NavigationService();
     return DefaultTabController(
       length: 2,
       child: DestinationBackgroundWrapper(
@@ -240,7 +241,7 @@ class _PackagesScreenState extends State<PackagesScreen> {
                       size: 32.h,
                     ),
                     onPressed: () {
-                      NavigationService().navigateTo(
+                      nav.navigateTo(
                         AppRoutes.companyAddPackage,
                         arguments: {
                           'name': destination.name,
@@ -258,55 +259,37 @@ class _PackagesScreenState extends State<PackagesScreen> {
         child: Column(
           children: [
             /// 🔵 TRAVEL INSIGHTS BUTTON
-            // CustomLoadingButton(
-            //   onPressed: () async {
-            //     // simulate loading insight fetch
-            //     await showDialog(
-            //       context: context,
-            //       builder: (_) => const Center(
-            //         child: SpinKitSpinningLines(color: Colors.white, size: 50),
-            //       ),
-            //     );
-
-            //     await Future.delayed(const Duration(seconds: 1));
-            //     NavigationService().pop();
-
-            //     // TODO: Show manual travel insights screen
-            //   },
-            //   text: 'Travel Insight',
-            // ),
-            /// 🔵 TRAVEL INSIGHTS BUTTON
             CustomLoadingButton(
               onPressed: () async {
+                final scaffoldContext = context;
+
                 // 1. Show a quick loading overlay
-                showDialog(
-                  context: context,
+                await showDialog(
+                  context: scaffoldContext,
                   barrierDismissible: false,
                   builder: (_) => const Center(
                     child: SpinKitSpinningLines(color: Colors.white, size: 50),
                   ),
                 );
 
-                // 2. Simulate a network fetch or processing time
-                await Future.delayed(const Duration(seconds: 1));
-
-                // 3. CHECK ASYNC GAP: If the user left the screen during the delay, stop!
+                // 2. CHECK ASYNC GAP: If the state is no longer mounted, stop!
                 if (!mounted) return;
 
-                // 4. Pop the loading spinner
-                NavigationService().pop();
+                // 3. Pop the loading spinner
+                nav.pop();
 
-                // 5. Show the Insight using your Custom Dialog
-                await AppConfirmDialog.show(
-                  // ignore: use_build_context_synchronously
-                  context,
-                  title: '${destination.name} Insights',
-                  message: destination.insights,
-                  confirmText: 'Got it!',
-                  cancelText: 'Close',
-                  icon: Icons.lightbulb_outline_rounded,
-                  confirmColor: AppConstants.primaryColor,
-                );
+                // 4. Show the Insight using your Custom Dialog
+                if (mounted && scaffoldContext.mounted) {
+                  await AppConfirmDialog.show(
+                    scaffoldContext,
+                    title: '${destination.name} Insights',
+                    message: destination.insights,
+                    confirmText: 'Got it!',
+                    cancelText: 'Close',
+                    icon: Icons.lightbulb_outline_rounded,
+                    confirmColor: AppConstants.primaryColor,
+                  );
+                }
               },
               text: 'Travel Insight',
             ),
@@ -323,16 +306,14 @@ class _PackagesScreenState extends State<PackagesScreen> {
               child: TabBarView(
                 children: [
                   /// ================= PACKAGES TAB =================
-                  // provider.isLoadingPackages
-                  // ?
-                  // const Center(
-                  //     child: SpinKitSpinningLines(
-                  //       color: Colors.white,
-                  //       size: 50,
-                  //     ),
-                  //   )
-                  // :
-                  provider.packages.isEmpty
+                  provider.isLoadingPackages
+                      ? const Center(
+                          child: SpinKitSpinningLines(
+                            color: Colors.white,
+                            size: 50,
+                          ),
+                        )
+                      : provider.packages.isEmpty
                       ? const Center(
                           child: Text(
                             'No packages available yet',

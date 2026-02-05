@@ -80,9 +80,10 @@
 // created by: FAMZY CodeWorks
 
 import 'package:famzy_tourz_v2/constants.dart';
-import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -91,89 +92,106 @@ class WeatherBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<DestinationsProvider>();
-    final weather = provider.weather;
+    // final provider = context.watch<DestinationsProvider>();
+    // final weather = provider.weather;
 
-    if (provider.isLoadingWeather) {
-      return const Padding(
-        padding: EdgeInsets.all(20),
-        child: CircularProgressIndicator(),
-      );
-    }
+    // if (provider.isLoadingWeather) {
+    //   return const Padding(
+    //     padding: EdgeInsets.all(20),
+    //     child: CircularProgressIndicator(),
+    //   );
+    // }
+    // We use Selector instead of context.watch to prevent unnecessary
+    // rebuilds of the whole widget tree during navigation.
+    return Selector<DestinationsProvider, bool>(
+      selector: (_, prov) => prov.isLoadingWeather,
+      builder: (context, isLoading, child) {
+        if (isLoading) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.h),
+            child: const SpinKitSpinningLines(color: Colors.white, size: 50),
+          );
+        }
+        // Once loading is false, we fetch the weather data
+        final weather = context.read<DestinationsProvider>().weather;
+        if (weather == null) return const SizedBox();
 
-    if (weather == null) return const SizedBox();
+        final now = DateTime.now();
+        final formattedDate = DateFormat('MMM d, yyyy').format(now);
 
-    final now = DateTime.now();
-    final formattedDate = DateFormat('MMM d, yyyy').format(now);
-
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppConstants.primaryTransGColor,
-        borderRadius: BorderRadius.circular(50),
-        border: Border.all(color: Colors.white, width: .5.r),
-      ),
-      child: Column(
-        // crossAxisAlignment: .center,
-        children: [
-          Text(
-            'Local Weather',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
+        return Container(
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppConstants.primaryTransGColor,
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(color: Colors.white, width: .5.r),
           ),
-          Text(
-            formattedDate,
-            style: TextStyle(color: AppConstants.whiteColorP5, fontSize: 14.sp),
+          child: Column(
+            // crossAxisAlignment: .center,
+            children: [
+              Text(
+                'Local Weather',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                formattedDate,
+                style: TextStyle(
+                  color: AppConstants.whiteColorP5,
+                  fontSize: 14.sp,
+                ),
+              ),
+              Divider(color: Colors.white24, height: 20.h),
+              _WeatherRow(
+                icon: Icons.thermostat,
+                value: '${weather['temp']} °C',
+                label: 'Temperature',
+              ),
+              _WeatherRow(
+                icon: Icons.air,
+                value: '${weather['windspeed']} km/h',
+                label: 'Wind Speed',
+              ),
+              // _WeatherRow(
+              //   icon: Icons.explore,
+              //   value: '${weather['winddirection']}°',
+              //   label: 'Wind Direction',
+              // ),
+              // UV and Precipitation
+              _WeatherRow(
+                icon: Icons.wb_sunny_outlined,
+                value: '${weather['uv_index']}',
+                label: 'UV Index',
+              ),
+              _WeatherRow(
+                icon: Icons.umbrella_outlined,
+                value: '${weather['precipitation']} mm',
+                label: 'Precipitation',
+              ),
+              // _WeatherRow(
+              //   icon: Icons.calendar_today,
+              //   value: formattedDate,
+              //   label: 'Today',
+              // ),
+              // Sunrise and Sunset
+              _WeatherRow(
+                icon: Icons.wb_twilight,
+                value: '${weather['sunrise']}',
+                label: 'Sunrise',
+              ),
+              _WeatherRow(
+                icon: Icons.nights_stay_outlined,
+                value: '${weather['sunset']}',
+                label: 'Sunset',
+              ),
+            ],
           ),
-          Divider(color: Colors.white24, height: 20.h),
-          _WeatherRow(
-            icon: Icons.thermostat,
-            value: '${weather['temp']} °C',
-            label: 'Temperature',
-          ),
-          _WeatherRow(
-            icon: Icons.air,
-            value: '${weather['windspeed']} km/h',
-            label: 'Wind Speed',
-          ),
-          // _WeatherRow(
-          //   icon: Icons.explore,
-          //   value: '${weather['winddirection']}°',
-          //   label: 'Wind Direction',
-          // ),
-          // UV and Precipitation
-          _WeatherRow(
-            icon: Icons.wb_sunny_outlined,
-            value: '${weather['uv_index']}',
-            label: 'UV Index',
-          ),
-          _WeatherRow(
-            icon: Icons.umbrella_outlined,
-            value: '${weather['precipitation']} mm',
-            label: 'Precipitation',
-          ),
-          // _WeatherRow(
-          //   icon: Icons.calendar_today,
-          //   value: formattedDate,
-          //   label: 'Today',
-          // ),
-          // Sunrise and Sunset
-          _WeatherRow(
-            icon: Icons.wb_twilight,
-            value: '${weather['sunrise']}',
-            label: 'Sunrise',
-          ),
-          _WeatherRow(
-            icon: Icons.nights_stay_outlined,
-            value: '${weather['sunset']}',
-            label: 'Sunset',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

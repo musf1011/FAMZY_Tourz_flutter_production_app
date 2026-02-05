@@ -34,7 +34,7 @@ class EmailAuthService {
       'gender': gender,
       'photoUrl': photoUrl,
       'createdAt': FieldValue.serverTimestamp(),
-      'updatedAit': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 

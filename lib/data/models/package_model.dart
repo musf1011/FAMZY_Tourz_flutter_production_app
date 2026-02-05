@@ -39,6 +39,8 @@
 //   }
 // }
 
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
 class PackageModel {
@@ -91,6 +93,23 @@ class PackageModel {
     return null;
   }
 
+  DateTime get departureDateTime {
+    try {
+      // Assuming departureDate is "2024-05-20" and departureTime is "10:00 AM"
+      debugPrint('***datedddddModel: $departureDate');
+      final String dateTimeString = '$departureDate $departureTime';
+      return DateFormat('yyyy-MM-dd h:mm a').parse(dateTimeString);
+    } catch (e) {
+      // Fallback in case of parsing error
+      return DateTime.now().add(const Duration(days: 365));
+    }
+  }
+
+  bool get isExpired {
+    // Checks if the departure time has already passed
+    return departureDateTime.isBefore(DateTime.now());
+  }
+
   /// Converts the keySpots string into a List for UI bullet points
   List<String> get keySpotsList =>
       keySpots.split(',').map((e) => e.trim()).toList();
@@ -107,8 +126,8 @@ class PackageModel {
       companyName: map['companyName'] ?? '',
       packageName: map['packageName'] ?? '',
       duration: map['duration'] ?? '',
-      departureDate: map['date'] ?? '',
-      departureTime: map['time'] ?? '',
+      departureDate: map['departureDate'] ?? '',
+      departureTime: map['departureTime'] ?? '',
       keySpots: map['keySpots'] ?? '',
       vehicle: map['vehicle'] ?? '',
       description: map['description'] ?? '',

@@ -100,9 +100,10 @@ import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/link_service.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/firebase_options.dart';
-import 'package:famzy_tourz_v2/presentation/providers/auth_provider.dart';
-import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/add_package_provider.dart';
-import 'package:famzy_tourz_v2/presentation/providers/destinations_providers.dart/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/splash_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
@@ -154,6 +155,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => SplashProvider()),
         ChangeNotifierProvider(create: (_) => MainProvider()),
         ChangeNotifierProvider(create: (_) => DestinationsProvider()),

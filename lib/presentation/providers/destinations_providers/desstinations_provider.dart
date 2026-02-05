@@ -174,15 +174,48 @@ class DestinationsProvider extends ChangeNotifier {
   bool _isLoadingPackages = false;
   bool get isLoadingPackages => _isLoadingPackages;
 
+  // Future<void> loadPackages() async {
+  //   _packages = [];
+  //   _isLoadingPackages = true;
+  //   notifyListeners();
+
+  //   final raw = await _packagesService.fetchPackages(selectedDestination.name);
+  //   _packages = raw.map((e) => PackageModel.fromMap(e)).toList();
+  //   _isLoadingPackages = false;
+  //   notifyListeners();
+  // }
   Future<void> loadPackages() async {
     _packages = [];
     _isLoadingPackages = true;
     notifyListeners();
 
-    final raw = await _packagesService.fetchPackages(selectedDestination.name);
-    _packages = raw.map((e) => PackageModel.fromMap(e)).toList();
-    _isLoadingPackages = false;
-    notifyListeners();
+    try {
+      final raw = await _packagesService.fetchPackages(
+        selectedDestination.name,
+      );
+
+      // 1. Convert raw data to models
+      final allPackages = raw.map((e) => PackageModel.fromMap(e)).toList();
+
+      // 2. Filter and Sort
+      final now = DateTime.now();
+
+      _packages =
+          allPackages.where((package) {
+              // Keep only if departure is in the future
+              return package.departureDateTime.isAfter(now);
+            }).toList()
+            // Sort by nearest departure date first
+            ..sort(
+              (a, b) => a.departureDateTime.compareTo(b.departureDateTime),
+            );
+    } catch (e) {
+      debugPrint('Error loading packages: $e');
+      // Handle error state if necessary
+    } finally {
+      _isLoadingPackages = false;
+      notifyListeners();
+    }
   }
 
   //missing card's functions
