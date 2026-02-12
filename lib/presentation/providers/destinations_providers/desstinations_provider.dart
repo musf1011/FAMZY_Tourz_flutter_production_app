@@ -190,6 +190,9 @@ class DestinationsProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      debugPrint(
+        '****selected destination in provider: ${selectedDestination.name}',
+      );
       final raw = await _packagesService.fetchPackages(
         selectedDestination.name,
       );
@@ -209,6 +212,7 @@ class DestinationsProvider extends ChangeNotifier {
             ..sort(
               (a, b) => a.departureDateTime.compareTo(b.departureDateTime),
             );
+      debugPrint('***packages:${allPackages[2].packageName}');
     } catch (e) {
       debugPrint('Error loading packages: $e');
       // Handle error state if necessary
@@ -278,7 +282,10 @@ class DestinationsProvider extends ChangeNotifier {
   String? get userRole => _userRole;
 
   bool get canManagePackages => _userRole == 'admin' || _userRole == 'company';
-
+  // Specific role checks for UI logic
+  bool get isAdmin => _userRole == 'admin';
+  bool get isCompany => _userRole == 'company';
+  bool get isUser => _userRole == 'user' || _userRole == null;
   Future<void> checkUserRole() async {
     _userRole = await AdminService.getUserRole();
     notifyListeners();

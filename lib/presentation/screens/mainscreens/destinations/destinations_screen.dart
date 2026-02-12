@@ -78,8 +78,8 @@ class _DestinationPageState extends State<_DestinationPage> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppConstants.secondaryTransGColor,
-              AppConstants.blackColorP7,
+              AppConstants.primaryTransGColor,
+              AppConstants.blackColorP5,
             ],
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,

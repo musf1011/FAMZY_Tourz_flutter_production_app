@@ -5,22 +5,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DestinationBackgroundWrapper extends StatelessWidget {
   final String imagePath;
-  final String destinationName;
+  final Widget? destinationName;
+  final String? titleText;
   final Widget child;
-  final Future<void> Function()?
-  onRefresh; // Optional: If null, no RefreshIndicator
-  final List<Widget>? actions; // Optional: For icons like the "Add" button
+
+  final Future<void> Function()? onRefresh; // If null, no RefreshIndicator
+  final List<Widget>? actions; //  For icons like the "Add" button
   final VoidCallback? onBackTap;
 
   const DestinationBackgroundWrapper({
     super.key,
     required this.imagePath,
-    required this.destinationName,
     required this.child,
+    this.destinationName,
+    this.titleText,
     this.onRefresh,
     this.actions,
     this.onBackTap,
-  });
+  }) : assert(
+         destinationName != null || titleText != null,
+         'Must provide either destinationName or titleText',
+       );
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +40,8 @@ class DestinationBackgroundWrapper extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppConstants.secondaryTransGColor,
-              AppConstants.blackColorP7,
+              AppConstants.primaryTransGColor,
+              AppConstants.blackColorP5,
             ],
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
@@ -54,21 +59,20 @@ class DestinationBackgroundWrapper extends StatelessWidget {
                       size: 40.h,
                       color: AppConstants.whiteColorP5,
                     ),
-                    onPressed:
-                        onBackTap ??
-                        () =>
-                            NavigationService().pop(), // <--- 3. Use logic here
+                    onPressed: onBackTap ?? () => NavigationService().pop(),
                   ),
                   // Only render if screen provides actions
                   if (actions != null) Row(children: actions!),
                 ],
               ),
-              Text(
-                destinationName,
-                style: AppConstants.destNameTextStyle,
-                textAlign: .center, // Using the global theme we set up!
-              ),
+              destinationName ??
+                  Text(
+                    titleText!,
+                    style: AppConstants.destNameTextStyle,
+                    textAlign: .center, // Using the global theme we set up!
+                  ),
 
+              // destinationName,
               Expanded(
                 child: child,
               ), // This is where the unique screen content goes

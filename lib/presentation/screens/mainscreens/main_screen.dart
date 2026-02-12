@@ -486,7 +486,6 @@ class MainScreen extends StatelessWidget {
                           dialogMessage:
                               'Are you sure you want to log out of FAMZY Tourz?',
                           isDanger: true,
-                          confirmColor: Colors.red,
                           isLoading: auth.loading,
                           onConfirmed: () => auth.emailSignOut(),
                         );
@@ -501,7 +500,7 @@ class MainScreen extends StatelessWidget {
               bottomNavigationBar: WaterDropNavBar(
                 backgroundColor: AppConstants.primaryColor,
                 waterDropColor: Colors.white,
-                bottomPadding: 8.h,
+                bottomPadding: 20.h,
                 inactiveIconColor: AppConstants.whiteColorP5,
                 selectedIndex: main.selectedIndex,
                 onItemSelected: main.onTabSelected.call,
@@ -519,8 +518,8 @@ class MainScreen extends StatelessWidget {
                     outlinedIcon: Icons.email_outlined,
                   ),
                   BarItem(
-                    filledIcon: Icons.folder_rounded,
-                    outlinedIcon: Icons.folder_outlined,
+                    filledIcon: Icons.person_4_rounded,
+                    outlinedIcon: Icons.person_rounded,
                   ),
                 ],
               ),

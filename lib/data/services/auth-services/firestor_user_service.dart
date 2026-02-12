@@ -36,6 +36,9 @@ class FirestoreUserService {
       'name': user.displayName ?? '',
       'email': user.email,
       'photoURL': user.photoURL,
+      'role': 'user',
+      'age': '',
+      'gender': '',
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     });
@@ -63,8 +66,6 @@ class FirestoreUserService {
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
-
-  // static Future<void
 }
   // static Future<void> saveUserToFirestore({
   //   int? age,

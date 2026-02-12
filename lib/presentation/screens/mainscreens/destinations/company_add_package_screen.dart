@@ -395,6 +395,7 @@ import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs
 import 'package:famzy_tourz_v2/presentation/widgets/lottie_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -419,37 +420,41 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
   // @override
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
+
+  //   final userProvider = context.read<UserProvider>();
   //   final packageProvider = context.read<AddPackageProvider>();
-  //   // final userProvider = context.read<UserProvider>();
+
+  //   // Load user ONLY if not already loaded
+  //   if (!userProvider.isLoggedIn) {
+  //     final uid = userProvider.user?.uid;
+  //     if (uid != null) {
+  //       userProvider.loadUser(uid);
+  //     }
+  //   }
+
+  //   // Inject company info once user is available
+  //   final user = userProvider.user;
+  //   if (user != null) {
+  //     packageProvider.setCompanyInfo(user);
+  //   }
+
   //   // Prefill controllers in EDIT mode
   //   if (packageProvider.isEditMode) {
   //     _dateController.text = packageProvider.departureDate;
   //     _timeController.text = packageProvider.departureTime;
   //   }
-  //   // final user = userProvider
   // }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final userProvider = context.read<UserProvider>();
+    final user = context.read<UserProvider>().user;
     final packageProvider = context.read<AddPackageProvider>();
 
-    // Load user ONLY if not already loaded
-    if (!userProvider.isLoggedIn) {
-      final uid = userProvider.user?.uid;
-      if (uid != null) {
-        userProvider.loadUser(uid);
-      }
-    }
-
-    // Inject company info once user is available
-    final user = userProvider.user;
     if (user != null) {
       packageProvider.setCompanyInfo(user);
     }
 
-    // Prefill controllers in EDIT mode
     if (packageProvider.isEditMode) {
       _dateController.text = packageProvider.departureDate;
       _timeController.text = packageProvider.departureTime;
@@ -468,6 +473,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
     final destProvider = context.watch<DestinationsProvider>();
     final packageProvider = context.watch<AddPackageProvider>();
     final destination = destProvider.selectedDestination;
+    final nav = NavigationService();
 
     return PopScope(
       canPop: false,
@@ -486,251 +492,316 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
         );
         // If user confirms, use the Navigator to leave
         if (shouldPop && context.mounted) {
-          NavigationService().pop();
+          packageProvider.reset();
+          nav.pop();
         }
       },
       child: Stack(
         children: [
           DestinationBackgroundWrapper(
             imagePath: destination.image,
-            destinationName:
-                '${packageProvider.isEditMode ? 'Edit' : 'Add'} Package\nfor ${destination.name}',
-            onBackTap: () => NavigationService().maybePop(),
+            destinationName: Text(
+              '${packageProvider.isEditMode ? 'Edit' : 'Add'} Package\nfor ${destination.name}',
+              style: GoogleFonts.playpenSansArabic(
+                // Or GoogleFonts.anton, etc.an
+                fontSize: 40.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing:
+                    -1.5, // Tight spacing looks better for large titles
+              ),
+              textAlign: .center,
+            ),
+            onBackTap: () {
+              NavigationService().maybePop();
+              // packageProvider.reset();
+            },
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: Form(
                 key: packageProvider.formKey,
                 child: Column(
                   children: [
-                    // CircleAvatar(
-                    //   radius: 40.r,
-                    //   backgroundColor: AppConstants.secondaryColor,
-                    //   backgroundImage: user!.photoUrl.isNotEmpty
-                    //       ? NetworkImage(user.photoUrl)
-                    //       : null,
-                    //   child: user.photoUrl.isEmpty
-                    //       ? const Icon(
-                    //           Icons.business,
-                    //           color: Colors.white,
-                    //           size: 40,
-                    //         )
-                    //       : null,
-                    // ),
-                    // SizedBox(height: 8.h),
-                    // Text(
-                    //   user.name,
-                    //   style: TextStyle(
-                    //     color: Colors.white,
-                    //     fontSize: 16.sp,
-                    //     fontWeight: FontWeight.w600,
-                    //   ),
-                    // ),
                     const ProfileHeader(),
-                    CustTextFormField(
-                      label: 'Package Name',
-                      hint: 'e.g. Summer Special',
-                      readOnly: packageProvider.isEditMode ? true : false,
-                      initialValue: packageProvider.packageName,
-                      onChanged: (v) {
-                        if (!packageProvider.isEditMode) {
-                          packageProvider.setPackageName(v);
-                        }
-                      },
-                      onSaved: (v) => packageProvider.packageName = v ?? '',
-                      validator: (v) =>
-                          v == null || v.isEmpty ? 'Required' : null,
-                    ),
-                    // 🆔 Tour ID Display (Cleaned up logic)
-                    if (packageProvider.isEditMode)
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 10.h),
-                        child: Text(
-                          'Editing Tour ID: ${packageProvider.packageId}',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12.sp,
-                          ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: .all(
+                          color: AppConstants.whiteColorP5,
+                          width: .5.w,
                         ),
-                      )
-                    else if (
-                    // packageProvider.generateNewId(
-                    //     packageProvider.packageName,
-                    //     destination.name,
-                    //   ) !=
-                    //   ''
-                    packageProvider.packageName != '')
-                      Text(
-                        // 'Tour ID: ${packageProvider.generateNewId(packageProvider.packageName, destination.name)}',
-                        'Tour ID: ${packageProvider.previewId}',
-                        style: const TextStyle(color: Colors.white),
+                        borderRadius: .circular(15.r),
+                        color: AppConstants.primaryTransGColor,
                       ),
-                    CustTextFormField(
-                      label: 'Duration',
-                      hint: 'e.g. 2 Days/ 3 Nights',
-                      initialValue: packageProvider.duration,
-                      onSaved: (v) => packageProvider.duration = v ?? '',
-                      validator: (v) => v!.isEmpty ? 'Required' : null,
-                    ),
-                    CustTextFormField(
-                      label: 'Date',
-                      hint: 'YYYY-MM-DD',
-                      controller: _dateController,
-                      readOnly: true,
-                      onTap: () async {
-                        final pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2050),
-                          builder: (context, child) {
-                            return Theme(
-                              data: Theme.of(context).copyWith(
-                                colorScheme: const ColorScheme.dark(
-                                  primary: AppConstants.underline, // FAMZY Gold
-                                  onPrimary: Colors.white,
-                                  surface: AppConstants
-                                      .secondaryColor, // Dark Surface
-                                  onSurface: Colors.white,
+                      padding: .fromLTRB(.05.sw, .03.sh, .05.sw, .03.sh),
+                      child: Column(
+                        children: [
+                          CustTextFormField(
+                            label: 'Package Name',
+                            hint: 'e.g. Summer Special',
+                            readOnly: packageProvider.isEditMode ? true : false,
+                            initialValue: packageProvider.packageName,
+                            onChanged: (v) {
+                              if (!packageProvider.isEditMode) {
+                                packageProvider.setPackageName(v);
+                              }
+                            },
+                            onSaved: (v) =>
+                                packageProvider.packageName = v ?? '',
+                            validator: (v) =>
+                                v == null || v.isEmpty ? 'Required' : null,
+                          ),
+
+                          // 🆔 Tour ID Display (Cleaned up logic)
+                          if (packageProvider.isEditMode)
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 10.h),
+                              child: Text(
+                                'Editing Tour ID:\n${packageProvider.packageId}',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12.sp,
                                 ),
-                                textButtonTheme: TextButtonThemeData(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: AppConstants.underline,
-                                  ),
-                                ),
-                                datePickerTheme: DatePickerThemeData(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50.r),
-                                    side: BorderSide(
-                                      color: Colors.white,
-                                      width: 2.r,
-                                    ),
-                                  ),
-                                ),
-                                dialogTheme: const DialogThemeData(
-                                  backgroundColor:
-                                      AppConstants.primaryTransGColor,
-                                ),
+                                textAlign: .center,
                               ),
-
-                              child: child!,
-                            );
-                          },
-                        );
-
-                        if (pickedDate != null) {
-                          final formatted = DateFormat(
-                            'yyyy-MM-dd',
-                          ).format(pickedDate);
-                          _dateController.text = formatted;
-                          packageProvider.departureDate = formatted;
-                        }
-                      },
-                      validator: (v) =>
-                          v == null || v.isEmpty ? 'Select date' : null,
-                    ),
-
-                    CustTextFormField(
-                      label: 'Time',
-                      hint: '10:00 AM',
-                      controller: _timeController,
-                      readOnly: true,
-                      onTap: () async {
-                        final pickedTime = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                          builder: (context, child) {
-                            return Theme(
-                              data: Theme.of(context).copyWith(
-                                colorScheme: ColorScheme.dark(
-                                  primary: AppConstants.textColor,
-                                  onPrimary: AppConstants.whiteColorP5,
-                                  surface: Colors.white,
-                                  onSurface: Colors.white,
-                                ),
-                                timePickerTheme: TimePickerThemeData(
-                                  backgroundColor: AppConstants.secondaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(22.r),
-                                    side: const BorderSide(
-                                      color: Colors.white,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  // Styling the dial
-                                  dialHandColor: AppConstants.underline,
-                                  dialBackgroundColor:
-                                      AppConstants.whiteColorP5,
-                                  dialTextColor: Colors.white,
-                                  hourMinuteTextColor: Colors.white,
-                                  hourMinuteShape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50.r),
-                                    side: BorderSide(
-                                      color: AppConstants.whiteColorP5,
-                                    ),
-                                  ),
-                                  dayPeriodTextColor: Colors.white,
-                                  cancelButtonStyle: TextButton.styleFrom(
-                                    foregroundColor: Colors.red,
-                                  ),
-                                  confirmButtonStyle: TextButton.styleFrom(
-                                    foregroundColor: Colors.green,
-                                  ),
-                                ),
+                            )
+                          else if (
+                          // packageProvider.generateNewId(
+                          //     packageProvider.packageName,
+                          //     destination.name,
+                          //   ) !=
+                          //   ''
+                          packageProvider.packageName != '')
+                            Text(
+                              // 'Tour ID: ${packageProvider.generateNewId(packageProvider.packageName, destination.name)}',
+                              'Tour ID:\n${Provider.of<AddPackageProvider>(context, listen: false).getPreviewId(context)}',
+                              style: TextStyle(
+                                color: AppConstants.whiteColorP5,
                               ),
-                              child: child!,
-                            );
-                          },
-                        );
+                              textAlign: .center,
+                            ),
+                          CustTextFormField(
+                            label: 'Duration',
+                            hint: 'e.g. 2 Days/ 3 Nights',
+                            initialValue: packageProvider.duration,
+                            onSaved: (v) => packageProvider.duration = v ?? '',
+                            validator: (v) => v!.isEmpty ? 'Required' : null,
+                          ),
+                          CustTextFormField(
+                            label: 'Date',
+                            hint: 'YYYY-MM-DD',
+                            controller: _dateController,
+                            readOnly: true,
+                            onTap: () async {
+                              final pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2050),
+                                builder: (context, child) {
+                                  return Theme(
+                                    data: Theme.of(context).copyWith(
+                                      colorScheme: const ColorScheme.dark(
+                                        primary: AppConstants
+                                            .underline, // FAMZY Gold
+                                        onPrimary: Colors.white,
+                                        surface: AppConstants
+                                            .secondaryColor, // Dark Surface
+                                        onSurface: Colors.white,
+                                      ),
+                                      textButtonTheme: TextButtonThemeData(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor:
+                                              AppConstants.underline,
+                                        ),
+                                      ),
+                                      datePickerTheme: DatePickerThemeData(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            50.r,
+                                          ),
+                                          side: BorderSide(
+                                            color: Colors.white,
+                                            width: 2.r,
+                                          ),
+                                        ),
+                                      ),
+                                      dialogTheme: const DialogThemeData(
+                                        backgroundColor:
+                                            AppConstants.primaryTransGColor,
+                                      ),
+                                    ),
 
-                        if (pickedTime == null) return;
-                        // ignore: use_build_context_synchronously
-                        final formatted = pickedTime.format(context);
-                        if (!mounted) return;
-                        _timeController.text = formatted;
-                        packageProvider.departureTime = formatted;
-                      },
-                      validator: (v) =>
-                          v == null || v.isEmpty ? 'Select time' : null,
-                    ),
-                    CustTextFormField(
-                      label: 'Key Spots',
-                      hint: 'e.g. Maho dand, Fizza gat',
-                      initialValue: packageProvider.keySpots,
-                      onSaved: (v) => packageProvider.keySpots = v ?? '',
-                      validator: (v) => v!.isEmpty ? 'Required' : null,
-                    ),
-                    CustTextFormField(
-                      label: 'Vehicle',
-                      hint: 'e.g. Luxury Bus / SUV',
-                      initialValue: packageProvider.vehicle,
-                      onSaved: (v) => packageProvider.vehicle = v ?? '',
-                      validator: (v) => v!.isEmpty ? 'Required' : null,
-                    ),
-                    CustTextFormField(
-                      label: 'Price',
-                      hint: 'e.g. 500',
-                      initialValue: packageProvider.price,
-                      keyboardType: TextInputType.number,
-                      onSaved: (v) => packageProvider.price = v ?? '',
-                      validator: (v) => v!.isEmpty ? 'Required' : null,
-                    ),
+                                    child: child!,
+                                  );
+                                },
+                              );
 
-                    CustTextFormField(
-                      label: 'Description',
-                      hint: 'Tell users about the trip...',
-                      initialValue: packageProvider.description,
-                      maxLines: 4,
-                      onSaved: (v) => packageProvider.description = v ?? '',
-                      validator: (v) => v!.isEmpty ? 'Required' : null,
+                              if (pickedDate != null) {
+                                final formatted = DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(pickedDate);
+                                _dateController.text = formatted;
+                                packageProvider.departureDate = formatted;
+                              }
+                            },
+                            validator: (v) =>
+                                v == null || v.isEmpty ? 'Select date' : null,
+                          ),
+
+                          CustTextFormField(
+                            label: 'Time',
+                            hint: '10:00 AM',
+                            controller: _timeController,
+                            readOnly: true,
+                            onTap: () async {
+                              final pickedTime = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                                builder: (context, child) {
+                                  return Theme(
+                                    data: Theme.of(context).copyWith(
+                                      colorScheme: ColorScheme.dark(
+                                        primary: AppConstants.textColor,
+                                        onPrimary: AppConstants.whiteColorP5,
+                                        surface: Colors.white,
+                                        onSurface: Colors.white,
+                                      ),
+                                      timePickerTheme: TimePickerThemeData(
+                                        backgroundColor:
+                                            AppConstants.secondaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            22.r,
+                                          ),
+                                          side: const BorderSide(
+                                            color: Colors.white,
+                                            width: 0.5,
+                                          ),
+                                        ),
+                                        // Styling the dial
+                                        dialHandColor: AppConstants.underline,
+                                        dialBackgroundColor:
+                                            AppConstants.whiteColorP5,
+                                        dialTextColor: Colors.white,
+                                        hourMinuteTextColor: Colors.white,
+                                        hourMinuteShape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            50.r,
+                                          ),
+                                          side: BorderSide(
+                                            color: AppConstants.whiteColorP5,
+                                          ),
+                                        ),
+                                        dayPeriodTextColor: Colors.white,
+                                        cancelButtonStyle: TextButton.styleFrom(
+                                          foregroundColor: Colors.red,
+                                        ),
+                                        confirmButtonStyle:
+                                            TextButton.styleFrom(
+                                              foregroundColor: Colors.green,
+                                            ),
+                                      ),
+                                    ),
+                                    child: child!,
+                                  );
+                                },
+                              );
+
+                              if (pickedTime == null) return;
+                              // ignore: use_build_context_synchronously
+                              final formatted = pickedTime.format(context);
+                              if (!mounted) return;
+                              _timeController.text = formatted;
+                              packageProvider.departureTime = formatted;
+                            },
+                            validator: (v) =>
+                                v == null || v.isEmpty ? 'Select time' : null,
+                          ),
+                          CustTextFormField(
+                            label: 'Key Spots',
+                            hint: 'e.g. Maho dand, Fizza gat',
+                            initialValue: packageProvider.keySpots,
+                            onSaved: (v) => packageProvider.keySpots = v ?? '',
+                            validator: (v) => v!.isEmpty ? 'Required' : null,
+                          ),
+                          CustTextFormField(
+                            label: 'Vehicle',
+                            hint: 'e.g. Luxury Bus / SUV',
+                            initialValue: packageProvider.vehicle,
+                            onSaved: (v) => packageProvider.vehicle = v ?? '',
+                            validator: (v) => v!.isEmpty ? 'Required' : null,
+                          ),
+                          CustTextFormField(
+                            label: 'Price',
+                            hint: 'e.g. 500',
+                            initialValue: packageProvider.price,
+                            keyboardType: TextInputType.number,
+                            onSaved: (v) => packageProvider.price = v ?? '',
+                            validator: (v) => v!.isEmpty ? 'Required' : null,
+                          ),
+                          CustTextFormField(
+                            label: 'Description',
+                            hint: 'Tell users about the trip...',
+                            initialValue: packageProvider.description,
+                            maxLines: 1,
+                            onSaved: (v) =>
+                                packageProvider.description = v ?? '',
+                            validator: (v) => v!.isEmpty ? 'Required' : null,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 30.h),
                     CustomLoadingButton(
                       isLoading: packageProvider.isLoading,
                       text: packageProvider.isEditMode
                           ? 'Edit Package'
                           : 'Add Package',
                       onPressed: () async {
-                        // // 1. Get the current user from UserProvider
+                        final confirmed = await AppConfirmDialog.show(
+                          context,
+                          title: packageProvider.isEditMode
+                              ? 'Edit Package?'
+                              : 'Add Package?',
+                          message: 'Are you sure you want to save?',
+                        );
+
+                        if (!mounted) return;
+
+                        await packageProvider.submitWithConfirmation(
+                          destinationName: destination.name,
+                          confirmed: confirmed,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 20.h),
+                    // SizedBox(height: 300.h),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          if (packageProvider.showSuccess)
+            LottieOverlay(
+              assetPath: 'assets/animations/success.json',
+              onAnimationComplete: () {
+                packageProvider.reset();
+                nav.pop();
+              },
+            ),
+          if (packageProvider.showError)
+            LottieOverlay(
+              assetPath: 'assets/animations/error.json',
+              onAnimationComplete: () => packageProvider.toggleError(false),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+ // // 1. Get the current user from UserProvider
                         // final isLoggedIn = context
                         //     .read<UserProvider>()
                         //     .isLoggedIn;
@@ -768,44 +839,3 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                         //   user: user,
                         //   confirmed: confirmed,
                         // );
-
-                        final confirmed = await AppConfirmDialog.show(
-                          context,
-                          title: packageProvider.isEditMode
-                              ? 'Edit Package?'
-                              : 'Add Package?',
-                          message: 'Are you sure you want to save?',
-                        );
-
-                        if (!mounted) return;
-
-                        await packageProvider.submitWithConfirmation(
-                          destinationName: destination.name,
-                          confirmed: confirmed,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          if (packageProvider.showSuccess)
-            LottieOverlay(
-              assetPath: 'assets/animations/success.json',
-              onAnimationComplete: () {
-                packageProvider.reset();
-                NavigationService().pop();
-              },
-            ),
-          if (packageProvider.showError)
-            LottieOverlay(
-              assetPath: 'assets/animations/error.json',
-              onAnimationComplete: () => packageProvider.toggleError(false),
-            ),
-        ],
-      ),
-    );
-  }
-}

@@ -503,9 +503,8 @@
 //     }
 //   }
 // }
-
+//created by: FAMZY CodeWorks
 import 'dart:async';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:famzy_tourz_v2/data/services/auth-services/email_auth_service.dart';
 import 'package:famzy_tourz_v2/data/services/auth-services/firestor_user_service.dart';
@@ -513,11 +512,13 @@ import 'package:famzy_tourz_v2/data/services/auth-services/google_auth_service.d
 import 'package:famzy_tourz_v2/data/services/auth-services/password_reset_service.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/data/services/session_service.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -525,6 +526,9 @@ class AuthProvider extends ChangeNotifier {
   final NavigationService _navigation = NavigationService();
   final GoogleAuthService _googleAuth = GoogleAuthService.instance;
 
+  final UserProvider _userProvider;
+
+  AuthProvider(this._userProvider);
   bool _loading = false;
   bool get loading => _loading;
 
@@ -535,6 +539,21 @@ class AuthProvider extends ChangeNotifier {
 
   void resetLoading() {
     _loading = false;
+    notifyListeners();
+  }
+
+  String? _uid;
+  String? get uid => _uid;
+
+  bool get isAuthenticated => _uid != null;
+
+  void setUid(String uid) {
+    _uid = uid;
+    notifyListeners();
+  }
+
+  void clear() {
+    _uid = null;
     notifyListeners();
   }
 
@@ -581,10 +600,20 @@ class AuthProvider extends ChangeNotifier {
         email: email.trim(),
         password: password.trim(),
       );
+
       // --- THE CANCEL CHECK ---
       // If the user pressed 'Back', cancelAuthentication() was called,
       // incrementing _requestSessionId. Now currentId != _requestSessionId.
       if (currentSessionId != _requestSessionId) return;
+
+      final firebaseUser = _auth.currentUser;
+      if (firebaseUser != null) {
+        setUid(firebaseUser.uid);
+        // Load user data via UserProvider if context is available
+        await _userProvider.loadUser(firebaseUser.uid);
+        debugPrint('*****here we go to sign in');
+      }
+      debugPrint('***no way');
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
@@ -652,6 +681,7 @@ class AuthProvider extends ChangeNotifier {
         _setLoading(false);
         return;
       }
+      debugPrint('***here we go isnnew user: ${result.isNewUser}');
 
       if (currentSessionId != _requestSessionId) return;
       final prefs = await SharedPreferences.getInstance();
@@ -669,6 +699,14 @@ class AuthProvider extends ChangeNotifier {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _navigation.navigateAndClearStack(AppRoutes.additionalInfoScreen);
         });
+      }
+      //load user info if already registered
+      final firebaseUser = _auth.currentUser;
+
+      if (firebaseUser != null) {
+        debugPrint('********doen"$firebaseUser');
+        setUid(firebaseUser.uid);
+        await _userProvider.loadUser(firebaseUser.uid);
       }
 
       //to ask where to go
@@ -771,6 +809,8 @@ class AuthProvider extends ChangeNotifier {
       if (user == null) {
         throw Exception('Failed to create user.');
       }
+      setUid(user.uid);
+      await _userProvider.loadUser(user.uid);
 
       debugPrint('***3rd step');
       //save user in Firestore

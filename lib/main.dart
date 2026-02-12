@@ -154,71 +154,136 @@ void main() async {
     // MOVED: Providers are now at the very top of the widget tree
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        // ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProxyProvider<UserProvider, AuthProvider>(
+          create: (context) => AuthProvider(context.read<UserProvider>()),
+          update: (context, userProvider, previous) =>
+              previous ?? AuthProvider(userProvider),
+        ),
+
         ChangeNotifierProvider(create: (_) => SplashProvider()),
         ChangeNotifierProvider(create: (_) => MainProvider()),
         ChangeNotifierProvider(create: (_) => DestinationsProvider()),
-        ChangeNotifierProvider(create: (_) => AddPackageProvider()),
+        // ChangeNotifierProvider(
+        //   create: (_) => AddPackageProvider(),
+        // ),
+        ChangeNotifierProxyProvider<UserProvider, AddPackageProvider>(
+          create: (context) => AddPackageProvider(context.read<UserProvider>()),
+          update: (context, userProvider, previous) =>
+              previous ?? AddPackageProvider(userProvider),
+        ),
       ],
       child: const FamzyApp(),
     ),
   );
 }
 
-class FamzyApp extends StatefulWidget {
+// class FamzyApp extends StatefulWidget {
+//   const FamzyApp({super.key});
+
+//   @override
+//   State<FamzyApp> createState() => _FamzyAppState();
+// }
+
+// class _FamzyAppState extends State<FamzyApp> {
+//   // Store subscription to prevent memory leaks
+//   StreamSubscription<User?>? _authSubscription;
+
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     // 1. Deep Link initialization
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       LinkService.init();
+//     });
+
+//     // 2. The Auth Watcher: Listens for forced logouts or session changes
+//     _authSubscription = FirebaseAuth.instance.authStateChanges().listen((
+//       User? user,
+//     ) {
+//       if (!mounted) return;
+
+//       if (user == null) {
+//         // Now context works because Provider is above this widget
+//         final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+//         // Uses our NavigationService to check current location
+//         final currentRoute = NavigationService().currentRouteName;
+
+//         // Only sign out if we aren't already on the login/splash path
+//         if (currentRoute != AppRoutes.splash &&
+//             currentRoute != AppRoutes.welcome &&
+//             currentRoute != AppRoutes.login &&
+//             currentRoute != AppRoutes.signup &&
+//             currentRoute != AppRoutes.enterEmail &&
+//             currentRoute != null) {
+//           debugPrint('done you are out*************=$currentRoute');
+//           authProvider.emailSignOut();
+//         }
+//       }
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     // CRITICAL: Stop listening when the app is destroyed
+//     _authSubscription?.cancel();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ScreenUtilInit(
+//       designSize: const Size(390, 844),
+//       minTextAdapt: true,
+//       builder: (context, child) {
+//         return MaterialApp(
+//           title: 'FAMZY Tourz',
+//           theme: ThemeData(
+//             scaffoldBackgroundColor: AppConstants.primaryTransGColor,
+//             useMaterial3: false, // Ensures consistent UI for your design
+//             textSelectionTheme: const TextSelectionThemeData(
+//               cursorColor: AppConstants.tertiaryColor,
+//               selectionColor: AppConstants.primaryTransGColor,
+//               selectionHandleColor: AppConstants.tertiaryColor,
+//             ),
+//             // // 1. APPLY MONTSERRAT GLOBALLY
+//             // textTheme:
+//             //     GoogleFonts.montserratTextTheme(
+//             //       Theme.of(context).textTheme,
+//             //     ).copyWith(
+//             //       // 2. DEFINE YOUR 60.sp HERO STYLE HERE
+//             //       displayLarge: GoogleFonts.montserrat(
+//             //         fontSize: 60.sp,
+//             //         fontWeight: FontWeight.bold,
+//             //         color: Colors.white,
+//             //         shadows: [
+//             //           Shadow(
+//             //             blurRadius: 100.0,
+//             //             color: AppConstants.blackColorP5,
+//             //             offset: const Offset(2, 2),
+//             //           ),
+//             //         ],
+//             //       ),
+//             //     ),
+//           ),
+//           debugShowCheckedModeBanner: false,
+//           navigatorKey: NavigationService().navigatorKey,
+//           navigatorObservers: [
+//             AppRouteObserver(),
+//           ], // Connects the route tracker
+//           initialRoute: AppRoutes.splash,
+//           onGenerateRoute: AppRoutes.generateRoute,
+//         );
+//       },
+//     );
+//   }
+// }
+
+class FamzyApp extends StatelessWidget {
   const FamzyApp({super.key});
-
-  @override
-  State<FamzyApp> createState() => _FamzyAppState();
-}
-
-class _FamzyAppState extends State<FamzyApp> {
-  // Store subscription to prevent memory leaks
-  StreamSubscription<User?>? _authSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // 1. Deep Link initialization
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      LinkService.init();
-    });
-
-    // 2. The Auth Watcher: Listens for forced logouts or session changes
-    _authSubscription = FirebaseAuth.instance.authStateChanges().listen((
-      User? user,
-    ) {
-      if (!mounted) return;
-
-      if (user == null) {
-        // Now context works because Provider is above this widget
-        final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-        // Uses our NavigationService to check current location
-        final currentRoute = NavigationService().currentRouteName;
-
-        // Only sign out if we aren't already on the login/splash path
-        if (currentRoute != AppRoutes.splash &&
-            currentRoute != AppRoutes.welcome &&
-            currentRoute != AppRoutes.login &&
-            currentRoute != AppRoutes.signup &&
-            currentRoute != AppRoutes.enterEmail &&
-            currentRoute != null) {
-          debugPrint('done you are out*************=$currentRoute');
-          authProvider.emailSignOut();
-        }
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    // CRITICAL: Stop listening when the app is destroyed
-    _authSubscription?.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -230,37 +295,16 @@ class _FamzyAppState extends State<FamzyApp> {
           title: 'FAMZY Tourz',
           theme: ThemeData(
             scaffoldBackgroundColor: AppConstants.primaryTransGColor,
-            useMaterial3: false, // Ensures consistent UI for your design
+            useMaterial3: false,
             textSelectionTheme: const TextSelectionThemeData(
               cursorColor: AppConstants.tertiaryColor,
               selectionColor: AppConstants.primaryTransGColor,
               selectionHandleColor: AppConstants.tertiaryColor,
             ),
-            // // 1. APPLY MONTSERRAT GLOBALLY
-            // textTheme:
-            //     GoogleFonts.montserratTextTheme(
-            //       Theme.of(context).textTheme,
-            //     ).copyWith(
-            //       // 2. DEFINE YOUR 60.sp HERO STYLE HERE
-            //       displayLarge: GoogleFonts.montserrat(
-            //         fontSize: 60.sp,
-            //         fontWeight: FontWeight.bold,
-            //         color: Colors.white,
-            //         shadows: [
-            //           Shadow(
-            //             blurRadius: 100.0,
-            //             color: AppConstants.blackColorP5,
-            //             offset: const Offset(2, 2),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
           ),
           debugShowCheckedModeBanner: false,
           navigatorKey: NavigationService().navigatorKey,
-          navigatorObservers: [
-            AppRouteObserver(),
-          ], // Connects the route tracker
+          navigatorObservers: [AppRouteObserver()],
           initialRoute: AppRoutes.splash,
           onGenerateRoute: AppRoutes.generateRoute,
         );

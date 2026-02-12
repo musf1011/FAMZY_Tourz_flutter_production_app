@@ -136,9 +136,10 @@ import 'package:famzy_tourz_v2/data/services/packages-services/packages_service.
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddPackageProvider extends ChangeNotifier {
-  final UserProvider _userProvider = UserProvider();
+  final UserProvider _userProvider;
   AddPackageProvider(this._userProvider);
 
   final formKey = GlobalKey<FormState>();
@@ -159,10 +160,6 @@ class AddPackageProvider extends ChangeNotifier {
   /// COMPANY INFO (auto-filled)
   String companyName = '';
   String companyPhotoURL = '';
-  //   final user = userProvider.user!;
-
-  // companyName = user.name;
-  // companyPhotoURL = user.photoUrl;
 
   /// EDIT MODE
   PackageModel? editingPackage;
@@ -179,7 +176,7 @@ class AddPackageProvider extends ChangeNotifier {
     // (In edit mode, we want to keep the original creator's name)
     if (!isEditMode) {
       companyName = user.name;
-      companyPhotoURL = user.photoUrl;
+      companyPhotoURL = user.photoURL;
       // No notifyListeners() needed here if called during build/init
     }
   }
@@ -201,14 +198,25 @@ class AddPackageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// RESET
+  /// RESET ALL FIELDS
   void reset() {
     editingPackage = null;
+    packageName = '';
+    packageId = '';
+    duration = '';
+    departureDate = '';
+    departureTime = '';
+    keySpots = '';
+    vehicle = '';
+    description = '';
+    price = '';
+    companyName = '';
+    companyPhotoURL = '';
     showSuccess = false;
     showError = false;
+    isLoading = false;
     notifyListeners();
   }
-
   // /// MAIN SUBMIT
   // Future<void> submitWithConfirmation({
   //   required String destinationName,
@@ -242,9 +250,18 @@ class AddPackageProvider extends ChangeNotifier {
   }
 
   // 2. Stable Preview ID (No timestamp here so it doesn't flicker)
-  String get previewId {
+  // String get previewId {
+  //   if (packageName.isEmpty) return '';
+  //     // Get the provider instance from context
+  //   return '${packageName.toLowerCase().replaceAll(' ', '_').trim()}_${companyName.toLowerCase().replaceAll(' ', '_')}_${DestinationsProvider().selectedDestination.name}_uniquecode';
+  // }
+  String getPreviewId(BuildContext context) {
     if (packageName.isEmpty) return '';
-    return '${packageName.toLowerCase().replaceAll(' ', '_')}_${DestinationsProvider().selectedDestination.name}_uniquecode';
+    final destinationsProvider = Provider.of<DestinationsProvider>(
+      context,
+      listen: false,
+    );
+    return '${packageName.toLowerCase().replaceAll(' ', '_').trim()}_${companyName.toLowerCase().replaceAll(' ', '_')}_${destinationsProvider.selectedDestination.name}_uniquecode';
   }
 
   Future<void> submit(String destinationName, AppUser user) async {

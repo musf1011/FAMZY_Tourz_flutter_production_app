@@ -1,5 +1,5 @@
+//created by: FAMZY CodeWorks
 import 'package:famzy_tourz_v2/data/models/package_model.dart';
-import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/additional_info_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/email_verification_pending_screen.dart';
@@ -78,19 +78,17 @@ class AppRoutes {
         final args = settings.arguments;
 
         return MaterialPageRoute(
-          builder: (_) => ChangeNotifierProvider(
-            create: (_) {
-              final provider = AddPackageProvider(UserProvider());
+          builder: (BuildContext context) {
+            final provider = context.read<AddPackageProvider>();
 
-              if (args != null && args is PackageModel) {
-                provider.loadForEdit(args);
-              }
+            if (args != null && args is PackageModel) {
+              provider.loadForEdit(args);
+            }
 
-              return provider;
-            },
-            child: const CompanyAddPackageScreen(),
-          ),
+            return const CompanyAddPackageScreen();
+          },
         );
+
       case _:
         // default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());

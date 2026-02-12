@@ -224,11 +224,11 @@ class _PackagesScreenState extends State<PackagesScreen> {
       length: 2,
       child: DestinationBackgroundWrapper(
         imagePath: destination.image,
-        destinationName: destination.name,
+        titleText: destination.name,
         onRefresh: provider.initPackagesScreen,
         actions: [
           Consumer<DestinationsProvider>(
-            builder: (_, provider, __) {
+            builder: (_, provider, _) {
               if (!provider.canManagePackages) return const SizedBox();
 
               return Row(
@@ -259,39 +259,47 @@ class _PackagesScreenState extends State<PackagesScreen> {
         child: Column(
           children: [
             /// 🔵 TRAVEL INSIGHTS BUTTON
-            CustomLoadingButton(
-              onPressed: () async {
-                final scaffoldContext = context;
+            SizedBox(
+              height: 30.h,
+              width: 120.w,
+              child: CustomLoadingButton(
+                onPressed: () async {
+                  final scaffoldContext = context;
 
-                // 1. Show a quick loading overlay
-                await showDialog(
-                  context: scaffoldContext,
-                  barrierDismissible: false,
-                  builder: (_) => const Center(
-                    child: SpinKitSpinningLines(color: Colors.white, size: 50),
-                  ),
-                );
+                  // // // 1. Show a quick loading overlay
+                  // showDialog(
+                  //   context: scaffoldContext,
+                  //   barrierDismissible: false,
+                  //   builder: (_) => const Center(
+                  //     child: SpinKitSpinningLines(
+                  //       color: Colors.white,
+                  //       size: 50,
+                  //     ),
+                  //   ),
+                  // );
 
-                // 2. CHECK ASYNC GAP: If the state is no longer mounted, stop!
-                if (!mounted) return;
+                  // 2. CHECK ASYNC GAP: If the state is no longer mounted, stop!
+                  if (!mounted) return;
 
-                // 3. Pop the loading spinner
-                nav.pop();
+                  // // 3. Pop the loading spinner
+                  // nav.pop();
 
-                // 4. Show the Insight using your Custom Dialog
-                if (mounted && scaffoldContext.mounted) {
-                  await AppConfirmDialog.show(
-                    scaffoldContext,
-                    title: '${destination.name} Insights',
-                    message: destination.insights,
-                    confirmText: 'Got it!',
-                    cancelText: 'Close',
-                    icon: Icons.lightbulb_outline_rounded,
-                    confirmColor: AppConstants.primaryColor,
-                  );
-                }
-              },
-              text: 'Travel Insight',
+                  // 4. Show the Insight using your Custom Dialog
+                  if (mounted && scaffoldContext.mounted) {
+                    await AppConfirmDialog.show(
+                      scaffoldContext,
+                      title: '${destination.name} Insights',
+                      message: destination.insights,
+                      confirmText: 'Got it!',
+                      cancelText: 'Close',
+                      icon: Icons.lightbulb_outline_rounded,
+                      confirmColor: AppConstants.primaryColor,
+                    );
+                  }
+                },
+                // text: 'Insight',
+                child: Text('Insight', style: TextStyle(fontSize: 16.sp)),
+              ),
             ),
             const TabBar(
               labelColor: Colors.white,

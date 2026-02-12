@@ -79,6 +79,8 @@ class AppConfirmDialog extends StatelessWidget {
             ),
             SizedBox(width: 10.w),
           ],
+          // Column(
+          //   children: [
           Expanded(
             child: Text(
               title,
@@ -92,13 +94,17 @@ class AppConfirmDialog extends StatelessWidget {
           ),
         ],
       ),
-      content: Text(
-        message,
-        style: GoogleFonts.poppins(
-          fontSize: 14.sp,
-          color: AppConstants.whiteColorP9,
-          // fontWeight: .w500,
-          letterSpacing: 0.4,
+      //   ],
+      // ),
+      content: SingleChildScrollView(
+        child: Text(
+          message,
+          style: GoogleFonts.poppins(
+            fontSize: 14.sp,
+            color: AppConstants.whiteColorP9,
+            // fontWeight: .w500,
+            letterSpacing: 0.4,
+          ),
         ),
       ),
 
