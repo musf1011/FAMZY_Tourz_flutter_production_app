@@ -41,13 +41,20 @@ import 'package:famzy_tourz_v2/data/services/auth-services/email_auth_service.da
 import 'package:famzy_tourz_v2/data/services/link_service.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/data/services/session_service.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SplashProvider extends ChangeNotifier {
   final NavigationService _navigation = NavigationService();
 
-  Future<void> initialize() async {
+  Future<void> initialize(BuildContext context) async {
+    final userProvider = context.read<UserProvider>();
+    // 1️⃣ WAIT until UserProvider finishes initializing
+    while (userProvider.initializing) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
     //DEEP LINK HAS ABSOLUTE PRIORITY
     if (LinkService.pendingRoute != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

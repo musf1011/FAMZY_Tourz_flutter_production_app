@@ -9,7 +9,9 @@ import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/reset_pa
 import 'package:famzy_tourz_v2/presentation/screens/Auth/signup_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/company_add_package_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/hotel_placeholder_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/package_detail_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/packages_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/passenger_info_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/main_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -28,11 +30,13 @@ class AppRoutes {
   static const String enterEmail = '/enter_email';
   static const String resetEmailSent = '/reset_email_sent';
   static const String resetPassword = '/reset_password';
-  //main screens
+  //-----main screens----
   static const String main = '/main';
   static const String packages = '/packages';
   static const hotelPlaceholder = '/hotel-placeholder';
   static const companyAddPackage = '/comapany-add-package';
+  static const packageDetail = '/package-detail';
+  static const passengerInfo = '/passenger-info';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -76,7 +80,6 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const PackagesScreen());
       case companyAddPackage:
         final args = settings.arguments;
-
         return MaterialPageRoute(
           builder: (BuildContext context) {
             final provider = context.read<AddPackageProvider>();
@@ -88,7 +91,10 @@ class AppRoutes {
             return const CompanyAddPackageScreen();
           },
         );
-
+      case packageDetail:
+        return MaterialPageRoute(builder: (_) => const PackageDetailScreen());
+      case passengerInfo:
+        return MaterialPageRoute(builder: (_) => const PassengerInfoScreen());
       case _:
         // default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());

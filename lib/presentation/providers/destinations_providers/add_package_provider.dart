@@ -155,7 +155,7 @@ class AddPackageProvider extends ChangeNotifier {
   String keySpots = '';
   String vehicle = '';
   String description = '';
-  String price = '';
+  int price = 0;
 
   /// COMPANY INFO (auto-filled)
   String companyName = '';
@@ -209,7 +209,7 @@ class AddPackageProvider extends ChangeNotifier {
     keySpots = '';
     vehicle = '';
     description = '';
-    price = '';
+    price = 0;
     companyName = '';
     companyPhotoURL = '';
     showSuccess = false;

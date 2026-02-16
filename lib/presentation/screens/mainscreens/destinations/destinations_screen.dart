@@ -134,7 +134,7 @@ class _DestinationPageState extends State<_DestinationPage> {
                         expanded ? 'Show less' : 'Read more',
                         style: TextStyle(
                           color: expanded
-                              ? AppConstants.underline
+                              ? AppConstants.famzyGold
                               : AppConstants.googleBlue,
                           fontSize: 15.sp,
                         ),

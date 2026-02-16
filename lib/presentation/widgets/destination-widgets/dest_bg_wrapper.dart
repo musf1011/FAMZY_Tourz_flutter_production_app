@@ -56,7 +56,7 @@ class DestinationBackgroundWrapper extends StatelessWidget {
                   IconButton(
                     icon: Icon(
                       Icons.arrow_circle_left_outlined,
-                      size: 40.h,
+                      size: 45.r,
                       color: AppConstants.whiteColorP5,
                     ),
                     onPressed: onBackTap ?? () => NavigationService().pop(),

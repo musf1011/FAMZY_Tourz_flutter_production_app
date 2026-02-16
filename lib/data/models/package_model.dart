@@ -54,7 +54,7 @@ class PackageModel {
   final String keySpots; // Stored as a comma-separated string
   final String vehicle; // e.g., "Toyota Hiace" or "4x4 Prado"
   final String description;
-  final String price;
+  final int price;
   final String destination; // The ID of the destination it belongs to
   final String packageCreatedAt;
   final String? packageEditedAt;
@@ -115,7 +115,11 @@ class PackageModel {
       keySpots.split(',').map((e) => e.trim()).toList();
 
   /// Formatted price for display
-  String get formattedPrice => 'Rs. $price';
+  // String get formattedPrice => 'Rs. $price';
+  String get formattedPrice {
+    final formatter = NumberFormat('#,###');
+    return 'Rs. ${formatter.format(price)}';
+  }
 
   // --- DATA CONVERSION ---
 
@@ -131,9 +135,10 @@ class PackageModel {
       keySpots: map['keySpots'] ?? '',
       vehicle: map['vehicle'] ?? '',
       description: map['description'] ?? '',
-      price: map['price'] ?? '0',
+      price: (map['price'] as num?)?.toInt() ?? 0,
       destination: map['destination'] ?? '',
       packageCreatedAt: map['packageCreatedAt'] ?? '',
+      packageEditedAt: map['packageEditedAt'],
     );
   }
 

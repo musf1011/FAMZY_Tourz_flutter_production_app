@@ -16,12 +16,14 @@ class AppConstants {
   static const Color lightGreen = Color.fromARGB(150, 100, 200, 100);
   static const Color lightRed = Color.fromARGB(150, 255, 40, 30);
   static const Color transRColor = Color.fromARGB(155, 255, 155, 155);
-  static const Color underline = Color.fromARGB(255, 180, 150, 30);
+  static const Color famzyGold = Color.fromARGB(255, 180, 150, 30);
+  static const Color transWhite = Colors.white24;
   // Using getters instead of static variables for dynamic colors (as it first need to fully initialize before assigning it)
   static Color get blackColorP7 => Colors.black.withAlpha((255 * 0.7).round());
   static Color get blackColorP5 => Colors.black.withAlpha((255 * 0.5).round());
   static Color get blackColorP3 => Colors.black.withAlpha((255 * 0.3).round());
   static Color get whiteColorP9 => Colors.white.withAlpha((255 * 0.9).round());
+  static Color get whiteColorP7 => Colors.white.withAlpha((255 * 0.7).round());
   static Color get whiteColorP5 => Colors.white.withAlpha((255 * 0.5).round());
 
   // --- Auth UI Colors ---
@@ -53,7 +55,7 @@ class AppConstants {
       // );
       GoogleFonts.playpenSansArabic(
         // Or GoogleFonts.anton, etc.an
-        fontSize: 50.sp,
+        fontSize: 40.sp,
         fontWeight: FontWeight.bold,
         color: Colors.white,
         letterSpacing: -1.5, // Tight spacing looks better for large titles

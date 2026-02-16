@@ -95,21 +95,20 @@
 //   }
 // }
 
-import 'dart:async'; // Required for StreamSubscription
+// Required for StreamSubscription
 import 'package:famzy_tourz_v2/constants.dart';
-import 'package:famzy_tourz_v2/data/services/link_service.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/firebase_options.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/booking_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/splash_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:famzy_tourz_v2/routes/app_routes_obsserver.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -173,6 +172,7 @@ void main() async {
           update: (context, userProvider, previous) =>
               previous ?? AddPackageProvider(userProvider),
         ),
+        ChangeNotifierProvider(create: (_) => BookingProvider()),
       ],
       child: const FamzyApp(),
     ),

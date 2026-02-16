@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        context.read<SplashProvider>().initialize();
+        context.read<SplashProvider>().initialize(context);
       }
     });
   }

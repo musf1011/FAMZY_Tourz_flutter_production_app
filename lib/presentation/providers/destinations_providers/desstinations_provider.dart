@@ -199,7 +199,7 @@ class DestinationsProvider extends ChangeNotifier {
 
       // 1. Convert raw data to models
       final allPackages = raw.map((e) => PackageModel.fromMap(e)).toList();
-
+      debugPrint('****got raw ${allPackages[0]}');
       // 2. Filter and Sort
       final now = DateTime.now();
 
@@ -315,4 +315,42 @@ class DestinationsProvider extends ChangeNotifier {
     pageController.dispose();
     super.dispose();
   }
+
+  /// ================= PACKAGE DETAIL STATE =================
+
+  // PackageModel? _selectedPackage;
+  // PackageModel? get selectedPackage => _selectedPackage;
+
+  // int _seatCount = 1;
+  // int get seatCount => _seatCount;
+
+  // int get totalPrice {
+  //   if (_selectedPackage == null) return 0;
+  //   return _seatCount * _selectedPackage!.price;
+  // }
+
+  // /// select package
+  // void selectPackage(PackageModel package) {
+  //   _selectedPackage = package;
+  //   _seatCount = 1;
+  //   notifyListeners();
+  // }
+
+  // /// increase seats
+  // void increaseSeat() {
+  //   if (_seatCount < 5) {
+  //     _seatCount++;
+  //     notifyListeners();
+  //   }
+  // }
+
+  // /// decrease seats
+  // void decreaseSeat() {
+  //   debugPrint('****seat decreased $_seatCount');
+  //   if (_seatCount > 1) {
+  //     _seatCount--;
+
+  //     notifyListeners();
+  //   }
+  // }
 }

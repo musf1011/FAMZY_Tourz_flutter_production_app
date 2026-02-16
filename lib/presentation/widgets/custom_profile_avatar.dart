@@ -11,7 +11,7 @@ class CustomProfileAvatar extends StatelessWidget {
   const CustomProfileAvatar({
     super.key,
     required this.imageUrl,
-    this.radius = 40.0,
+    this.radius = 30.0,
     this.borderWidth = 1.0,
     this.fallbackIcon = Icons.business,
   });

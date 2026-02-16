@@ -161,9 +161,12 @@
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/models/package_model.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/booking_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_profile_avatar.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/info_chip.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -253,10 +256,10 @@ class _PackageCardState extends State<PackageCard> {
               runSpacing: 8,
               alignment: .spaceBetween,
               children: [
-                _infoChip(Icons.calendar_month, widget.package.departureDate),
-                _infoChip(Icons.timelapse, widget.package.departureTime),
-                _infoChip(Icons.timeline, widget.package.duration),
-                _infoChip(Icons.directions_car, widget.package.vehicle),
+                infoChip(Icons.calendar_month, widget.package.departureDate),
+                infoChip(Icons.timelapse, widget.package.departureTime),
+                infoChip(Icons.timeline, widget.package.duration),
+                infoChip(Icons.directions_car, widget.package.vehicle),
               ],
             ),
 
@@ -268,14 +271,14 @@ class _PackageCardState extends State<PackageCard> {
               children: [
                 const Icon(
                   Icons.place,
-                  color: AppConstants.underline,
+                  color: AppConstants.famzyGold,
                   size: 18,
                 ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     widget.package.keySpots,
-                    style: const TextStyle(color: Colors.white70),
+                    style: TextStyle(color: AppConstants.whiteColorP9),
                   ),
                 ),
               ],
@@ -288,7 +291,7 @@ class _PackageCardState extends State<PackageCard> {
               widget.package.description,
               maxLines: expanded ? null : 3,
               overflow: expanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.white70),
+              style: TextStyle(color: AppConstants.whiteColorP5),
             ),
             if (widget.package.description.length > 120)
               TextButton(
@@ -297,16 +300,26 @@ class _PackageCardState extends State<PackageCard> {
                 child: Text(
                   expanded ? 'Show less' : 'See more',
                   style: expanded
-                      ? const TextStyle(color: AppConstants.underline)
+                      ? const TextStyle(color: AppConstants.famzyGold)
                       : const TextStyle(color: AppConstants.googleBlue),
                 ),
               ),
 
             const SizedBox(height: 14),
             CustomLoadingButton(
-              text: '${widget.package.price} PKR / Person',
+              text: '${widget.package.price.toString()} PKR / Person',
               backgroundColor: AppConstants.primaryColor,
-              onPressed: () => provider.bookPackage(widget.package),
+              // onPressed: () => NavigationService().navigateTo(
+              //   AppRoutes.packageDetail,
+              //   arguments: widget.package,
+              // ),
+              onPressed: () {
+                final provider = context.read<BookingProvider>();
+                provider.selectPackage(widget.package);
+                final user = context.read<UserProvider>().user;
+                provider.prefillFirstPassenger(user);
+                nav.navigateTo(AppRoutes.packageDetail);
+              },
               isLoading: false,
             ),
 
@@ -362,28 +375,6 @@ class _PackageCardState extends State<PackageCard> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  /// 🔹 INFO CHIP
-  Widget _infoChip(IconData icon, String text) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: Colors.white12,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16, color: Colors.white70),
-          const SizedBox(width: 6),
-          Text(
-            text,
-            style: const TextStyle(color: Colors.white70, fontSize: 13),
-          ),
-        ],
       ),
     );
   }

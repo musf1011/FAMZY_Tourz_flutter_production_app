@@ -606,13 +606,13 @@ class AuthProvider extends ChangeNotifier {
       // incrementing _requestSessionId. Now currentId != _requestSessionId.
       if (currentSessionId != _requestSessionId) return;
 
-      final firebaseUser = _auth.currentUser;
-      if (firebaseUser != null) {
-        setUid(firebaseUser.uid);
-        // Load user data via UserProvider if context is available
-        await _userProvider.loadUser(firebaseUser.uid);
-        debugPrint('*****here we go to sign in');
-      }
+      // final firebaseUser = _auth.currentUser;
+      // if (firebaseUser != null) {
+      //   setUid(firebaseUser.uid);
+      //   // Load user data via UserProvider if context is available
+      //   await _userProvider.loadUser(firebaseUser.uid);
+      //   debugPrint('*****here we go to sign in');
+      // }
       debugPrint('***no way');
 
       final prefs = await SharedPreferences.getInstance();
@@ -701,13 +701,13 @@ class AuthProvider extends ChangeNotifier {
         });
       }
       //load user info if already registered
-      final firebaseUser = _auth.currentUser;
+      // final firebaseUser = _auth.currentUser;
 
-      if (firebaseUser != null) {
-        debugPrint('********doen"$firebaseUser');
-        setUid(firebaseUser.uid);
-        await _userProvider.loadUser(firebaseUser.uid);
-      }
+      // if (firebaseUser != null) {
+      //   debugPrint('********doen"$firebaseUser');
+      //   setUid(firebaseUser.uid);
+      //   await _userProvider.loadUser(firebaseUser.uid);
+      // }
 
       //to ask where to go
       final status = await SessionService.getSessionStatus();
@@ -806,16 +806,16 @@ class AuthProvider extends ChangeNotifier {
       if (currentSessionId != _requestSessionId) return;
       debugPrint('***2nd step');
       final user = userCred.user;
-      if (user == null) {
-        throw Exception('Failed to create user.');
-      }
-      setUid(user.uid);
-      await _userProvider.loadUser(user.uid);
+      // if (user == null) {
+      //   throw Exception('Failed to create user.');
+      // }
+      // setUid(user.uid);
+      // await _userProvider.loadUser(user.uid);
 
       debugPrint('***3rd step');
       //save user in Firestore
       await EmailAuthService.instance.saveUserToFirestore(
-        uid: user.uid,
+        uid: user!.uid,
         fullName: fullName,
         email: email,
         age: age,

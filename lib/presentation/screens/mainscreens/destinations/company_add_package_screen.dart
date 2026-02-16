@@ -387,6 +387,7 @@ import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_glass_wrapper.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_text_form_field.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/dest_bg_wrapper.dart';
@@ -504,7 +505,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
               '${packageProvider.isEditMode ? 'Edit' : 'Add'} Package\nfor ${destination.name}',
               style: GoogleFonts.playpenSansArabic(
                 // Or GoogleFonts.anton, etc.an
-                fontSize: 40.sp,
+                fontSize: 30.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 letterSpacing:
@@ -523,16 +524,18 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                 child: Column(
                   children: [
                     const ProfileHeader(),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: .all(
-                          color: AppConstants.whiteColorP5,
-                          width: .5.w,
-                        ),
-                        borderRadius: .circular(15.r),
-                        color: AppConstants.primaryTransGColor,
-                      ),
-                      padding: .fromLTRB(.05.sw, .03.sh, .05.sw, .03.sh),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     border: .all(
+                    //       color: AppConstants.whiteColorP5,
+                    //       width: .5.w,
+                    //     ),
+                    //     borderRadius: .circular(15.r),
+                    //     color: AppConstants.primaryTransGColor,
+                    //   ),
+                    //   padding: .fromLTRB(.05.sw, .03.sh, .05.sw, .03.sh),
+                    //   child:
+                    CustomGlassWrapper(
                       child: Column(
                         children: [
                           CustTextFormField(
@@ -602,7 +605,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                                     data: Theme.of(context).copyWith(
                                       colorScheme: const ColorScheme.dark(
                                         primary: AppConstants
-                                            .underline, // FAMZY Gold
+                                            .famzyGold, // FAMZY Gold
                                         onPrimary: Colors.white,
                                         surface: AppConstants
                                             .secondaryColor, // Dark Surface
@@ -611,7 +614,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                                       textButtonTheme: TextButtonThemeData(
                                         style: TextButton.styleFrom(
                                           foregroundColor:
-                                              AppConstants.underline,
+                                              AppConstants.famzyGold,
                                         ),
                                       ),
                                       datePickerTheme: DatePickerThemeData(
@@ -679,7 +682,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                                           ),
                                         ),
                                         // Styling the dial
-                                        dialHandColor: AppConstants.underline,
+                                        dialHandColor: AppConstants.famzyGold,
                                         dialBackgroundColor:
                                             AppConstants.whiteColorP5,
                                         dialTextColor: Colors.white,
@@ -734,10 +737,24 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                           CustTextFormField(
                             label: 'Price',
                             hint: 'e.g. 500',
-                            initialValue: packageProvider.price,
+                            initialValue: packageProvider.price > 0
+                                ? packageProvider.price.toString()
+                                : '',
                             keyboardType: TextInputType.number,
-                            onSaved: (v) => packageProvider.price = v ?? '',
-                            validator: (v) => v!.isEmpty ? 'Required' : null,
+                            onSaved: (v) => packageProvider.price =
+                                int.tryParse(v ?? '0') ?? 0,
+                            // validator: (v) => v!.isEmpty || v==0  ? 'Required' : null,
+                            validator: (v) {
+                              if (v == null || v.isEmpty) return 'Required';
+
+                              final n = int.tryParse(v);
+                              if (n == null) return 'Enter a valid number';
+                              if (n <= 1000) {
+                                return 'Price must be greater than 1000';
+                              }
+
+                              return null;
+                            },
                           ),
                           CustTextFormField(
                             label: 'Description',

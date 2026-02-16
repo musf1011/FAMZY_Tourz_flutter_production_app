@@ -95,7 +95,9 @@ class UserProvider extends ChangeNotifier {
   AppUser? get user => _user;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool _initializing = true;
+  bool get initializing => _initializing;
   bool get isLoggedIn => _auth.currentUser != null;
 
   UserProvider() {
@@ -103,34 +105,38 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> _initialize() async {
+    //if already login
     final firebaseUser = _auth.currentUser;
 
     if (firebaseUser != null) {
-      await loadUser(firebaseUser.uid);
+      await loadUserFromFirestore(firebaseUser.uid);
     }
-
+    //listen auth changes
     _auth.authStateChanges().listen((firebaseUser) async {
       if (firebaseUser != null) {
-        await loadUser(firebaseUser.uid);
+        await loadUserFromFirestore(firebaseUser.uid);
       } else {
-        clear();
+        _clearUser();
       }
     });
+    _initializing = false;
+    notifyListeners();
   }
 
-  Future<void> loadUser(String uid) async {
-    final doc = await FirebaseFirestore.instance
-        .collection('usersInfo')
-        .doc(uid)
-        .get();
+  Future<void> loadUserFromFirestore(String uid) async {
+    final doc = await _firestore.collection('usersInfo').doc(uid).get();
 
-    if (!doc.exists) return;
+    if (!doc.exists) {
+      _user = null;
+      notifyListeners();
+      return;
+    }
 
     _user = AppUser.fromMap(doc.data()!);
     notifyListeners();
   }
 
-  void clear() {
+  void _clearUser() {
     _user = null;
     notifyListeners();
   }
