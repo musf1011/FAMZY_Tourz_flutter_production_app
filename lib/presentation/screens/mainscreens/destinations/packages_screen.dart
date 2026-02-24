@@ -233,13 +233,20 @@ class _PackagesScreenState extends State<PackagesScreen> {
 
               return Row(
                 children: [
-                  Text('Add Package', style: AppConstants.sendButtonTextStyle),
+                  Text(
+                    'Add Package',
+                    style: TextStyle(
+                      color: AppConstants.whiteColorP5,
+                      fontSize: 16.sp,
+                    ),
+                  ),
                   IconButton(
                     icon: Icon(
                       Icons.add_box_rounded,
                       color: AppConstants.whiteColorP5,
-                      size: 32.h,
+                      size: 24.h,
                     ),
+
                     onPressed: () {
                       nav.navigateTo(
                         AppRoutes.companyAddPackage,
@@ -266,25 +273,8 @@ class _PackagesScreenState extends State<PackagesScreen> {
                 onPressed: () async {
                   final scaffoldContext = context;
 
-                  // // // 1. Show a quick loading overlay
-                  // showDialog(
-                  //   context: scaffoldContext,
-                  //   barrierDismissible: false,
-                  //   builder: (_) => const Center(
-                  //     child: SpinKitSpinningLines(
-                  //       color: Colors.white,
-                  //       size: 50,
-                  //     ),
-                  //   ),
-                  // );
-
-                  // 2. CHECK ASYNC GAP: If the state is no longer mounted, stop!
                   if (!mounted) return;
-
-                  // // 3. Pop the loading spinner
-                  // nav.pop();
-
-                  // 4. Show the Insight using your Custom Dialog
+                  //insight
                   if (mounted && scaffoldContext.mounted) {
                     await AppConfirmDialog.show(
                       scaffoldContext,
@@ -293,7 +283,7 @@ class _PackagesScreenState extends State<PackagesScreen> {
                       confirmText: 'Got it!',
                       cancelText: 'Close',
                       icon: Icons.lightbulb_outline_rounded,
-                      confirmColor: AppConstants.primaryColor,
+                      confirmColor: AppConstants.famzyGold,
                     );
                   }
                 },

@@ -64,9 +64,6 @@ class ProfileHeader extends StatelessWidget {
             letterSpacing: 0.5,
           ),
         ),
-
-        // Bottom padding to separate from the form fields
-        SizedBox(height: 16.h),
       ],
     );
   }

@@ -8,6 +8,7 @@ import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/seat_cou
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +17,9 @@ class PackageDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final pkg =  package;
-    // final provider = context.watch<DestinationsProvider>();
-    // final destination = provider.selectedDestination;
     final destProvider = context.watch<DestinationsProvider>();
     final bookingProvider = context.watch<BookingProvider>();
+
     final pkg = bookingProvider.package;
     final destination = destProvider.selectedDestination;
     return Scaffold(
@@ -46,7 +45,6 @@ class PackageDetailScreen extends StatelessWidget {
                     image: AssetImage(destination.image),
                     fit: BoxFit.cover,
                   ),
-                  // color: AppConstants.primaryColor,
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(50.r),
                   ),
@@ -114,12 +112,6 @@ class PackageDetailScreen extends StatelessWidget {
                               infoChip(Icons.directions_car, pkg.vehicle),
                             ],
                           ),
-
-                          // _infoTile('📅 Date', pkg.departureDate),
-                          // _infoTile('⏰ Time', pkg.departureTime),
-                          // _infoTile('⛳ Duration', pkg.duration),
-                          // _infoTile('📍 Key Spots', pkg.keySpots),
-                          // _infoTile('🚗 Vehicle', pkg.vehicle),
                           SizedBox(height: 20.h),
 
                           /// KEY SPOTS
@@ -165,46 +157,8 @@ class PackageDetailScreen extends StatelessWidget {
 
                           SizedBox(height: 10.h),
 
-                          /// 🔹 SEAT SELECTOR
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     Text(
-                          //       'Seats',
-                          //       style: GoogleFonts.poppins(
-                          //         fontSize: 18.sp,
-                          //         fontWeight: FontWeight.w600,
-                          //         color: AppConstants.underline,
-                          //       ),
-                          //     ),
-                          // Row(
-                          //   children: [
-                          //     IconButton(
-                          //       onPressed: () {
-                          //         if (seatCount > 1) {
-                          //           setState(() => seatCount--);
-                          //         }
-                          //       },
-                          //       icon: const Icon(Icons.remove_circle,color: A,),
-                          //     ),
-                          //     Text(
-                          //       '$seatCount',
-                          //       style: GoogleFonts.poppins(fontSize: 18.sp),
-                          //     ),
-                          //     IconButton(
-                          //       onPressed: () {
-                          //         if (seatCount < 5) {
-                          //           setState(() => seatCount++);
-                          //         }
-                          //       },
-                          //       icon: const Icon(Icons.add_circle),
-                          //     ),
-                          //   ],
-                          // ),
                           SeatCountContainer(provider: bookingProvider),
 
-                          //   ],
-                          // ),
                           SizedBox(height: 10.h),
 
                           /// 🔹 TOTAL PRICE
@@ -219,45 +173,20 @@ class PackageDetailScreen extends StatelessWidget {
 
                           SizedBox(height: 10.h),
 
-                          /// 🔹 BOOK BUTTON
-                          // SizedBox(
-                          //   width: double.infinity,
-                          //   height: 50.h,
-                          //   child: ElevatedButton(
-                          //     onPressed: () {
-                          //       // Navigator.pushNamed(
-                          //       //   context,
-                          //       //   AppRoutes.passengerInfo,
-                          //       //   arguments: {
-                          //       //     "package": pkg,
-                          //       //     "seats": seatCount,
-                          //       //   },
-                          //       // );
-                          //     },
-                          //     style: ElevatedButton.styleFrom(
-                          //       shape: RoundedRectangleBorder(
-                          //         borderRadius: BorderRadius.circular(12.r),
-                          //       ),
-                          //     ),
-                          //     child: Text(
-                          //       'Get Tickets ',
-                          //       style: GoogleFonts.poppins(fontSize: 16.sp),
-                          //     ),
-                          //   ),
-                          // ),
-                          CustomLoadingButton(
-                            onPressed: () {
-                              // context.read<BookingProvider>().initialize(
-                              //   pkg,
-                              //   bookingProvider.seatCount,
-                              // );
-                              NavigationService().navigateTo(
-                                AppRoutes.passengerInfo,
-                              );
-                            },
-                            text: 'Get Tickets   🎫',
-                          ),
-
+                          bookingProvider.checkingBooking
+                              ? const SpinKitSpinningLines(color: Colors.white)
+                              : CustomLoadingButton(
+                                  onPressed: bookingProvider.alreadyBooked
+                                      ? () {}
+                                      : () {
+                                          NavigationService().navigateTo(
+                                            AppRoutes.passengerInfo,
+                                          );
+                                        },
+                                  text: bookingProvider.alreadyBooked
+                                      ? 'Already Booked 🎫'
+                                      : 'Get Tickets 🎫',
+                                ),
                           SizedBox(height: 30.h),
                         ],
                       ),
@@ -267,21 +196,6 @@ class PackageDetailScreen extends StatelessWidget {
               );
             },
           ),
-
-          // /// 🔹 BACK BUTTON
-          // SafeArea(
-          //   child: Padding(
-          //     padding: EdgeInsets.all(16.w),
-          //     child: CircleAvatar(
-          //       backgroundColor: Colors.white,
-          //       child: IconButton(
-          //         icon: const Icon(Icons.arrow_back),
-          //         onPressed: () => Navigator.pop(context),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          /// 🔹 CUSTOM BACK BUTTON
           Positioned(
             top: 0,
             left: 0,
@@ -294,7 +208,7 @@ class PackageDetailScreen extends StatelessWidget {
                     size: 40.r,
                     color: AppConstants.whiteColorP7,
                   ),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => NavigationService().pop(),
                 ),
               ),
             ),
@@ -303,22 +217,4 @@ class PackageDetailScreen extends StatelessWidget {
       ),
     );
   }
-
-  // Widget _infoTile(String title, String value) {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(vertical: 6.h),
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           flex: 2,
-  //           child: Text(
-  //             title,
-  //             style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-  //           ),
-  //         ),
-  //         Expanded(flex: 3, child: Text(value, style: GoogleFonts.poppins())),
-  //       ],
-  //     ),
-  //   );
-  // }
 }

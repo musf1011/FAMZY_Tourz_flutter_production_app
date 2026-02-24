@@ -17,7 +17,7 @@ class AppConstants {
   static const Color lightRed = Color.fromARGB(150, 255, 40, 30);
   static const Color transRColor = Color.fromARGB(155, 255, 155, 155);
   static const Color famzyGold = Color.fromARGB(255, 180, 150, 30);
-  static const Color transWhite = Colors.white24;
+  static const Color transGrey = Color.fromARGB(159, 100, 100, 100);
   // Using getters instead of static variables for dynamic colors (as it first need to fully initialize before assigning it)
   static Color get blackColorP7 => Colors.black.withAlpha((255 * 0.7).round());
   static Color get blackColorP5 => Colors.black.withAlpha((255 * 0.5).round());
@@ -31,7 +31,7 @@ class AppConstants {
   static const Color authCardColor = Colors.white;
   static const Color googleBlue = Color(0xFF4285F4);
 
-  static const Color accentColor = Colors.lightBlueAccent;
+  static const Color accentColor = Color.fromARGB(200, 100, 200, 255);
   static const Color textColor = Colors.black87;
   static const Color errorColor = Colors.red;
 
@@ -86,7 +86,7 @@ class AppConstants {
   static TextStyle sendButtonTextStyle = TextStyle(
     color: AppConstants.whiteColorP5,
     fontWeight: FontWeight.bold,
-    fontSize: 18.0,
+    fontSize: 12.sp,
   );
 
   //auth cards style

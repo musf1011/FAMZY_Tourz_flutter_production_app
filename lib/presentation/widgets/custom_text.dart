@@ -18,8 +18,8 @@ class CustomText extends StatelessWidget {
     this.height,
     this.fontWeight = FontWeight.w400,
     this.fontSize,
-    this.color = Colors.black,
-    this.align,
+    this.color = Colors.white,
+    this.align = .start,
     this.underline = false,
   });
 

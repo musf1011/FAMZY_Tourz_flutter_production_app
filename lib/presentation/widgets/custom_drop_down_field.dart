@@ -2,12 +2,12 @@ import 'package:famzy_tourz_v2/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class GenderDropdownField extends StatelessWidget {
+class CustomGenderDropdownField extends StatelessWidget {
   final String? value;
-  final ValueChanged<String?> onChanged;
+  final ValueChanged<String?>? onChanged;
   final FormFieldValidator<String>? validator;
 
-  const GenderDropdownField({
+  const CustomGenderDropdownField({
     super.key,
     required this.value,
     required this.onChanged,
@@ -21,8 +21,10 @@ class GenderDropdownField extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       borderRadius: BorderRadius.circular(15.r),
-      dropdownColor: AppConstants.primaryTransGColor,
-      iconEnabledColor: AppConstants.tertiaryColor,
+      dropdownColor: AppConstants.primaryColor,
+
+      iconEnabledColor: Colors.grey,
+
       decoration: InputDecoration(
         label: const Text('Gender', style: TextStyle(color: Colors.white)),
         hint: Text(

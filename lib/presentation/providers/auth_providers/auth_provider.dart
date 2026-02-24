@@ -522,6 +522,23 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
+  // final TextEditingController _fullName = TextEditingController();
+  // final TextEditingController _email = TextEditingController();
+  // final TextEditingController _password = TextEditingController();
+  // final TextEditingController _confirmPassword = TextEditingController();
+  // final TextEditingController _age = TextEditingController();
+  String fullName = '';
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
+  String age = '';
+  // String fullName = '';
+  // String fullName = '';
+  // String fullName = '';
+  // String fullName = '';
+  // String fullName = '';
+  // String fullName = '';
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final NavigationService _navigation = NavigationService();
   final GoogleAuthService _googleAuth = GoogleAuthService.instance;
@@ -588,14 +605,16 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //email & password signin for existing account
-  Future<void> signInWithEmail(String email, String password) async {
+  Future<void> signInWithEmail(
+    // String email, String password
+  ) async {
     // // Increment counter to mark a NEW request session
     // final int sessionId = ++_activeRequestCounter;
     // Capture the ID at the start of THIS specific function call
     final int currentSessionId = _requestSessionId;
     try {
       _setLoading(true);
-
+      debugPrint('*****$email & $password');
       await _auth.signInWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
@@ -786,13 +805,15 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //if new, signn up using email & password
-  Future<void> signUpWithEmail({
-    required String fullName,
-    required String email,
-    required String password,
-    required int age,
-    required String? gender,
-  }) async {
+  Future<void> signUpWithEmail(
+    // {
+    // required String fullName,
+    // required String email,
+    // required String password,
+    // required int age,
+    // required String? gender,
+    // }
+  ) async {
     final currentSessionId = _requestSessionId;
     try {
       _setLoading(true);
@@ -818,8 +839,8 @@ class AuthProvider extends ChangeNotifier {
         uid: user!.uid,
         fullName: fullName,
         email: email,
-        age: age,
-        gender: gender ?? '',
+        age: int.parse(age),
+        gender: selectedGender ?? 'other',
         photoUrl: '',
       );
 
@@ -1168,7 +1189,6 @@ class AuthProvider extends ChangeNotifier {
         _navigation.navigateAndClearStack(AppRoutes.welcome);
       });
     } on FirebaseAuthException catch (e) {
-      print('$e');
       _navigation.showSnackBar(
         title: 'Reset Failed',
         message: _getFirebaseErrorMessage(e.code),
@@ -1194,4 +1214,42 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     _navigation.navigateAndClearStack(AppRoutes.login);
   }
+
+  UserType _selectedUserType = UserType.tourist;
+  UserType get selectedUserType => _selectedUserType;
+
+  bool get isCompany => _selectedUserType == UserType.company;
+
+  void setUserType(UserType userType) {
+    _selectedUserType = userType;
+    notifyListeners();
+  }
+
+  bool _isPasswordVisible = true;
+  bool get isPasswordVisible => _isPasswordVisible;
+  void togglePasswordVisibility() {
+    _isPasswordVisible = !_isPasswordVisible;
+    notifyListeners();
+  }
+
+  String? _selectedGender;
+  String? get selectedGender => _selectedGender;
+  void selectGender(String? selectedGender) {
+    debugPrint('****$_selectedGender ******');
+    _selectedGender = selectedGender;
+  }
+
+  /// RESET ALL FIELDS
+  void reset() {
+    email = '';
+    password = '';
+    confirmPassword = '';
+    age = '';
+    _selectedGender = null;
+    fullName = '';
+    notifyListeners();
+  }
 }
+
+// Define an enum for clarity
+enum UserType { company, tourist }

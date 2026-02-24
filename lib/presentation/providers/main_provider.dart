@@ -55,7 +55,7 @@
 import 'package:flutter/material.dart';
 
 class MainProvider extends ChangeNotifier {
-  late final PageController pageController;
+  late PageController pageController;
 
   int _selectedIndex = 0;
   // final bool _isReady = true; // Always ready now
@@ -64,7 +64,29 @@ class MainProvider extends ChangeNotifier {
   // bool get isReady => _isReady;
 
   MainProvider() {
+    // pageController = PageController(initialPage: _selectedIndex);
+    _initController();
+  }
+  void _initController() {
     pageController = PageController(initialPage: _selectedIndex);
+  }
+
+  //Add this to reset the state when coming back from a Booking
+  void resetToHome(int index) {
+    _selectedIndex = index; // Or 0, wherever your 'Destinations' screen is
+
+    pageController.dispose();
+    _initController();
+    notifyListeners();
+  }
+
+  void setTab(int index) {
+    _selectedIndex = index;
+    // Use jumpToPage to immediately sync the PageView without animation
+    if (pageController.hasClients) {
+      pageController.jumpToPage(index);
+    }
+    notifyListeners();
   }
 
   void onTabSelected(int index) {

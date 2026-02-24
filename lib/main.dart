@@ -95,15 +95,17 @@
 //   }
 // }
 
-// Required for StreamSubscription
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/firebase_options.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/admin_bookings_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/booking_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/payment_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/user_bookings_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/splash_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
@@ -173,6 +175,9 @@ void main() async {
               previous ?? AddPackageProvider(userProvider),
         ),
         ChangeNotifierProvider(create: (_) => BookingProvider()),
+        ChangeNotifierProvider(create: (_) => UserBookingsProvider()),
+        ChangeNotifierProvider(create: (_) => PaymentProvider()),
+        ChangeNotifierProvider(create: (_) => AdminBookingsProvider()),
       ],
       child: const FamzyApp(),
     ),
@@ -300,6 +305,14 @@ class FamzyApp extends StatelessWidget {
               cursorColor: AppConstants.tertiaryColor,
               selectionColor: AppConstants.primaryTransGColor,
               selectionHandleColor: AppConstants.tertiaryColor,
+            ),
+            radioTheme: RadioThemeData(
+              fillColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return AppConstants.primaryColor;
+                }
+                return AppConstants.whiteColorP5;
+              }),
             ),
           ),
           debugShowCheckedModeBanner: false,

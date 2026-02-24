@@ -46,18 +46,19 @@ import 'package:latlong2/latlong.dart';
 class PackageModel {
   final String companyName;
   final String companyPhotoURL;
-  final String id;
+  final String packageId;
   final String packageName;
-  final String duration; // e.g., "3 Days, 2 Nights"
+  final String duration;
   final String departureDate;
   final String departureTime;
-  final String keySpots; // Stored as a comma-separated string
-  final String vehicle; // e.g., "Toyota Hiace" or "4x4 Prado"
+  final String keySpots;
+  final String vehicle;
   final String description;
   final int price;
-  final String destination; // The ID of the destination it belongs to
+  final String destination;
   final String packageCreatedAt;
   final String? packageEditedAt;
+  final int seatBooked;
   // Coordinates for the map markers
   final double? latitude;
   final double? longitude;
@@ -65,7 +66,7 @@ class PackageModel {
   PackageModel({
     required this.companyName,
     required this.companyPhotoURL,
-    required this.id,
+    required this.packageId,
     required this.packageName,
     required this.duration,
     required this.departureDate,
@@ -76,16 +77,12 @@ class PackageModel {
     required this.price,
     required this.destination,
     required this.packageCreatedAt,
+    required this.seatBooked,
     this.packageEditedAt,
     this.latitude,
     this.longitude,
   });
 
-  // --- HELPER METHODS ---
-  // --- MAP HELPER ---
-
-  /// Returns a LatLng object if coordinates exist, otherwise returns null.
-  /// Used directly in your FlutterMap MarkerLayer.
   LatLng? get spotsLatLng {
     if (latitude != null && longitude != null) {
       return LatLng(latitude!, longitude!);
@@ -95,37 +92,29 @@ class PackageModel {
 
   DateTime get departureDateTime {
     try {
-      // Assuming departureDate is "2024-05-20" and departureTime is "10:00 AM"
       debugPrint('***datedddddModel: $departureDate');
       final String dateTimeString = '$departureDate $departureTime';
       return DateFormat('yyyy-MM-dd h:mm a').parse(dateTimeString);
     } catch (e) {
-      // Fallback in case of parsing error
       return DateTime.now().add(const Duration(days: 365));
     }
   }
 
   bool get isExpired {
-    // Checks if the departure time has already passed
     return departureDateTime.isBefore(DateTime.now());
   }
 
-  /// Converts the keySpots string into a List for UI bullet points
   List<String> get keySpotsList =>
       keySpots.split(',').map((e) => e.trim()).toList();
 
-  /// Formatted price for display
-  // String get formattedPrice => 'Rs. $price';
   String get formattedPrice {
     final formatter = NumberFormat('#,###');
     return 'Rs. ${formatter.format(price)}';
   }
 
-  // --- DATA CONVERSION ---
-
   factory PackageModel.fromMap(Map<String, dynamic> map) {
     return PackageModel(
-      id: map['id'] ?? '',
+      packageId: map['packageId'] ?? '',
       companyPhotoURL: map['companyPhotoURL'] ?? '',
       companyName: map['companyName'] ?? '',
       packageName: map['packageName'] ?? '',
@@ -137,6 +126,7 @@ class PackageModel {
       description: map['description'] ?? '',
       price: (map['price'] as num?)?.toInt() ?? 0,
       destination: map['destination'] ?? '',
+      seatBooked: map['seatBooked'] ?? 0,
       packageCreatedAt: map['packageCreatedAt'] ?? '',
       packageEditedAt: map['packageEditedAt'],
     );
@@ -146,7 +136,7 @@ class PackageModel {
     return {
       'companyName': companyName,
       'companyPhotoURL': companyPhotoURL,
-      'id': id,
+      'packageId': packageId,
       'packageName': packageName,
       'duration': duration,
       'departureDate': departureDate,
@@ -156,6 +146,7 @@ class PackageModel {
       'description': description,
       'price': price,
       'destination': destination,
+      'seatBooked': seatBooked,
       'packageCreatedAt': packageCreatedAt,
     };
   }

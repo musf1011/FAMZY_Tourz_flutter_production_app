@@ -380,7 +380,7 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
                       //     setState(() => selectedGender = v);
                       //   },
                       // ),
-                      GenderDropdownField(
+                      CustomGenderDropdownField(
                         value: selectedGender,
                         validator: (v) {
                           if (v == null) {

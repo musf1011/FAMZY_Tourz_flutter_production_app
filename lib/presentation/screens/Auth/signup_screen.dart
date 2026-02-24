@@ -1,147 +1,9 @@
-// import 'package:famzy_tourz_v2/constants.dart';
-// import 'package:famzy_tourz_v2/presentation/controllers/signup_controller.dart';
-// import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
-// import 'package:famzy_tourz_v2/presentation/widgets/custom_text_form_field.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-// class SignUpScreen extends StatelessWidget {
-//   SignUpScreen({super.key});
-
-//   final SignUpController controller = SignUpController();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//         width: 1.sw,
-//         height: 1.sh,
-//         decoration: const BoxDecoration(
-//           image: DecorationImage(
-//             image: AssetImage("assets/images/bg_app.jpg"),
-//             fit: BoxFit.cover,
-//           ),
-//         ),
-//         child: SingleChildScrollView(
-//           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 50.h),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text(
-//                 "Sign Up",
-//                 style: AppConstants.appBarTextStyle.copyWith(
-//                   color: AppConstants.primaryColor,
-//                   fontSize: 40.sp,
-//                 ),
-//               ),
-//               SizedBox(height: 20.h),
-
-//               /// Full Name
-//               CustTextFormField(
-//                 label: "Full Name",
-//                 hint: "Billy Boy",
-//                 controller: controller.fullName,
-//               ),
-//               SizedBox(height: 12.h),
-
-//               /// G-Mail
-//               CustTextFormField(
-//                 label: "Email",
-//                 hint: "you@gmail.com",
-//                 keyboardType: TextInputType.emailAddress,
-//                 controller: controller.email,
-//               ),
-//               SizedBox(height: 12.h),
-
-//               /// Password
-//               CustTextFormField(
-//                 label: "Password",
-//                 hint: "Password",
-//                 obscureText: true,
-//                 controller: controller.password,
-//               ),
-//               SizedBox(height: 12.h),
-
-//               /// Confirm Password
-//               CustTextFormField(
-//                 label: "Confirm Password",
-//                 hint: "Re-enter password",
-//                 obscureText: true,
-//                 controller: controller.confirmPassword,
-//               ),
-//               SizedBox(height: 16.h),
-
-//               /// Age Field
-//               CustTextFormField(
-//                 label: "Age",
-//                 hint: "18",
-//                 keyboardType: TextInputType.number,
-//                 controller: controller.age,
-//               ),
-//               SizedBox(height: 16.h),
-
-//               /// Gender Dropdown
-//               DropdownButtonFormField<String>(
-//                 decoration: InputDecoration(
-//                   labelText: "Gender",
-//                   labelStyle: TextStyle(color: Colors.white),
-//                 ),
-//                 items: const [
-//                   DropdownMenuItem(value: "male", child: Text("Male")),
-//                   DropdownMenuItem(value: "female", child: Text("Female")),
-//                   DropdownMenuItem(value: "other", child: Text("Other")),
-//                 ],
-//                 onChanged: (value) => controller.gender = value,
-//               ),
-
-//               SizedBox(height: 30.h),
-
-//               /// SIGN UP BUTTON
-//               ValueListenableBuilder<bool>(
-//                 valueListenable: controller.isLoading,
-//                 builder: (_, loading, __) {
-//                   return CustomLoadingButton(
-//                     text: "SIGN UP",
-//                     isLoading: loading,
-//                     onPressed: () => controller.signUp(context),
-//                   );
-//                 },
-//               ),
-
-//               SizedBox(height: 20.h),
-
-//               Center(
-//                 child: Column(
-//                   children: [
-//                     Text(
-//                       "Or continue with",
-//                       style: TextStyle(color: AppConstants.whiteColorP9),
-//                     ),
-//                     SizedBox(height: 8.h),
-
-//                     // google button
-//                     IconButton(
-//                       icon: Image.asset(
-//                         'assets/logos/google_logo.png',
-//                         height: 35.h,
-//                       ),
-//                       onPressed: () => controller.signInWithGoogle(context),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:famzy_tourz_v2/constants.dart';
+import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/back_logo_row.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_drop_down_field.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_glass_wrapper.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_text_form_field.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/google_button_inkwell.dart';
@@ -153,29 +15,37 @@ import 'package:provider/provider.dart';
 
 import '../../providers/auth_providers/auth_provider.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+// // Define an enum for clarity
+// enum UserType { company, tourist }
 
-  @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
+class SignUpScreen extends StatelessWidget {
+  // final _formKey = GlobalKey<FormState>();
+  // This ensures it isn't recreated when build() runs
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  bool _isPasswordNotVisible = true;
-  bool isLoadingLocal = false;
+  SignUpScreen({super.key});
+  // final TextEditingController _fullName = TextEditingController();
+  // final TextEditingController _email = TextEditingController();
+  // final TextEditingController _password = TextEditingController();
+  // final TextEditingController _confirmPassword = TextEditingController();
+  // final TextEditingController _age = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _fullName = TextEditingController();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
-  final TextEditingController _confirmPassword = TextEditingController();
-  final TextEditingController _age = TextEditingController();
-
-  String? selectedGender;
+  // // Inside your State class:
+  // UserType _selectedUserType = UserType.tourist;
+  // bool get isCompany => _selectedUserType == UserType.company;
+  // @override
+  // void dispose() {
+  //   _fullName.dispose();
+  //   _email.dispose();
+  //   _password.dispose();
+  //   _confirmPassword.dispose();
+  //   _age.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.read<AuthProvider>();
     return AppBackground(
       child: SingleChildScrollView(
         child: Column(
@@ -190,140 +60,392 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
 
             //form container
-            Padding(
-              padding: .fromLTRB(.05.sw, .02.sh, .05.sw, .03.sh),
-              child: Container(
-                decoration: AppConstants.glassCardDecoration,
-                // decoration: BoxDecoration(
-                //   borderRadius: .circular(15.r),
-                //   color: AppConstants.primaryTransGColor,
-                //   border: .all(color: Colors.white, width: .5.w),
-                // ),
-                child: Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: .symmetric(horizontal: .05.sw),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 8.h),
+            CustomGlassWrapper(
+              bottomMargin: 20.h,
+              // Padding(
+              //   padding: .fromLTRB(.05.sw, .02.sh, .05.sw, .03.sh),
+              //   child: Container(
+              //     decoration: AppConstants.glassCardDecoration,
 
-                        // Full name
-                        CustTextFormField(
-                          controller: _fullName,
-                          label: 'Full Name',
-                          hint: 'Billy Boy',
-                          validator: (v) => v == null || v.isEmpty
-                              ? 'Full Name required'
-                              : null,
-                        ),
-                        SizedBox(height: 10.h),
+              // decoration: BoxDecoration(
+              //   borderRadius: .circular(15.r),
+              //   color: AppConstants.primaryTransGColor,
+              //   border: .all(color: Colors.white, width: .5.w),
+              // ),
+              // child: Form(
+              //   key: _formKey,
+              //   child: Padding(
+              //     padding: .symmetric(horizontal: .05.sw),
+              //     child: Column(
+              //       children: [
+              //         SizedBox(height: 8.h),
+              //         Row(
+              //           children: [
+              //             RadioMenuButton(
+              //               value: value,
+              //               groupValue: groupValue,
+              //               onChanged: () {},
+              //               child: const Text('Comapany'),
+              //             ),
+              //             RadioMenuButton(
+              //               value: value,
+              //               groupValue: groupValue,
+              //               onChanged: () {},
+              //               child: const Text('Tourist'),
+              //             ),
+              //           ],
+              //         ),
 
-                        // Email
-                        CustTextFormField(
-                          controller: _email,
-                          label: 'G-Mail',
-                          hint: 'you@gmail.com',
-                          keyboardType: .emailAddress,
-                          validator: (v) =>
-                              v == null || v.isEmpty ? 'G-Mail required' : null,
-                        ),
-                        SizedBox(height: 10.h),
+              //         // Full name
+              //         CustTextFormField(
+              //           controller: _fullName,
+              //           label: company ? 'Compay Name' : 'Full Name',
+              //           hint: 'Billy Boy',
+              //           validator: (v) => v == null || v.isEmpty
+              //               ? 'Full Name required'
+              //               : null,
+              //         ),
+              //         SizedBox(height: 10.h),
 
-                        // Password
-                        CustTextFormField(
-                          controller: _password,
-                          label: 'Password',
-                          hint: 'password',
-                          obscureText: true,
-                          isPasswordHidden: _isPasswordNotVisible,
-                          toggleVisibility: () {
-                            setState(() {
-                              _isPasswordNotVisible = !_isPasswordNotVisible;
-                            });
-                          },
-                          validator: (v) => v == null || v.isEmpty
-                              ? 'Password required'
-                              : null,
-                        ),
-                        SizedBox(height: 10.h),
+              //         // Email
+              //         CustTextFormField(
+              //           controller: _email,
+              //           label: 'G-Mail',
+              //           hint: 'you@gmail.com',
+              //           keyboardType: .emailAddress,
+              //           validator: (v) =>
+              //               v == null || v.isEmpty ? 'G-Mail required' : null,
+              //         ),
+              //         SizedBox(height: 10.h),
 
-                        // confirm password
-                        CustTextFormField(
-                          controller: _confirmPassword,
-                          label: 'Confirm Password',
-                          hint: 'password',
-                          obscureText: true,
-                          isPasswordHidden: _isPasswordNotVisible,
-                          toggleVisibility: () {
-                            setState(() {
-                              _isPasswordNotVisible = !_isPasswordNotVisible;
-                            });
-                          },
-                          validator: (v) {
-                            if (v == null || v.isEmpty) {
-                              return 'Confirm password';
-                            }
-                            if (v != _password.text) {
-                              return 'Passwords do not match';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 10.h),
+              // // Password
+              // CustTextFormField(
+              //   controller: _password,
+              //   label: 'Password',
+              //   hint: 'password',
+              //   obscureText: true,
+              //   isPasswordHidden: _isPasswordNotVisible,
+              //   toggleVisibility: () {
+              //     setState(() {
+              //       _isPasswordNotVisible = !_isPasswordNotVisible;
+              //     });
+              //   },
+              //   validator: (v) => v == null || v.isEmpty
+              //       ? 'Password required'
+              //       : null,
+              // ),
+              // SizedBox(height: 10.h),
 
-                        // age and gender row
-                        Row(
+              // // confirm password
+              // CustTextFormField(
+              //   controller: _confirmPassword,
+              //   label: 'Confirm Password',
+              //   hint: 'password',
+              //   obscureText: true,
+              //   isPasswordHidden: _isPasswordNotVisible,
+              //   toggleVisibility: () {
+              //     setState(() {
+              //       _isPasswordNotVisible = !_isPasswordNotVisible;
+              //     });
+              //   },
+              //   validator: (v) {
+              //     if (v == null || v.isEmpty) {
+              //       return 'Confirm password';
+              //     }
+              //     if (v != _password.text) {
+              //       return 'Passwords do not match';
+              //     }
+              //     return null;
+              //   },
+              // ),
+              // SizedBox(height: 10.h),
+
+              //         // age and gender row
+              //         Row(
+              //           children: [
+              //             Padding(
+              //               padding: .only(top: 6.h),
+              //               child: SizedBox(
+              //                 width: .455.sw,
+              //                 child: CustTextFormField(
+              //                   controller: _age,
+              //                   label: 'Age',
+              //                   hint: '18',
+              //                   keyboardType: .number,
+              //                   inputFormatters: [
+              //                     FilteringTextInputFormatter.digitsOnly,
+              //                   ],
+              //                   validator: (v) {
+              //                     if (v == null || v.isEmpty) {
+              //                       return 'Enter age';
+              //                     }
+              //                     final n = int.tryParse(v);
+              //                     if (n == null || n < 13 || n > 130) {
+              //                       return 'Invalid age';
+              //                     }
+              //                     return null;
+              //                   },
+              //                 ),
+              //               ),
+              //             ),
+              //             Padding(
+              //               padding: .only(left: .03.sw),
+              //               child: SizedBox(
+              //                 width: .25.sw,
+              //                 child: GenderDropdownField(
+              //                   value: selectedGender,
+              //                   validator: (v) {
+              //                     if (v == null || v.isEmpty) {
+              //                       return 'Please select your gender';
+              //                     }
+              //                     return null;
+              //                   },
+              //                   onChanged: (v) {
+              //                     setState(() => selectedGender = v);
+              //                   },
+              //                 ),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+
+              //         SizedBox(height: 30.h),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    SizedBox(height: 8.h),
+                    Consumer<AuthProvider>(
+                      builder: (context, auth, child) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: .only(top: 6.h),
-                              child: SizedBox(
-                                width: .455.sw,
-                                child: CustTextFormField(
-                                  controller: _age,
-                                  label: 'Age',
-                                  hint: '18',
-                                  keyboardType: .number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  validator: (v) {
-                                    if (v == null || v.isEmpty) {
-                                      return 'Enter age';
-                                    }
-                                    final n = int.tryParse(v);
-                                    if (n == null || n < 13 || n > 130) {
-                                      return 'Invalid age';
-                                    }
-                                    return null;
-                                  },
+                            //company/tourist
+                            RadioMenuButton<UserType>(
+                              value: UserType.company,
+                              groupValue: authProvider.selectedUserType,
+                              style: const ButtonStyle(
+                                iconColor: WidgetStatePropertyAll(Colors.amber),
+                              ),
+
+                              onChanged: (UserType? value) {
+                                if (value != null) {
+                                  // authProvider.setState(
+                                  //   () => _selectedUserType = value,
+                                  // authProvider.
+                                  // );
+                                  authProvider.setUserType(value);
+                                }
+                              },
+                              child: Text(
+                                'Company',
+                                style: TextStyle(
+                                  color: authProvider.isCompany
+                                      ? Colors.white
+                                      : AppConstants.whiteColorP5,
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: .only(left: .03.sw),
-                              child: SizedBox(
-                                width: .25.sw,
-                                child: GenderDropdownField(
-                                  value: selectedGender,
-                                  validator: (v) {
-                                    if (v == null || v.isEmpty) {
-                                      return 'Please select your gender';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (v) {
-                                    setState(() => selectedGender = v);
-                                  },
+                            RadioMenuButton<UserType>(
+                              value: UserType.tourist,
+                              groupValue: authProvider.selectedUserType,
+                              onChanged: (UserType? value) {
+                                if (value != null) {
+                                  // setState(() => _selectedUserType = value);
+                                  authProvider.setUserType(value);
+                                }
+                              },
+                              child: Text(
+                                'Tourist',
+                                style: TextStyle(
+                                  color: authProvider.isCompany
+                                      ? AppConstants.whiteColorP5
+                                      : Colors.white,
                                 ),
                               ),
                             ),
                           ],
-                        ),
-
-                        SizedBox(height: 30.h),
-                      ],
+                        );
+                      },
                     ),
-                  ),
+                    //full name/company name
+                    CustTextFormField(
+                      // controller: _fullName,
+                      onChanged: (v) {
+                        authProvider.fullName = v;
+                      },
+                      label: authProvider.isCompany
+                          ? 'Company Name'
+                          : 'Full Name',
+                      hint: authProvider.isCompany
+                          ? 'Famzy Tourz Ltd'
+                          : 'Billy Boy',
+                      validator: (v) => v == null || v.isEmpty
+                          ? (authProvider.isCompany
+                                ? 'Company Name required'
+                                : 'Full Name required')
+                          : null,
+                    ),
+                    SizedBox(height: 10.h),
+                    //email
+                    CustTextFormField(
+                      // controller: _email,
+                      onChanged: (v) {
+                        authProvider.email = v;
+                      },
+                      label: 'G-Mail',
+                      hint: 'you@gmail.com',
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (v) =>
+                          v == null || v.isEmpty ? 'G-Mail required' : null,
+                    ),
+                    SizedBox(height: 10.h),
+                    // Password
+                    Consumer<AuthProvider>(
+                      builder: (context, auth, child) {
+                        return Column(
+                          children: [
+                            CustTextFormField(
+                              // controller: _password,
+                              onChanged: (v) {
+                                authProvider.password = v;
+                              },
+                              label: 'Password',
+                              hint: 'password',
+                              obscureText: true,
+                              isPasswordHidden: auth.isPasswordVisible,
+                              toggleVisibility: () {
+                                // setState(() {
+                                //   _isPasswordNotVisible = !_isPasswordNotVisible;
+                                // });
+                                auth.togglePasswordVisibility();
+                              },
+                              validator: (v) => v == null || v.isEmpty
+                                  ? 'Password required'
+                                  : null,
+                            ),
+
+                            SizedBox(height: 10.h),
+                            // confirm password
+                            CustTextFormField(
+                              // controller: _confirmPassword,
+                              onChanged: (v) {
+                                authProvider.confirmPassword = v;
+                              },
+                              label: 'Confirm Password',
+                              hint: 'password',
+                              obscureText: true,
+                              isPasswordHidden: auth.isPasswordVisible,
+                              toggleVisibility: () {
+                                // setState(() {
+                                //   _isPasswordNotVisible = !_isPasswordNotVisible;
+                                // });
+                                auth.togglePasswordVisibility();
+                                // _isPasswordNotVisible =
+                                //     !_isPasswordNotVisible;
+                              },
+                              validator: (v) {
+                                if (v == null || v.isEmpty) {
+                                  return 'Confirm password';
+                                }
+                                if (v != auth.password) {
+                                  return 'Passwords do not match';
+                                }
+                                return null;
+                              },
+                            ),
+                            //       ],
+                            //     );
+                            //   },
+                            // ),
+                            // SizedBox(height: 10.h),
+                            // Consumer<AuthProvider>(
+                            //   builder: (context, auth, child) {
+                            //     return
+                            auth.isCompany
+                                ? SizedBox(height: 10.h)
+                                : Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 6.h),
+                                        child: SizedBox(
+                                          width: .455.sw,
+                                          child: CustTextFormField(
+                                            // controller: _age,
+                                            onChanged: (v) {
+                                              authProvider.age = v;
+                                            },
+                                            label: 'Age',
+                                            hint: '18',
+                                            readOnly: authProvider.isCompany,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                            ],
+                                            validator: (v) {
+                                              if (authProvider.isCompany) {
+                                                return null;
+                                              }
+                                              if (v == null || v.isEmpty) {
+                                                return 'Enter age';
+                                              }
+                                              final n = int.tryParse(v);
+                                              if (n == null ||
+                                                  n < 13 ||
+                                                  n > 130) {
+                                                return 'Invalid age';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: .01.sw),
+                                        child: SizedBox(
+                                          width: .38.sw,
+                                          child: CustomGenderDropdownField(
+                                            value:
+                                                //  authProvider.isCompany
+                                                //     ? null
+                                                //     :
+                                                authProvider.selectedGender,
+                                            onChanged: authProvider.isCompany
+                                                ? null
+                                                : (v) {
+                                                    // setState(
+                                                    //   () => selectedGender = v,
+                                                    // );
+                                                    authProvider.selectGender(
+                                                      v,
+                                                    );
+                                                  },
+                                            validator: (v) {
+                                              if (authProvider.isCompany) {
+                                                return null;
+                                              }
+                                              if (v == null || v.isEmpty) {
+                                                return 'Please select gender';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ],
+                        );
+                      },
+                    ),
+
+                    SizedBox(height: 30.h),
+                  ],
                 ),
               ),
             ),
@@ -337,15 +459,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   onPressed: () {
                     FocusScope.of(context).unfocus();
                     if (_formKey.currentState!.validate()) {
-                      // call provider
-                      final intAge = int.tryParse(_age.text.trim()) ?? 0;
+                      // final intAge = int.tryParse(_age.text.trim()) ?? 0;
                       auth.signUpWithEmail(
-                        fullName: _fullName.text.trim(),
-                        email: _email.text.trim(),
-                        password: _password.text.trim(),
-                        age: intAge,
-                        gender: selectedGender,
+                        //   fullName: _fullName.text.trim(),
+                        //   email: _email.text.trim(),
+                        //   password: _password.text.trim(),
+                        //   age: intAge,
+                        //   gender: authProvider.selectedGender,
                       );
+                      auth.reset();
                     }
                   },
                   isLoading: auth.loading,
@@ -361,23 +483,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             SizedBox(height: 10.h),
-            // // google button
-            // Consumer<AuthProvider>(
-            //   builder: (context, auth, child) {
-            //     return InkWell(
-            //       onTap: auth.loading ? null : () => auth.signInWithGoogle(),
-            //       borderRadius: .circular(12),
-            //       child: Opacity(
-            //         opacity: auth.loading ? 0.5 : 1.0,
-            //         child: Image.asset(
-            //           'assets/logos/google_logo.png',
-            //           height: 50.h,
-            //           width: 50.h,
-            //         ),
-            //       ),
-            //     );
-            //   },
-            // ),
             // // google button
             Consumer<AuthProvider>(
               builder: (context, auth, child) {
@@ -403,7 +508,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(width: 8.0),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacementNamed(context, AppRoutes.login);
+                    authProvider.reset();
+                    NavigationService().navigateTo(AppRoutes.login);
                   },
                   child: const Text(
                     'Log In',

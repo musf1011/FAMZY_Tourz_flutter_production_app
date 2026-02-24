@@ -183,7 +183,7 @@ class AddPackageProvider extends ChangeNotifier {
 
   /// INIT (for edit)
   void loadForEdit(PackageModel pkg) {
-    packageId = pkg.id;
+    packageId = pkg.packageId;
     editingPackage = pkg;
     packageName = pkg.packageName;
     duration = pkg.duration;
@@ -274,7 +274,7 @@ class AddPackageProvider extends ChangeNotifier {
     try {
       // 3. FINAL ID LOGIC: Keep existing if editing, otherwise create unique
       final String finalId = isEditMode
-          ? editingPackage!.id
+          ? editingPackage!.packageId
           : '${packageName.toLowerCase().replaceAll(' ', '_')}_${companyName.toLowerCase().replaceAll(' ', '_')}_${destinationName}_${DateTime.now().millisecondsSinceEpoch}';
       setCompanyInfo(user);
       debugPrint(
@@ -282,7 +282,7 @@ class AddPackageProvider extends ChangeNotifier {
       );
 
       final package = PackageModel(
-        id: finalId,
+        packageId: finalId,
         companyName: companyName,
         companyPhotoURL: companyPhotoURL,
         packageName: packageName,
@@ -294,6 +294,7 @@ class AddPackageProvider extends ChangeNotifier {
         description: description,
         price: price,
         destination: destinationName,
+        seatBooked: 0,
         packageCreatedAt: isEditMode
             ? editingPackage!.packageCreatedAt
             : DateTime.now().toIso8601String(),

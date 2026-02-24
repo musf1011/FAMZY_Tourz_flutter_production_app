@@ -24,8 +24,10 @@ class BackAndLogoRow extends StatelessWidget {
               color: AppConstants.primaryColor,
             ),
             onPressed: () {
-              // 1. Tell the provider to stop loading and invalidate the current session
-              context.read<AuthProvider>().cancelAuthentication();
+              //tell the provider to stop loading and invalidate the current session
+              final authProvider = context.read<AuthProvider>();
+              authProvider.cancelAuthentication();
+              authProvider.reset();
               NavigationService().navigateAndClearStack(AppRoutes.welcome);
             },
           ),

@@ -426,8 +426,11 @@
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
+import 'package:famzy_tourz_v2/presentation/screens/admin-screens/admin_bookings_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/destinations_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/my_bookings_screen.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
@@ -441,8 +444,20 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DestinationsProvider>().checkUserRole();
+    final userRole = context.read<DestinationsProvider>().userRole;
     return Consumer<MainProvider>(
       builder: (context, main, _) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (main.pageController.hasClients) {
+            // Check if current page matches provider index
+            // using .round() to handle potential micro-offsets during animation
+            // if (main.pageController.page?.round() != main.selectedIndex) {
+            //   main.pageController.jumpToPage(main.selectedIndex);
+            // }
+            main.pageController.jumpToPage(main.selectedIndex);
+          }
+        });
         return PopScope(
           canPop: false, // Intercepts the back button
           onPopInvokedWithResult: (bool didPop, dynamic result) async {
@@ -493,7 +508,10 @@ class MainScreen extends StatelessWidget {
                     ),
                   ),
                   const DestinationsScreen(),
-                  const Center(child: Text('Chat List')),
+                  const MyBookingsScreen(),
+                  userRole == 'admin'
+                      ? const AdminBookingsScreen()
+                      : const Center(child: Text('Chat List')),
                   const Center(child: Text('Profile')),
                 ],
               ),

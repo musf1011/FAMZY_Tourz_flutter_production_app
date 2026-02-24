@@ -66,6 +66,23 @@ class FirestoreUserService {
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
+
+  // static Future<void> addIdPassport(String idPassport) {
+  //   final AppUser user = context.read<UserProvider>().user;;
+  //   if (user == null) return;
+  //   _firestore.collection('usersInfo').doc(user.userId).update( 'idPassport' : idPassport);
+  // }
+  static Future<void> updateIdPassport({
+    required String userId,
+    required String idPassport,
+  }) async {
+    if (idPassport.isEmpty) return;
+
+    await _firestore.collection('usersInfo').doc(userId).update({
+      'idPassport': idPassport,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
 }
   // static Future<void> saveUserToFirestore({
   //   int? age,

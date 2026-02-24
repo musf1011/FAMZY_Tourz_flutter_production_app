@@ -7,7 +7,7 @@ Widget infoChip(IconData icon, String text) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 6.h),
     decoration: BoxDecoration(
-      color: AppConstants.transWhite,
+      color: AppConstants.transGrey,
       borderRadius: BorderRadius.circular(25),
       border: Border.all(width: .5.r, color: AppConstants.whiteColorP5),
     ),

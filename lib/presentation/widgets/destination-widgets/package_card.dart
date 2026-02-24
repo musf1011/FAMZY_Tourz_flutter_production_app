@@ -205,19 +205,8 @@ class _PackageCardState extends State<PackageCard> {
         child: Column(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// 🔰 COMPANY HEADER
             Row(
               children: [
-                // CircleAvatar(
-                //   radius: 22,
-                //   backgroundColor: Colors.white24,
-                //   backgroundImage: widget.package.companyPhotoURL.isNotEmpty
-                //       ? NetworkImage(widget.package.companyPhotoURL)
-                //       : null,
-                //   child: widget.package.companyPhotoURL.isEmpty
-                //       ? const Icon(Icons.business, color: Colors.white)
-                //       : null,
-                // ),
                 CustomProfileAvatar(
                   imageUrl: widget.package.companyPhotoURL,
                   radius: 30.r,
@@ -232,6 +221,10 @@ class _PackageCardState extends State<PackageCard> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                ),
+                Text(
+                  'Seat Booked: ${widget.package.seatBooked}',
+                  style: const TextStyle(color: AppConstants.famzyGold),
                 ),
               ],
             ),
@@ -254,7 +247,7 @@ class _PackageCardState extends State<PackageCard> {
             Wrap(
               spacing: 10,
               runSpacing: 8,
-              alignment: .spaceBetween,
+              alignment: .center,
               children: [
                 infoChip(Icons.calendar_month, widget.package.departureDate),
                 infoChip(Icons.timelapse, widget.package.departureTime),
@@ -314,10 +307,11 @@ class _PackageCardState extends State<PackageCard> {
               //   arguments: widget.package,
               // ),
               onPressed: () {
-                final provider = context.read<BookingProvider>();
-                provider.selectPackage(widget.package);
+                final bookingProvider = context.read<BookingProvider>();
                 final user = context.read<UserProvider>().user;
-                provider.prefillFirstPassenger(user);
+                bookingProvider.selectPackage(widget.package, user!.userId);
+
+                bookingProvider.prefillFirstPassenger(user);
                 nav.navigateTo(AppRoutes.packageDetail);
               },
               isLoading: false,

@@ -74,7 +74,7 @@ class AppConfirmDialog extends StatelessWidget {
           if (icon != null) ...[
             Icon(
               icon,
-              color: isDanger ? AppConstants.lightRed : Colors.white,
+              color: isDanger ? AppConstants.lightRed : AppConstants.famzyGold,
               size: 28.sp,
             ),
             SizedBox(width: 10.w),

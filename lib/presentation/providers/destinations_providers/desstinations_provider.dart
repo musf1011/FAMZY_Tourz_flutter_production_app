@@ -299,7 +299,7 @@ class DestinationsProvider extends ChangeNotifier {
 
   /// ================= PACKAGE DELETE =================
   Future<void> deletePackage(PackageModel package) async {
-    await _packagesService.deletePackage(package.id);
+    await _packagesService.deletePackage(package.packageId);
     await loadPackages();
   }
 

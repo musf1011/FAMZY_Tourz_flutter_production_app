@@ -40,7 +40,9 @@ class AppBackground extends StatelessWidget {
 
         // 1. Cancel the active auth session and reset loading state
         debugPrint('****cancelling auth reached');
-        context.read<AuthProvider>().cancelAuthentication();
+        final authProvider = context.read<AuthProvider>();
+        authProvider.cancelAuthentication();
+        authProvider.reset();
 
         // 2. Clear the stack and go back to a safe entry point
         await NavigationService().navigateAndClearStack(AppRoutes.welcome);
