@@ -39,7 +39,6 @@
 //   }
 // }
 
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -58,6 +57,7 @@ class PackageModel {
   final String destination;
   final String packageCreatedAt;
   final String? packageEditedAt;
+  final int totalSeats;
   final int seatBooked;
   // Coordinates for the map markers
   final double? latitude;
@@ -77,6 +77,7 @@ class PackageModel {
     required this.price,
     required this.destination,
     required this.packageCreatedAt,
+    required this.totalSeats,
     required this.seatBooked,
     this.packageEditedAt,
     this.latitude,
@@ -92,7 +93,7 @@ class PackageModel {
 
   DateTime get departureDateTime {
     try {
-      debugPrint('***datedddddModel: $departureDate');
+      // debugPrint('***datedddddModel: $departureDate');
       final String dateTimeString = '$departureDate $departureTime';
       return DateFormat('yyyy-MM-dd h:mm a').parse(dateTimeString);
     } catch (e) {
@@ -112,6 +113,14 @@ class PackageModel {
     return 'Rs. ${formatter.format(price)}';
   }
 
+  /// =======================
+  /// 🎫 SEAT LOGIC
+  /// =======================
+
+  int get availableSeats => totalSeats - seatBooked;
+
+  bool get isFull => availableSeats <= 0;
+
   factory PackageModel.fromMap(Map<String, dynamic> map) {
     return PackageModel(
       packageId: map['packageId'] ?? '',
@@ -126,6 +135,7 @@ class PackageModel {
       description: map['description'] ?? '',
       price: (map['price'] as num?)?.toInt() ?? 0,
       destination: map['destination'] ?? '',
+      totalSeats: map['totalSeats'] ?? 0,
       seatBooked: map['seatBooked'] ?? 0,
       packageCreatedAt: map['packageCreatedAt'] ?? '',
       packageEditedAt: map['packageEditedAt'],
@@ -145,8 +155,9 @@ class PackageModel {
       'vehicle': vehicle,
       'description': description,
       'price': price,
-      'destination': destination,
       'seatBooked': seatBooked,
+      'totalSeats': totalSeats,
+      'destination': destination,
       'packageCreatedAt': packageCreatedAt,
     };
   }

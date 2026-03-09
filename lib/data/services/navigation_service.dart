@@ -130,7 +130,7 @@ class NavigationService {
     // Guard: If the context is null or the widget is unmounted, stop.
     if (context == null || !context!.mounted) return;
     final snackBar = SnackBar(
-      elevation: 0,
+      elevation: 6,
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       dismissDirection: DismissDirection.horizontal,

@@ -265,7 +265,7 @@ class _PackagesScreenState extends State<PackagesScreen> {
 
         child: Column(
           children: [
-            /// 🔵 TRAVEL INSIGHTS BUTTON
+            // insight button
             SizedBox(
               height: 30.h,
               width: 120.w,
@@ -291,12 +291,15 @@ class _PackagesScreenState extends State<PackagesScreen> {
                 child: Text('Insight', style: TextStyle(fontSize: 16.sp)),
               ),
             ),
-            const TabBar(
-              labelColor: Colors.white,
+            TabBar(
+              labelColor: AppConstants.whiteColorP9,
               indicatorColor: Colors.white,
+              unselectedLabelColor: AppConstants.whiteColorP5,
+              overlayColor: WidgetStatePropertyAll(AppConstants.whiteColorP5),
+
               tabs: [
-                Tab(text: 'Packages'),
-                Tab(text: 'Explore'),
+                const Tab(text: 'Packages'),
+                const Tab(text: 'Explore'),
               ],
             ),
 

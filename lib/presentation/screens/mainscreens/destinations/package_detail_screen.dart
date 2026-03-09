@@ -157,7 +157,7 @@ class PackageDetailScreen extends StatelessWidget {
 
                           SizedBox(height: 10.h),
 
-                          SeatCountContainer(provider: bookingProvider),
+                          SeatCountContainer(bookingProvider: bookingProvider),
 
                           SizedBox(height: 10.h),
 

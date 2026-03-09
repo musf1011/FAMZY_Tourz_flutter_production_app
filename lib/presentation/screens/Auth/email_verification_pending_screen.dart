@@ -653,7 +653,7 @@ class _EmailVerificationPendingScreenState
                 dialogMessage:
                     'Are you sure you want to log out of FAMZY Tourz?',
                 isDanger: true,
-                confirmColor: Colors.red,
+                // confirmColor: Colors.red,
                 // isLoading: auth.loading,
                 onConfirmed: () => auth.emailSignOut(),
               );

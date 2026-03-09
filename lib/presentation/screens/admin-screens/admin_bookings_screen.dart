@@ -136,6 +136,18 @@ class _AdminBookingsScreenState extends State<AdminBookingsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   _tabController = TabController(length: 4, vsync: this);
+
+  //   Future.microtask(() {
+  //     if (mounted) {
+  //       context.read<AdminBookingsProvider>().loadBookings();
+  //     }
+  //   });
+  // }
   @override
   void initState() {
     super.initState();
@@ -144,7 +156,7 @@ class _AdminBookingsScreenState extends State<AdminBookingsScreen>
 
     Future.microtask(() {
       if (mounted) {
-        context.read<AdminBookingsProvider>().loadBookings();
+        context.read<AdminBookingsProvider>().startListening();
       }
     });
   }
@@ -269,7 +281,8 @@ class _AdminBookingsScreenState extends State<AdminBookingsScreen>
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () => provider.approve(booking.bookingId),
+                        onPressed: () =>
+                            provider.approve(context, booking.bookingId),
 
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppConstants.lightGreen,

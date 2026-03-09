@@ -1,510 +1,6 @@
-// // // // // import 'package:famzy_tourz_v2/routes/app_routes.dart';
-// // // // // import 'package:flutter/material.dart';
-// // // // // import 'package:firebase_auth/firebase_auth.dart';
-// // // // // import 'package:shared_preferences/shared_preferences.dart';
-
-// // // // // import '../../data/services/google_auth_service.dart';
-
-// // // // // class AuthProvider extends ChangeNotifier {
-// // // // //   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-// // // // //   bool _loading = false;
-// // // // //   bool get loading => _loading;
-
-// // // // //   final GoogleAuthService _googleAuth = GoogleAuthService.instance;
-
-// // // // //   void _setLoading(bool value) {
-// // // // //     _loading = value;
-// // // // //     notifyListeners();
-// // // // //   }
-
-// // // // //   /// ✅ Email + Password Sign In
-// // // // //   Future<void> signInWithEmail(
-// // // // //     BuildContext context,
-// // // // //     String email,
-// // // // //     String password,
-// // // // //   ) async {
-// // // // //     try {
-// // // // //       _setLoading(true);
-
-// // // // //       await _auth.signInWithEmailAndPassword(
-// // // // //         email: email.trim(),
-// // // // //         password: password.trim(),
-// // // // //       );
-
-// // // // //       final prefs = await SharedPreferences.getInstance();
-// // // // //       await prefs.setBool('isLoggedIn', true);
-
-// // // // //       Navigator.pushReplacementNamed(context, AppRoutes.main);
-// // // // //     } catch (e) {
-// // // // //       _showError(context, e.toString());
-// // // // //     } finally {
-// // // // //       _setLoading(false);
-// // // // //     }
-// // // // //   }
-
-// // // // //   /// ✅ Google Sign In
-// // // // //   Future<void> signInWithGoogle(BuildContext context) async {
-// // // // //     try {
-// // // // //       _setLoading(true);
-
-// // // // //       // final user = await _googleAuth.signInWithGoogle(context);
-// // // // // await _googleAuth.signInWithGoogle(context);
-// // // // //       // if (user != null) {
-// // // // //         final prefs = await SharedPreferences.getInstance();
-// // // // //         await prefs.setBool('isLoggedIn', true);
-
-// // // // //         Navigator.pushReplacementNamed(context, AppRoutes.main);
-// // // // //       // }
-// // // // //     } catch (e) {
-// // // // //       _showError(context, e.toString());
-// // // // //     } finally {
-// // // // //       _setLoading(false);
-// // // // //     }
-// // // // //   }
-
-// // // // //   void _showError(BuildContext context, String msg) {
-// // // // //     ScaffoldMessenger.of(context).showSnackBar(
-// // // // //       SnackBar(content: Text(msg)),
-// // // // //     );
-// // // // //   }
-// // // // // }
-
-// // // // import 'package:famzy_tourz_v2/data/services/google_auth_service.dart';
-// // // // import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
-// // // // import 'package:famzy_tourz_v2/routes/app_routes.dart';
-// // // // import 'package:firebase_auth/firebase_auth.dart';
-// // // // import 'package:flutter/material.dart';
-// // // // import 'package:shared_preferences/shared_preferences.dart';
-
-// // // // class AuthProvider extends ChangeNotifier {
-// // // //   final FirebaseAuth _auth = FirebaseAuth.instance;
-// // // //   final NavigationService _navigation = NavigationService();
-// // // //   final GoogleAuthService _googleAuth = GoogleAuthService.instance;
-
-// // // //   bool _loading = false;
-// // // //   bool get loading => _loading;
-
-// // // //   void _setLoading(bool value) {
-// // // //     _loading = value;
-// // // //     notifyListeners();
-// // // //   }
-
-// // // //   /// ✅ Email + Password Sign In
-// // // //   Future<void> signInWithEmail(String email, String password) async {
-// // // //     try {
-// // // //       _setLoading(true);
-
-// // // //       await _auth.signInWithEmailAndPassword(
-// // // //         email: email.trim(),
-// // // //         password: password.trim(),
-// // // //       );
-
-// // // //       final prefs = await SharedPreferences.getInstance();
-// // // //       await prefs.setBool('isLoggedIn', true);
-
-// // // //       _navigation.navigateReplacement(AppRoutes.main);
-// // // //     } catch (e) {
-// // // //       _navigation.showSnackBar(e.toString());
-// // // //     } finally {
-// // // //       _setLoading(false);
-// // // //     }
-// // // //   }
-
-// // // //   /// ✅ Google Sign In
-// // // //   Future<void> signInWithGoogle(BuildContext context) async {
-// // // //     try {
-// // // //       _setLoading(true);
-
-// // // //       await _googleAuth.signInWithGoogle(context);
-
-// // // //       final prefs = await SharedPreferences.getInstance();
-// // // //       await prefs.setBool('isLoggedIn', true);
-
-// // // //       _navigation.navigateReplacement(AppRoutes.main);
-// // // //     } catch (e) {
-// // // //       _navigation.showSnackBar(e.toString());
-// // // //     } finally {
-// // // //       _setLoading(false);
-// // // //     }
-// // // //   }
-// // // // }
-
-// // // import 'package:famzy_tourz_v2/data/services/google_auth_service.dart';
-// // // import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
-// // // import 'package:famzy_tourz_v2/routes/app_routes.dart';
-// // // import 'package:firebase_auth/firebase_auth.dart';
-// // // import 'package:flutter/material.dart';
-// // // import 'package:shared_preferences/shared_preferences.dart';
-
-// // // class AuthProvider extends ChangeNotifier {
-// // //   final FirebaseAuth _auth = FirebaseAuth.instance;
-// // //   final NavigationService _navigation = NavigationService();
-// // //   final GoogleAuthService _googleAuth = GoogleAuthService.instance;
-
-// // //   bool _loading = false;
-// // //   bool get loading => _loading;
-
-// // //   void _setLoading(bool value) {
-// // //     _loading = value;
-// // //     notifyListeners();
-// // //   }
-
-// // //   /// ✅ Email + Password Sign In
-// // //   Future<void> signInWithEmail(String email, String password) async {
-// // //     try {
-// // //       _setLoading(true);
-
-// // //       await _auth.signInWithEmailAndPassword(
-// // //         email: email.trim(),
-// // //         password: password.trim(),
-// // //       );
-
-// // //       final prefs = await SharedPreferences.getInstance();
-// // //       await prefs.setBool('isLoggedIn', true);
-
-// // //       // Navigate to main screen
-// // //       WidgetsBinding.instance.addPostFrameCallback((_) {
-// // //         _navigation.navigateReplacement(AppRoutes.main);
-// // //       });
-// // //     } catch (e) {
-// // //       // Show error
-// // //       _navigation.showSnackBar(
-// // //         _getFirebaseErrorMessage(e.toString()), // Better error messages
-// // //       );
-// // //     } finally {
-// // //       _setLoading(false);
-// // //     }
-// // //   }
-
-// // //   /// ✅ Google Sign In - FIXED (no BuildContext parameter)
-// // //   Future<void> signInWithGoogle(context) async {
-// // //     try {
-// // //       _setLoading(true);
-
-// // //       await _googleAuth.signInWithGoogle(context);
-
-// // //       final prefs = await SharedPreferences.getInstance();
-// // //       await prefs.setBool('isLoggedIn', true);
-
-// // //       // Navigate to main screen
-// // //       WidgetsBinding.instance.addPostFrameCallback((_) {
-// // //         _navigation.navigateReplacement(AppRoutes.main);
-// // //       });
-// // //     } catch (e) {
-// // //       _navigation.showSnackBar(e.toString());
-// // //     } finally {
-// // //       _setLoading(false);
-// // //     }
-// // //   }
-
-// // //   // Helper method for better error messages
-// // //   String _getFirebaseErrorMessage(String error) {
-// // //     if (error.contains('wrong-password') ||
-// // //         error.contains('invalid-credential')) {
-// // //       return 'Invalid email or password';
-// // //     } else if (error.contains('user-not-found')) {
-// // //       return 'No account found with this email';
-// // //     } else if (error.contains('user-disabled')) {
-// // //       return 'This account has been disabled';
-// // //     } else if (error.contains('too-many-requests')) {
-// // //       return 'Too many attempts. Please try again later';
-// // //     } else if (error.contains('network-request-failed')) {
-// // //       return 'Network error. Please check your connection';
-// // //     } else if (error.contains('invalid-email')) {
-// // //       return 'Invalid email format';
-// // //     } else {
-// // //       return 'Login failed. Please try again';
-// // //     }
-// // //   }
-// // // }
-
-// // // lib/presentation/providers/auth_provider.dart
-
-// // import 'package:famzy_tourz_v2/data/services/email_auth_service.dart';
-// // import 'package:famzy_tourz_v2/data/services/google_auth_service.dart';
-// // import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
-// // import 'package:famzy_tourz_v2/routes/app_routes.dart';
-// // import 'package:firebase_auth/firebase_auth.dart';
-// // import 'package:flutter/material.dart';
-// // import 'package:shared_preferences/shared_preferences.dart';
-
-// // class AuthProvider extends ChangeNotifier {
-// //   final FirebaseAuth _auth = FirebaseAuth.instance;
-// //   final NavigationService _navigation = NavigationService();
-// //   final GoogleAuthService _googleAuth = GoogleAuthService.instance;
-
-// //   bool _loading = false;
-// //   bool get loading => _loading;
-
-// //   void _setLoading(bool value) {
-// //     _loading = value;
-// //     notifyListeners();
-// //   }
-
-// //   //email & password signin for existing account
-// //   Future<void> signInWithEmail(String email, String password) async {
-// //     try {
-// //       _setLoading(true);
-
-// //       await _auth.signInWithEmailAndPassword(
-// //         email: email.trim(),
-// //         password: password.trim(),
-// //       );
-
-// //       final prefs = await SharedPreferences.getInstance();
-// //       await prefs.setBool('isLoggedIn', true);
-
-// //       WidgetsBinding.instance.addPostFrameCallback((_) {
-// //         _navigation.navigateReplacement(AppRoutes.main);
-// //       });
-// //     } catch (e) {
-// //       _navigation.showSnackBar(_getFirebaseErrorMessage(e.toString()));
-// //     } finally {
-// //       _setLoading(false);
-// //     }
-// //   }
-
-// //   /// google sign in for existing users
-// //   Future<void> signInWithGoogle() async {
-// //     try {
-// //       _setLoading(true);
-
-// //       // GoogleAuthService handles firestore saving for new users
-// //       await _googleAuth.signInWithGoogle(_navigation.context!);
-
-// //       final prefs = await SharedPreferences.getInstance();
-// //       await prefs.setBool('isLoggedIn', true);
-
-// //       WidgetsBinding.instance.addPostFrameCallback((_) {
-// //         _navigation.navigateReplacement(AppRoutes.main);
-// //       });
-// //     } catch (e) {
-// //       _navigation.showSnackBar(e.toString());
-// //     } finally {
-// //       _setLoading(false);
-// //     }
-// //   }
-
-// //   //if new, signn up using e-mail & password
-// //   Future<void> signUpWithEmail({
-// //     required String fullName,
-// //     required String email,
-// //     required String password,
-// //     required int age,
-// //     required String? gender,
-// //   }) async {
-// //     try {
-// //       _setLoading(true);
-
-// //       //create firebase user
-// //       final userCred = await EmailAuthService.instance.signUpWithEmail(
-// //         email,
-// //         password,
-// //       );
-// //       final user = userCred.user;
-// //       if (user == null) {
-// //         throw Exception('Failed to create user.');
-// //       }
-
-// //       //save user in Firestore
-// //       await EmailAuthService.instance.saveUserToFirestore(
-// //         uid: user.uid,
-// //         fullName: fullName,
-// //         email: email,
-// //         age: age,
-// //         gender: gender ?? '',
-// //         photoUrl: '',
-// //       );
-
-// //       //logged in saved locally
-// //       final prefs = await SharedPreferences.getInstance();
-// //       await prefs.setBool('isLoggedIn', true);
-
-// //       //send verification email
-// //       await EmailAuthService.instance.sendVerificationEmail(user);
-
-// //       //navigate to email verification pending screen
-// //       WidgetsBinding.instance.addPostFrameCallback((_) {
-// //         _navigation.navigateReplacement(AppRoutes.emailVerification);
-// //       });
-// //     } catch (e) {
-// //       _navigation.showSnackBar(e.toString());
-// //     } finally {
-// //       _setLoading(false);
-// //     }
-// //   }
-
-// //   // firebase error messages
-// //   String _getFirebaseErrorMessage(String error) {
-// //     if (error.contains('wrong-password') ||
-// //         error.contains('invalid-credential')) {
-// //       return 'Invalid email or password';
-// //     } else if (error.contains('user-not-found')) {
-// //       return 'No account found with this email';
-// //     } else if (error.contains('user-disabled')) {
-// //       return 'This account has been disabled';
-// //     } else if (error.contains('too-many-requests')) {
-// //       return 'Too many attempts. Please try again later';
-// //     } else if (error.contains('network-request-failed')) {
-// //       return 'Network error. Please check your connection';
-// //     } else if (error.contains('invalid-email')) {
-// //       return 'Invalid email format';
-// //     } else {
-// //       return 'Operation failed. Please try again';
-// //     }
-// //   }
-// // }
-
-// import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-// import 'package:famzy_tourz_v2/data/services/email_auth_service.dart';
-// import 'package:famzy_tourz_v2/data/services/google_auth_service.dart';
-// import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
-// import 'package:famzy_tourz_v2/routes/app_routes.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-
-// class AuthProvider extends ChangeNotifier {
-//   final FirebaseAuth _auth = FirebaseAuth.instance;
-//   final NavigationService _navigation = NavigationService();
-//   final GoogleAuthService _googleAuth = GoogleAuthService.instance;
-
-//   bool _loading = false;
-//   bool get loading => _loading;
-
-//   void _setLoading(bool value) {
-//     _loading = value;
-//     notifyListeners();
-//   }
-
-//   //email & password signin for existing account
-//   Future<void> signInWithEmail(String email, String password) async {
-//     try {
-//       _setLoading(true);
-
-//       await _auth.signInWithEmailAndPassword(
-//         email: email.trim(),
-//         password: password.trim(),
-//       );
-
-//       final prefs = await SharedPreferences.getInstance();
-//       await prefs.setBool('isLoggedIn', true);
-
-//       WidgetsBinding.instance.addPostFrameCallback((_) {
-//         _navigation.navigateReplacement(AppRoutes.main);
-//       });
-//     } catch (e) {
-//       _navigation.showSnackBar(
-//         title: 'Sign In Failed',
-//         message: _getFirebaseErrorMessage(e.toString()),
-//         type: ContentType.failure,
-//       );
-//     } finally {
-//       _setLoading(false);
-//     }
-//   }
-
-//   /// google sign in for existing users
-//   Future<void> signInWithGoogle() async {
-//     try {
-//       _setLoading(true);
-
-//       // GoogleAuthService handles firestore saving for new users
-//       await _googleAuth.signInWithGoogle(_navigation.context!);
-
-//       final prefs = await SharedPreferences.getInstance();
-//       await prefs.setBool('isLoggedIn', true);
-
-//       WidgetsBinding.instance.addPostFrameCallback((_) {
-//         _navigation.navigateReplacement(AppRoutes.main);
-//       });
-//     } catch (e) {
-//       _navigation.showSnackBar(
-//         title: 'Google Sign In Failed',
-//         message: e.toString(),
-//         type: ContentType.failure,
-//       );
-//     } finally {
-//       _setLoading(false);
-//     }
-//   }
-
-//   //if new, signn up using e-mail & password
-//   Future<void> signUpWithEmail({
-//     required String fullName,
-//     required String email,
-//     required String password,
-//     required int age,
-//     required String? gender,
-//   }) async {
-//     try {
-//       _setLoading(true);
-
-//       //create firebase user
-//       final userCred = await EmailAuthService.instance.signUpWithEmail(
-//         email,
-//         password,
-//       );
-//       final user = userCred.user;
-//       if (user == null) {
-//         throw Exception('Failed to create user.');
-//       }
-
-//       //save user in Firestore
-//       await EmailAuthService.instance.saveUserToFirestore(
-//         uid: user.uid,
-//         fullName: fullName,
-//         email: email,
-//         age: age,
-//         gender: gender ?? '',
-//         photoUrl: '',
-//       );
-
-//       //logged in saved locally
-//       final prefs = await SharedPreferences.getInstance();
-//       await prefs.setBool('isLoggedIn', true);
-
-//       //send verification email
-//       await EmailAuthService.instance.sendVerificationEmail(user);
-
-//       //navigate to email verification pending screen
-//       WidgetsBinding.instance.addPostFrameCallback((_) {
-//         _navigation.navigateReplacement(AppRoutes.emailVerification);
-//       });
-//     } catch (e) {
-//       _navigation.showSnackBar(
-//         title: 'Sign Up Failed',
-//         message: e.toString(),
-//         type: ContentType.failure,
-//       );
-//     } finally {
-//       _setLoading(false);
-//     }
-//   }
-
-//   // firebase error messages
-//   String _getFirebaseErrorMessage(String error) {
-//     if (error.contains('wrong-password') ||
-//         error.contains('invalid-credential')) {
-//       return 'Invalid email or password';
-//     } else if (error.contains('user-not-found')) {
-//       return 'No account found with this email';
-//     } else if (error.contains('user-disabled')) {
-//       return 'This account has been disabled';
-//     } else if (error.contains('too-many-requests')) {
-//       return 'Too many attempts. Please try again later';
-//     } else if (error.contains('network-request-failed')) {
-//       return 'Network error. Please check your connection';
-//     } else if (error.contains('invalid-email')) {
-//       return 'Invalid email format';
-//     } else {
-//       return 'Operation failed. Please try again';
-//     }
-//   }
-// }
 //created by: FAMZY CodeWorks
 import 'dart:async';
+import 'dart:math';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:famzy_tourz_v2/data/services/auth-services/email_auth_service.dart';
 import 'package:famzy_tourz_v2/data/services/auth-services/firestor_user_service.dart';
@@ -754,11 +250,18 @@ class AuthProvider extends ChangeNotifier {
         message: _getFirebaseErrorMessage(e.code),
         type: ContentType.failure,
       );
-    } catch (_) {
+    } on PlatformException catch (e) {
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
         title: 'Error',
-        message: 'Google sign in failed. Please try again',
+        message: _getFirebaseErrorMessage(e.code),
+        type: ContentType.failure,
+      );
+    } catch (e) {
+      await HapticFeedback.mediumImpact();
+      _navigation.showSnackBar(
+        title: 'Error',
+        message: _getFirebaseErrorMessage(e.toString()),
         type: ContentType.failure,
       );
     } finally {
@@ -766,16 +269,22 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> submitAdditionalInfo({
-    required int age,
-    required String gender,
-  }) async {
+  Future<void> submitAdditionalInfo(
+    // {
+    // required int age,
+    // required String gender,
+    // }
+  ) async {
     final currentSessionId = _requestSessionId;
     try {
       _setLoading(true);
 
       debugPrint('*****submitting');
-      await FirestoreUserService.addInfo(age, gender);
+      // await FirestoreUserService.addInfo(age, gender);
+      await FirestoreUserService.addInfo(
+        int.parse(age),
+        selectedGender ?? 'other',
+      );
       if (currentSessionId != _requestSessionId) return;
       debugPrint('*****submitted');
       await HapticFeedback.lightImpact();
@@ -818,7 +327,9 @@ class AuthProvider extends ChangeNotifier {
     try {
       _setLoading(true);
 
-      debugPrint('***1st step');
+      debugPrint(
+        '***1st step $email and $password , **$fullName , ** $age , ***$selectedGender ,',
+      );
       //create firebase user
       final userCred = await EmailAuthService.instance.signUpWithEmail(
         email,
@@ -833,17 +344,28 @@ class AuthProvider extends ChangeNotifier {
       // setUid(user.uid);
       // await _userProvider.loadUser(user.uid);
 
-      debugPrint('***3rd step');
+      // debugPrint('***3rd step; user uid: ${user!.uid}');
       //save user in Firestore
+      // await EmailAuthService.instance.saveUserToFirestore(
+      //   uid: user!.uid,
+      //   fullName: fullName,
+      //   email: email,
+      //   // age: int.parse(age),
+      //   age: age.isEmpty ? 0 : int.parse(age),
+      //   gender: selectedGender ?? 'other',
+      //   photoUrl: '',
+      // );
+      debugPrint('***2nd step');
+
       await EmailAuthService.instance.saveUserToFirestore(
         uid: user!.uid,
         fullName: fullName,
         email: email,
-        age: int.parse(age),
+        age: age.isEmpty ? 0 : int.parse(age),
         gender: selectedGender ?? 'other',
-        photoUrl: '',
       );
 
+      debugPrint('***3.5th step');
       if (currentSessionId != _requestSessionId) return;
       debugPrint('***4thst step');
       //logged in saved locally
@@ -890,6 +412,13 @@ class AuthProvider extends ChangeNotifier {
         message: _getFirebaseErrorMessage(e.code),
         type: ContentType.failure,
       );
+    } on PlatformException catch (e) {
+      await HapticFeedback.mediumImpact();
+      _navigation.showSnackBar(
+        title: 'Sign Up Failed',
+        message: _getFirebaseErrorMessage(e.code),
+        type: ContentType.failure,
+      );
     } catch (e) {
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
@@ -921,6 +450,26 @@ class AuthProvider extends ChangeNotifier {
 
   String _getFirebaseErrorMessage(String code) {
     switch (code) {
+      // --- GOOGLE / PLAY SERVICES SPECIFIC ---
+      case '4908':
+      case 'Clear Failed':
+      case 'service-version-update-required': // Some plugins use this kebab-case
+      case 'SERVICE_VERSION_UPDATE_REQUIRED':
+        return 'Please update Google Play Services to continue.';
+      case 'API_NOT_CONNECTED':
+        return 'Google Play Services not available';
+      case 'api-not-available':
+        return 'Google Play Services is not available on this device.';
+      case 'service-invalid':
+        return 'Google Play Services is outdated or missing.';
+      case 'sign-in-failed':
+        return 'Google Sign-In failed. Please try again.';
+      case 'account-exists-with-different-credential':
+        return 'An account already exists with the same email but different login method.';
+      case 'Connection with Google Play Services was not successful':
+        return 'Google Play Services Error';
+      case 'internal_error':
+        return 'Google Play Services internal error. Try restarting your phone.';
       // --- AUTH SPECIFIC ---
       case 'wrong-password':
         return 'Incorrect Password';
@@ -949,7 +498,7 @@ class AuthProvider extends ChangeNotifier {
       case 'too-many-requests':
         return 'Too many attempts. Please try again later.';
       default:
-        return 'Operation failed. Please try again';
+        return 'Operation failed. Please try again. Google Play Services may cause it.';
     }
   }
 
@@ -1078,7 +627,12 @@ class AuthProvider extends ChangeNotifier {
       //  Sign out from all services
       await _auth.signOut();
       // await GoogleSignIn.instance.signOut();
-      await GoogleAuthService.instance.googleSignOut();
+      // await GoogleAuthService.instance.googleSignOut();
+      try {
+        await GoogleAuthService.instance.googleSignOut();
+      } catch (e) {
+        // We ignore this error because the user is already signed out of Firebase
+      }
 
       // //clear Local Data base
       // final prefs = await SharedPreferences.getInstance();
@@ -1090,13 +644,29 @@ class AuthProvider extends ChangeNotifier {
       _setLoading(false);
 
       await _navigation.navigateAndClearStack(AppRoutes.welcome);
-    } catch (e) {
-      _setLoading(false);
+    } on FirebaseAuthException {
       _navigation.showSnackBar(
         title: 'Sign out failed',
-        message: 'Please check your connection and try again.',
+        // message: 'Please check your connection and try again.',
+        message: _getFirebaseErrorMessage(e.toString()),
         type: ContentType.failure,
       );
+    } on PlatformException catch (e) {
+      _navigation.showSnackBar(
+        title: 'Sign out failed',
+        // message: 'Please check your connection and try again.',
+        message: _getFirebaseErrorMessage(e.code),
+        type: ContentType.failure,
+      );
+    } catch (e) {
+      _navigation.showSnackBar(
+        title: 'Sign out failed',
+        // message: 'Please check your connection and try again.',
+        message: _getFirebaseErrorMessage(e.toString()),
+        type: ContentType.failure,
+      );
+    } finally {
+      _setLoading(false);
     }
   }
 

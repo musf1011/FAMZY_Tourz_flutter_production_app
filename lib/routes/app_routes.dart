@@ -54,7 +54,7 @@ class AppRoutes {
       case welcome:
         return MaterialPageRoute(builder: (_) => const WelcomeScreen());
       case additionalInfoScreen:
-        return MaterialPageRoute(builder: (_) => const AdditionalInfoScreen());
+        return MaterialPageRoute(builder: (_) => AdditionalInfoScreen());
       case enterEmail:
         return MaterialPageRoute(
           builder: (_) => const EnterEmailForResetScreen(),

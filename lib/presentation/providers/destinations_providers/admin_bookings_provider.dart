@@ -36,8 +36,11 @@
 //     await loadBookings();
 //   }
 // }
+import 'dart:async';
+
 import 'package:famzy_tourz_v2/data/models/booking_model.dart';
 import 'package:famzy_tourz_v2/data/services/packages-services/booking_services.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/famzy_snackbar.dart';
 import 'package:flutter/material.dart';
 
 class AdminBookingsProvider extends ChangeNotifier {
@@ -62,30 +65,71 @@ class AdminBookingsProvider extends ChangeNotifier {
   List<BookingModel> get rejected =>
       _allBookings.where((b) => b.paymentStatus == 'rejected').toList();
 
-  /// LOAD
-  Future<void> loadBookings() async {
-    _isLoading = true;
-    notifyListeners();
+  StreamSubscription? _subscription;
 
-    try {
-      _allBookings = await _service.getAllBookings();
-    } finally {
+  /// START REALTIME LISTENER
+  void startListening() {
+    _subscription = _service.streamAllBookings().listen((bookings) {
+      _allBookings = bookings;
+
       _isLoading = false;
+
       notifyListeners();
-    }
+    });
   }
 
-  /// APPROVE
-  Future<void> approve(String bookingId) async {
-    await _service.approvePayment(bookingId);
+  // /// APPROVE
+  // Future<void> approve(String bookingId) async {
+  //   await _service.approvePayment(bookingId);
+  // }
+  /// APPROVE PAYMENT
+  Future<void> approve(BuildContext context, String bookingId) async {
+    try {
+      // 1. You might have a loading state to show a spinner on the admin side
+      // _setLoading(true);
 
-    await loadBookings();
+      await _service.approvePayment(bookingId);
+
+      // 2. Success Feedback
+      if (context.mounted) {
+        FamzySnackBar.show(
+          context,
+          title: 'Payment Approved',
+          message: 'The booking is now confirmed and seats are reserved.',
+          status: SnackBarStatus.success,
+        );
+      }
+    } catch (e) {
+      // 3. Error Handling using your custom logic
+      if (context.mounted) {
+        final String errorMsg = e.toString().replaceAll('Exception: ', '');
+
+        // Customizing the look for Overbooking specifically
+        final bool isOverbooked = errorMsg.contains(
+          'Not enough seats available',
+        );
+
+        FamzySnackBar.show(
+          context,
+          title: isOverbooked ? 'Booking Full' : 'Approval Error',
+          message: errorMsg,
+          status: isOverbooked ? SnackBarStatus.warning : SnackBarStatus.error,
+        );
+      }
+    } finally {
+      // _setLoading(false);
+      notifyListeners();
+    }
   }
 
   /// REJECT
   Future<void> reject(String bookingId) async {
     await _service.rejectPayment(bookingId);
+  }
 
-    await loadBookings();
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 }

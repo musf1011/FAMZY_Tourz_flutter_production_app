@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class PassengerModel {
   final String name;
   final String gender;
@@ -18,7 +20,7 @@ class PassengerModel {
       'idNumber': idNumber,
       'age': age,
       'bookedBy': bookedBy,
-      'timestamp': DateTime.now(),
+      'timestamp': FieldValue.serverTimestamp(),
     };
   }
 }

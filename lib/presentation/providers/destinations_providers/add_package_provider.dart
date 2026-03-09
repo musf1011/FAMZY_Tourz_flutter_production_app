@@ -156,6 +156,7 @@ class AddPackageProvider extends ChangeNotifier {
   String vehicle = '';
   String description = '';
   int price = 0;
+  int totalSeats = 0;
 
   /// COMPANY INFO (auto-filled)
   String companyName = '';
@@ -193,6 +194,7 @@ class AddPackageProvider extends ChangeNotifier {
     vehicle = pkg.vehicle;
     description = pkg.description;
     price = pkg.price;
+    totalSeats = pkg.totalSeats;
     companyName = pkg.companyName;
     companyPhotoURL = pkg.companyPhotoURL;
     notifyListeners();
@@ -210,6 +212,7 @@ class AddPackageProvider extends ChangeNotifier {
     vehicle = '';
     description = '';
     price = 0;
+    totalSeats = 0;
     companyName = '';
     companyPhotoURL = '';
     showSuccess = false;
@@ -278,7 +281,7 @@ class AddPackageProvider extends ChangeNotifier {
           : '${packageName.toLowerCase().replaceAll(' ', '_')}_${companyName.toLowerCase().replaceAll(' ', '_')}_${destinationName}_${DateTime.now().millisecondsSinceEpoch}';
       setCompanyInfo(user);
       debugPrint(
-        '***id:$finalId,\n***company: $companyName,\n***companyphoto: $companyPhotoURL,\n***duration:$duration,\n***depTime:$departureTime,\n***depDate:$departureDate,\n***keyspot:$keySpots,\n***vehicle:$vehicle,\n***description:$description,\n***destinationName:$destinationName',
+        '***id:$finalId,\n***company: $companyName,\n***companyphoto: $companyPhotoURL,\n***duration:$duration,\n***depTime:$departureTime,\n***depDate:$departureDate,\n***total seats = $totalSeats\n***keyspot:$keySpots,\n***vehicle:$vehicle,\n***description:$description,\n***destinationName:$destinationName',
       );
 
       final package = PackageModel(
@@ -293,8 +296,9 @@ class AddPackageProvider extends ChangeNotifier {
         vehicle: vehicle,
         description: description,
         price: price,
-        destination: destinationName,
+        totalSeats: totalSeats,
         seatBooked: 0,
+        destination: destinationName,
         packageCreatedAt: isEditMode
             ? editingPackage!.packageCreatedAt
             : DateTime.now().toIso8601String(),

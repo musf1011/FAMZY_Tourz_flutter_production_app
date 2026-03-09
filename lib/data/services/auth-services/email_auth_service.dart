@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class EmailAuthService {
   EmailAuthService._();
@@ -10,6 +11,7 @@ class EmailAuthService {
 
   //create account with email & password
   Future<UserCredential> signUpWithEmail(String email, String password) async {
+    debugPrint('****email auth service class $email and $password');
     final credential = await _auth.createUserWithEmailAndPassword(
       email: email.trim(),
       password: password.trim(),
@@ -26,6 +28,9 @@ class EmailAuthService {
     required String gender,
     String photoUrl = '',
   }) async {
+    debugPrint(
+      '***1st step $email and $uid , **$fullName , ** $age , ***$gender ,',
+    );
     await _firestore.collection('usersInfo').doc(uid).set({
       'uid': uid,
       'name': fullName,

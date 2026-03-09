@@ -145,9 +145,16 @@ import '../../../data/services/packages-services/packages_service.dart';
 import '../../../data/services/packages-services/weather_service.dart';
 
 class DestinationsProvider extends ChangeNotifier {
-  /// ================= DESTINATION STATE =================
+  late PageController _pageController;
+  PageController get pageController => _pageController;
+  DestinationsProvider() {
+    // This runs only once when the app starts or provider is created
+    _pageController = PageController(initialPage: _currentIndex);
 
-  final PageController pageController = PageController();
+    debugPrint('Page controller: $_currentIndex');
+  }
+
+  /// ================= DESTINATION STATE =================
 
   int _currentIndex = 0;
   int get currentIndex => _currentIndex;
@@ -158,9 +165,25 @@ class DestinationsProvider extends ChangeNotifier {
       DestinationsLocalData.destinations[_currentIndex];
 
   void onPageChanged(int index) {
-    _currentIndex = index;
-    notifyListeners();
+    // _currentIndex = index;
+    // notifyListeners();
+
+    // Use Future.microtask to delay the update until the build is done
+    Future.microtask(() {
+      if (_currentIndex != index) {
+        _currentIndex = index;
+        debugPrint('index updated****: $_currentIndex');
+        notifyListeners();
+      }
+    });
   }
+
+  // // 2. Add a jump method to use when the screen loads
+  // void syncController() {
+  //   if (pageController.hasClients) {
+  //     pageController.jumpToPage(_currentIndex);
+  //   }
+  // }
 
   /// ================= SERVICES =================
   final PackagesService _packagesService = PackagesService();
@@ -199,7 +222,7 @@ class DestinationsProvider extends ChangeNotifier {
 
       // 1. Convert raw data to models
       final allPackages = raw.map((e) => PackageModel.fromMap(e)).toList();
-      debugPrint('****got raw ${allPackages[0]}');
+      debugPrint('****got raw ${allPackages.length}');
       // 2. Filter and Sort
       final now = DateTime.now();
 
@@ -212,7 +235,7 @@ class DestinationsProvider extends ChangeNotifier {
             ..sort(
               (a, b) => a.departureDateTime.compareTo(b.departureDateTime),
             );
-      debugPrint('***packages:${allPackages[2].packageName}');
+      debugPrint('***packages:${allPackages.first.packageName}');
     } catch (e) {
       debugPrint('Error loading packages: $e');
       // Handle error state if necessary
@@ -273,7 +296,10 @@ class DestinationsProvider extends ChangeNotifier {
       debugPrint('error fetching weather adat');
     } finally {
       _isLoadingWeather = false;
-      notifyListeners();
+      // THE MAGIC TRICK: If the app is busy building,
+      // wait a millisecond to notify.
+      await Future.microtask(() => notifyListeners());
+      // notifyListeners();
     }
   }
 

@@ -455,6 +455,7 @@ class GoogleAuthService {
     await initialize();
 
     // timeout handling
+
     final account = await GoogleSignIn.instance.authenticate().timeout(
       const Duration(seconds: 60),
     );

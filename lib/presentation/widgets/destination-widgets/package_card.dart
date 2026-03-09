@@ -166,6 +166,7 @@ import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/boo
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_profile_avatar.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/booking_closed_snack_bar.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/info_chip.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
@@ -222,9 +223,23 @@ class _PackageCardState extends State<PackageCard> {
                     ),
                   ),
                 ),
-                Text(
-                  'Seat Booked: ${widget.package.seatBooked}',
-                  style: const TextStyle(color: AppConstants.famzyGold),
+                Column(
+                  children: [
+                    Text(
+                      'Seat Booked: ${widget.package.seatBooked} / ${widget.package.totalSeats}',
+                      style: const TextStyle(color: AppConstants.famzyGold),
+                    ),
+                    Text(
+                      widget.package.isFull
+                          ? 'No Seat Available'
+                          : 'Available Seats: ${widget.package.availableSeats}',
+                      style: TextStyle(
+                        color: widget.package.isFull
+                            ? AppConstants.transRColor
+                            : AppConstants.famzyGold,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -299,25 +314,51 @@ class _PackageCardState extends State<PackageCard> {
               ),
 
             const SizedBox(height: 14),
+            // widget.package.isFull
+            //     // ? const SizedBox()
+            //     ? CustomLoadingButton(
+            //         onPressed: () {},
+            //         text: 'Booking Closed',
+            //         backgroundColor: AppConstants.transGrey,
+            //       )
+            //     :
             CustomLoadingButton(
-              text: '${widget.package.price.toString()} PKR / Person',
-              backgroundColor: AppConstants.primaryColor,
+              text: widget.package.isExpired
+                  ? 'Package Expired'
+                  : widget.package.isFull
+                  ? 'Sold Out'
+                  : '${widget.package.price.toString()} PKR / Person',
+              // backgroundColor: AppConstants.primaryColor,
               // onPressed: () => NavigationService().navigateTo(
               //   AppRoutes.packageDetail,
               //   arguments: widget.package,
               // ),
+              backgroundColor:
+                  (widget.package.isFull || widget.package.isExpired)
+                  ? AppConstants.transGrey
+                  : null,
               onPressed: () {
-                final bookingProvider = context.read<BookingProvider>();
-                final user = context.read<UserProvider>().user;
-                bookingProvider.selectPackage(widget.package, user!.userId);
+                if (widget.package.isExpired) {
+                  showBookingClosedSnackBar(context, isFull: false);
+                }
 
-                bookingProvider.prefillFirstPassenger(user);
-                nav.navigateTo(AppRoutes.packageDetail);
+                if (widget.package.isFull) {
+                  showBookingClosedSnackBar(context, isFull: true);
+                } else {
+                  final bookingProvider = context.read<BookingProvider>();
+                  final user = context.read<UserProvider>().user;
+                  debugPrint('*****ready to book from package card');
+                  bookingProvider.selectPackage(widget.package, user!.userId);
+                  debugPrint('*****select package done from package card');
+                  bookingProvider.prefillFirstPassenger(user);
+
+                  nav.navigateTo(AppRoutes.packageDetail);
+                }
               },
               isLoading: false,
             ),
 
-            /// 💰 PRICE + ACTION
+            //c PRICE + ACTION
             Row(
               mainAxisAlignment: .spaceBetween,
               children: [

@@ -16,21 +16,31 @@ class DestinationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<DestinationsProvider>();
-    final destinations = provider.destinations;
+    final destProvider = context.watch<DestinationsProvider>();
+    final destinations = destProvider.destinations;
+
+    // // This ensures that if the provider already has a saved index,
+    // // the controller is ready for it.
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   provider.syncController();
+    // });
 
     return Scaffold(
       body: PageView.builder(
-        // controller: provider.pageController,
-        controller: PageController(initialPage: provider.currentIndex),
+        // controller: destProvider.pageController,
+        controller: PageController(initialPage: destProvider.currentIndex),
         scrollDirection: Axis.vertical,
+        physics: const BouncingScrollPhysics(),
         itemCount: destinations.length,
-        onPageChanged: provider.onPageChanged,
+        onPageChanged: destProvider.onPageChanged,
         itemBuilder: (_, index) {
+          // debugPrint(
+          //   // 'Page controller: ${destProvider.currentIndex}, and ******${destProvider.pageController}',
+          // );
           final destination = destinations[index];
           return _DestinationPage(
             destination: destination,
-            isActive: provider.currentIndex == index,
+            isActive: destProvider.currentIndex == index,
             index: index, // Pass the actual page index
             totalCount: destinations.length, // Pass total count for dots
           );

@@ -93,6 +93,8 @@ import 'package:flutter/material.dart';
 class UserProvider extends ChangeNotifier {
   AppUser? _user;
   AppUser? get user => _user;
+  String? _userId; //for future use
+  String? get userId => _userId;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -131,8 +133,11 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-
+    _userId = doc.id; //for future use
     _user = AppUser.fromMap(doc.data()!);
+    // // 2. THE FIX: Pass both the data map AND the doc.id
+    // // This ensures userId in your model is NEVER an empty string.
+    // _user = AppUser.fromMap(doc.data()!, doc.id);
     notifyListeners();
   }
 

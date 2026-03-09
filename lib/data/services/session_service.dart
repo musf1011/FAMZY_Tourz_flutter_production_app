@@ -68,7 +68,7 @@ class SessionService {
           );
           final doc = await _db.collection('usersInfo').doc(user.uid).get();
           debugPrint('******checking age in firebas99 doc got');
-          hasAge = doc.data()?['age'] != '';
+          hasAge = doc.data()?['age'] != 0;
           debugPrint('******checking age in firebas99 age got');
           await prefs.setBool('hasAge', hasAge);
           await prefs.setBool('hasAdditionalInfo', hasAge);

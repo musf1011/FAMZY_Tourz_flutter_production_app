@@ -19,7 +19,7 @@
 // }
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart'; // Add this to your pubspec.yaml
+import 'package:intl/intl.dart';
 
 class WeatherService {
   Future<Map<String, dynamic>> fetchWeather(double lat, double lon) async {

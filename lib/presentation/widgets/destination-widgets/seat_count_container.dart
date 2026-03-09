@@ -5,12 +5,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SeatCountContainer extends StatelessWidget {
-  const SeatCountContainer({super.key, required this.provider});
+  const SeatCountContainer({super.key, required this.bookingProvider});
 
-  final BookingProvider provider;
+  final BookingProvider bookingProvider;
+  // final isMaxReached =
+  //   provider.seatCount >= provider.package!.availableSeats ||
+  //   provider.seatCount >= 5;
 
   @override
   Widget build(BuildContext context) {
+    final isMaxReached =
+        bookingProvider.seatCount >= bookingProvider.package!.availableSeats ||
+        bookingProvider.seatCount >= 5;
     return Container(
       width: 0.6.sw,
       padding: EdgeInsets.symmetric(horizontal: 10.h),
@@ -33,18 +39,20 @@ class SeatCountContainer extends StatelessWidget {
           IconButton(
             onPressed: () {
               debugPrint('****seat decreased  ');
-              provider.decreaseSeat();
+              bookingProvider.decreaseSeat();
             },
             icon: const Icon(Icons.remove_circle, color: AppConstants.lightRed),
           ),
           Text(
-            '${provider.seatCount}',
+            '${bookingProvider.seatCount}',
             style: GoogleFonts.roboto(fontSize: 20.sp, color: Colors.white),
           ),
           IconButton(
-            onPressed: () {
-              provider.increaseSeat();
-            },
+            onPressed: isMaxReached
+                ? null
+                : () {
+                    bookingProvider.increaseSeat();
+                  },
             icon: const Icon(Icons.add_circle, color: AppConstants.lightGreen),
           ),
         ],

@@ -395,6 +395,7 @@ import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/profile_
 import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/lottie_overlay.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -730,6 +731,10 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                               ? packageProvider.price.toString()
                               : '',
                           keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(5),
+                          ],
                           onSaved: (v) => packageProvider.price =
                               int.tryParse(v ?? '0') ?? 0,
                           // validator: (v) => v!.isEmpty || v==0  ? 'Required' : null,
@@ -742,6 +747,26 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                               return 'Price must be greater than 1000';
                             }
 
+                            return null;
+                          },
+                        ),
+                        CustTextFormField(
+                          label: 'Total Seats',
+                          hint: 'e.g. 30 seats',
+                          initialValue: packageProvider.totalSeats > 0
+                              ? packageProvider.totalSeats.toString()
+                              : '',
+                          keyboardType: .number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(2),
+                          ],
+                          onSaved: (v) => packageProvider.totalSeats =
+                              int.tryParse(v ?? '0') ?? 0,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) return 'Enter seats';
+                            final count = int.tryParse(v) ?? 0;
+                            if (count < 1) return 'Must be at least 1';
                             return null;
                           },
                         ),

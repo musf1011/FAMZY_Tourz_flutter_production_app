@@ -73,25 +73,33 @@ class AppUser {
   factory AppUser.fromMap(Map<String, dynamic> map) {
     return AppUser(
       idPassport: map['idPassport'] ?? '',
-      userId: map['userId'],
-      name: map['name'],
-      email: map['email'],
-      // age: map['age'],
-      age: _parseAge(map['age']),
-      gender: map['gender'],
+      userId: map['userId'] ?? '',
+      name: map['name'] ?? '',
+      email: map['email'] ?? '',
+      age: map['age'],
+      // age: _parseAge(map['age']),
+      gender: map['gender'] ?? '',
       photoURL: map['photoURL'] ?? '',
       role: map['role'] ?? 'user',
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      // createdAt: (map['createdAt'] as Timestamp).toDate(),
+      // updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      // Safety check: if null, use current time
+      createdAt: map['createdAt'] != null
+          ? (map['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+
+      updatedAt: map['updatedAt'] != null
+          ? (map['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 
-  // Helper to prevent crashes if age is stored as a String "" in Firestore
-  static int _parseAge(dynamic age) {
-    if (age == null || age == '') return 0;
-    if (age is int) return age;
-    return int.tryParse(age.toString()) ?? 0;
-  }
+  // // Helper to prevent crashes if age is stored as a String "" in Firestore
+  // static int _parseAge(dynamic age) {
+  //   if (age == null || age == '') return 0;
+  //   if (age is int) return age;
+  //   return int.tryParse(age.toString()) ?? 0;
+  // }
 
   Map<String, dynamic> toMap() {
     return {

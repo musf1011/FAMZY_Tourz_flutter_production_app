@@ -19,6 +19,9 @@ class LottieOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).unfocus();
+    });
     return Container(
       // Ensure it covers the whole screen
       height: 1.sh,

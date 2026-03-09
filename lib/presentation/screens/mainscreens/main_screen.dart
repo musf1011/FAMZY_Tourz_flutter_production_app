@@ -431,6 +431,7 @@ import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
 import 'package:famzy_tourz_v2/presentation/screens/admin-screens/admin_bookings_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/destinations_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/my_bookings_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/profile/profile_screen.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
@@ -491,28 +492,30 @@ class MainScreen extends StatelessWidget {
                 controller: main.pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  Center(
-                    child: Consumer<AuthProvider>(
-                      builder: (context, auth, _) {
-                        return ConfirmActionButton(
-                          buttonText: 'Sign Out',
-                          icon: Icons.logout_rounded,
-                          dialogTitle: 'Sign Out',
-                          dialogMessage:
-                              'Are you sure you want to log out of FAMZY Tourz?',
-                          isDanger: true,
-                          isLoading: auth.loading,
-                          onConfirmed: () => auth.emailSignOut(),
-                        );
-                      },
-                    ),
-                  ),
-                  const DestinationsScreen(),
-                  const MyBookingsScreen(),
+                  // Center(
+                  //   child: Consumer<AuthProvider>(
+                  //     builder: (context, auth, _) {
+                  //       return ConfirmActionButton(
+                  //         buttonText: 'Sign Out',
+                  //         icon: Icons.logout_rounded,
+                  //         dialogTitle: 'Sign Out',
+                  //         dialogMessage:
+                  //             'Are you sure you want to log out of FAMZY Tourz?',
+                  //         isDanger: true,
+                  //         isLoading: auth.loading,
+                  //         onConfirmed: () => auth.emailSignOut(),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                   userRole == 'admin'
                       ? const AdminBookingsScreen()
                       : const Center(child: Text('Chat List')),
                   const Center(child: Text('Profile')),
+                  const DestinationsScreen(),
+                  const MyBookingsScreen(),
+
+                  const ProfileScreen(),
                 ],
               ),
               bottomNavigationBar: WaterDropNavBar(

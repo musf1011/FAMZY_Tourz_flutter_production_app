@@ -207,7 +207,6 @@
 // }
 
 import 'package:famzy_tourz_v2/constants.dart';
-import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/back_logo_row.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_drop_down_field.dart';
@@ -218,55 +217,54 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 import '../../providers/auth_providers/auth_provider.dart';
 
-class AdditionalInfoScreen extends StatefulWidget {
-  const AdditionalInfoScreen({super.key});
+class AdditionalInfoScreen extends StatelessWidget {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  AdditionalInfoScreen({super.key});
 
-  @override
-  State<AdditionalInfoScreen> createState() => _AdditionalInfoScreenState();
-}
+  //   @override
+  //   State<AdditionalInfoScreen> createState() => _AdditionalInfoScreenState();
+  // }
 
-class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
-  @override
-  void initState() {
-    super.initState();
+  // class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
+  //   @override
+  //   void initState() {
+  //     super.initState();
 
-    // This waits until the first frame is drawn
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      NavigationService().showSnackBar(
-        title: 'Action Required!',
-        message: 'Just a few more details to personalize your experience.',
-        type: ContentType.warning,
-      );
-    });
-  }
+  //     // This waits until the first frame is drawn
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       NavigationService().showSnackBar(
+  //         title: 'Action Required!',
+  //         message: 'Just a few more details to personalize your experience.',
+  //         type: ContentType.warning,
+  //       );
+  //     });
+  //   }
 
-  final _formKey = GlobalKey<FormState>();
+  // final TextEditingController _ageController = TextEditingController();
+  // String? selectedGender;
 
-  final TextEditingController _ageController = TextEditingController();
-  String? selectedGender;
+  // @override
+  // void dispose() {
+  //   _ageController.dispose();
+  //   super.dispose();
+  // }
 
-  @override
-  void dispose() {
-    _ageController.dispose();
-    super.dispose();
-  }
+  // void _submit(AuthProvider auth) {
+  // FocusScope.of(context).unfocus();
 
-  void _submit(AuthProvider auth) {
-    FocusScope.of(context).unfocus();
+  // if (!_formKey.currentState!.validate()) return;
 
-    if (!_formKey.currentState!.validate()) return;
+  // final age = int.tryParse(_ageController.text.trim()) ?? 0;
 
-    final age = int.tryParse(_ageController.text.trim()) ?? 0;
-
-    auth.submitAdditionalInfo(age: age, gender: selectedGender!);
-  }
+  // auth.submitAdditionalInfo(age: age, gender: selectedGender!);
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.read<AuthProvider>();
     return AppBackground(
       notAllowPop: true,
       child: Column(
@@ -298,9 +296,12 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
 
                       // age
                       CustTextFormField(
-                        controller: _ageController,
+                        // controller: _ageController,
                         label: 'Age',
                         hint: '18',
+                        onChanged: (v) {
+                          authProvider.age = v;
+                        },
                         keyboardType: .number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -320,68 +321,9 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
                       SizedBox(height: 15.h),
 
                       // gender
-                      // DropdownButtonFormField<String>(
-                      //   validator: (value) {
-                      //     if (value == null) {
-                      //       return 'Please select gender';
-                      //     }
-                      //     return null;
-                      //   },
-                      //   decoration: InputDecoration(
-                      //     label: const Text(
-                      //       'Gender',
-                      //       style: TextStyle(color: Colors.white),
-                      //     ),
-                      //     hint: Text(
-                      //       'Not Selected',
-                      //       style: TextStyle(
-                      //         color: AppConstants.whiteColorP5,
-                      //       ),
-                      //     ),
-                      //     enabledBorder: const UnderlineInputBorder(
-                      //       borderSide: BorderSide(color: Colors.grey),
-                      //     ),
-                      //     focusedBorder: const UnderlineInputBorder(
-                      //       borderSide: BorderSide(
-                      //         color: AppConstants.tertiaryColor,
-                      //       ),
-                      //     ),
-                      //   ),
-                      //   dropdownColor: AppConstants.primaryTransGColor,
-                      //   iconEnabledColor: AppConstants.tertiaryColor,
-                      //   borderRadius: .circular(15.r),
-                      //   initialValue: selectedGender,
-                      //   items: [
-                      //     const DropdownMenuItem(
-                      //       value: 'male',
-                      //       child: Text(
-                      //         'Male',
-                      //         style: TextStyle(
-                      //           color: AppConstants.accentColor,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     DropdownMenuItem(
-                      //       value: 'female',
-                      //       child: Text(
-                      //         'Female',
-                      //         style: TextStyle(color: Colors.pink[200]),
-                      //       ),
-                      //     ),
-                      //     DropdownMenuItem(
-                      //       value: 'other',
-                      //       child: Text(
-                      //         'Other',
-                      //         style: TextStyle(color: Colors.yellow[200]),
-                      //       ),
-                      //     ),
-                      //   ],
-                      //   onChanged: (v) {
-                      //     setState(() => selectedGender = v);
-                      //   },
-                      // ),
                       CustomGenderDropdownField(
-                        value: selectedGender,
+                        // value: selectedGender,
+                        value: authProvider.selectedGender,
                         validator: (v) {
                           if (v == null) {
                             return 'Please select gender';
@@ -389,7 +331,8 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
                           return null;
                         },
                         onChanged: (v) {
-                          setState(() => selectedGender = v);
+                          // setState(() => selectedGender = v);
+                          authProvider.selectGender(v);
                         },
                       ),
 
@@ -407,7 +350,17 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
               return CustomLoadingButton(
                 text: 'CONTINUE',
                 isLoading: auth.loading,
-                onPressed: () => _submit(auth),
+                // onPressed: () => _submit(auth),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+
+                  if (!_formKey.currentState!.validate()) return;
+
+                  // final age = int.tryParse(_ageController.text.trim()) ?? 0;
+
+                  // auth.submitAdditionalInfo(age: age, gender: selectedGender!);
+                  auth.submitAdditionalInfo();
+                },
               );
             },
           ),
@@ -449,7 +402,8 @@ class _AdditionalInfoScreenState extends State<AdditionalInfoScreen> {
                 dialogMessage:
                     'Are you sure you want to log out of FAMZY Tourz?',
                 isDanger: true,
-                confirmColor: Colors.red,
+                // confirmColor: Colors.red,
+                // confirmColor: Colors.black,
                 isLoading: auth.loading,
                 onConfirmed: () => auth.emailSignOut(),
               );

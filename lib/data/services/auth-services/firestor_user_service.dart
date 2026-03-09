@@ -37,7 +37,7 @@ class FirestoreUserService {
       'email': user.email,
       'photoURL': user.photoURL,
       'role': 'user',
-      'age': '',
+      'age': 0,
       'gender': '',
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
