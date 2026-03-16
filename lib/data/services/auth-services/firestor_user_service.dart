@@ -83,6 +83,15 @@ class FirestoreUserService {
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
+
+  static Future<void> photoURLUpdate() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    await _firestore.collection('usersInfo').doc(user.uid).update({
+      'photoUrl': user.photoURL,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
 }
   // static Future<void> saveUserToFirestore({
   //   int? age,

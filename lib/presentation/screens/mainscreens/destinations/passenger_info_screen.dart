@@ -184,21 +184,28 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                     icon: Icons.airplane_ticket_outlined,
                   );
                   if (!confirmed) return;
-                  debugPrint(
-                    '****submit started ${userProvider.user!.userId}*** ',
-                  );
+                  debugPrint('****submit started ${userProvider.userId}*** ');
                   final bookingId = await bookingProvider.submitBooking(
                     user: userProvider.user!,
                   );
                   debugPrint('****submit started confirm: $confirmed*** ');
                   if (bookingId != null && context.mounted) {
                     //clear data before proceeding
-                    context.read<BookingProvider>().clearBookingData();
+
                     debugPrint('****booking id: $bookingId');
+                    debugPrint(
+                      '****pass info scr ready to clear booking data ',
+                    );
+                    context.read<BookingProvider>().clearBookingData();
+                    // WidgetsBinding.instance.addPostFrameCallback((_) {
                     await NavigationService().navigateReplacement(
                       AppRoutes.payment,
-                      arguments: bookingId,
+                      arguments: {
+                        'bookingId': bookingId,
+                        'packageId': bookingProvider.package!.packageId,
+                      },
                     );
+                    // });
                   }
                 },
                 child: const Text('Book Now'),

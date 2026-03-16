@@ -195,9 +195,13 @@ class LoginScreen extends StatelessWidget {
                   authProvider.reset();
                   NavigationService().navigateTo(AppRoutes.signup);
                 },
-                child: const Text(
+                child: Text(
                   'Sign Up',
-                  style: TextStyle(color: Colors.white, fontWeight: .bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: .bold,
+                    fontSize: 14.sp,
+                  ),
                 ),
               ),
             ],

@@ -11,8 +11,10 @@ class AppConfirmDialog extends StatelessWidget {
   final String confirmText;
   final String cancelText;
   final Color confirmColor;
+  final Color cancelColor;
   final IconData? icon;
-  final bool isDanger;
+  // final bool isDanger;
+  final Color iconColor;
 
   const AppConfirmDialog({
     super.key,
@@ -21,20 +23,25 @@ class AppConfirmDialog extends StatelessWidget {
     this.confirmText = 'Confirm',
     this.cancelText = 'Cancel',
     this.confirmColor = AppConstants.lightRed,
+    this.cancelColor = AppConstants.lightGreen,
     this.icon,
-    this.isDanger = false,
+    // this.isDanger = false,
+    this.iconColor = AppConstants.famzyGold,
   });
 
-  ///  Helper method (recommended way to use)
+  ///  Helper method
   static Future<bool> show(
     BuildContext context, {
     required String title,
     required String message,
     String confirmText = 'Confirm',
-    String cancelText = 'Cancel',
     Color confirmColor = AppConstants.lightRed,
+    String cancelText = 'Cancel',
+    Color cancelColor = AppConstants.lightGreen,
+
     IconData? icon,
-    bool isDanger = false,
+    // bool isDanger = false,
+    Color iconColor = AppConstants.famzyGold,
   }) async {
     final result = await showDialog<bool>(
       context: context,
@@ -46,7 +53,9 @@ class AppConfirmDialog extends StatelessWidget {
         cancelText: cancelText,
         confirmColor: confirmColor,
         icon: icon,
-        isDanger: isDanger,
+        // isDanger: isDanger,
+        iconColor: iconColor,
+        cancelColor: cancelColor,
       ),
     );
 
@@ -72,11 +81,7 @@ class AppConfirmDialog extends StatelessWidget {
       title: Row(
         children: [
           if (icon != null) ...[
-            Icon(
-              icon,
-              color: isDanger ? AppConstants.lightRed : AppConstants.famzyGold,
-              size: 28.sp,
-            ),
+            Icon(icon, color: iconColor, size: 28.sp),
             SizedBox(width: 10.w),
           ],
           // Column(
@@ -112,7 +117,7 @@ class AppConfirmDialog extends StatelessWidget {
       actions: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppConstants.lightGreen,
+            backgroundColor: cancelColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25.r),
             ),

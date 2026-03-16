@@ -425,7 +425,6 @@
 // created by: FAMZY CodeWorks
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
-import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
 import 'package:famzy_tourz_v2/presentation/screens/admin-screens/admin_bookings_screen.dart';
@@ -433,7 +432,6 @@ import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/des
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/my_bookings_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/profile/profile_screen.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -471,7 +469,7 @@ class MainScreen extends StatelessWidget {
               message: 'Are you sure you want to close FAMZY Tourz?',
               confirmText: 'Exit',
               cancelText: 'Stay',
-              isDanger: true,
+              iconColor: AppConstants.lightRed,
               confirmColor: AppConstants.lightRed,
               icon: Icons.exit_to_app_rounded,
             );
@@ -511,10 +509,9 @@ class MainScreen extends StatelessWidget {
                   userRole == 'admin'
                       ? const AdminBookingsScreen()
                       : const Center(child: Text('Chat List')),
-                  const Center(child: Text('Profile')),
+                  // const Center(child: Text('Profile')),
                   const DestinationsScreen(),
                   const MyBookingsScreen(),
-
                   const ProfileScreen(),
                 ],
               ),

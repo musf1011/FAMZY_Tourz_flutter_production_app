@@ -390,7 +390,7 @@ class _PackageCardState extends State<PackageCard> {
                             'Delete "${widget.package.packageName}" permanently?',
                         confirmText: 'Delete',
                         cancelText: 'Cancel',
-                        isDanger: true,
+                        iconColor: AppConstants.lightRed,
                         icon: Icons.delete_forever_rounded,
                       );
 

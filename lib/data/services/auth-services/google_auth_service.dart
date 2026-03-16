@@ -499,6 +499,8 @@ class GoogleAuthService {
     // save base user data for new users
     if (isNewUser) {
       await FirestoreUserService.createNewUserInfo();
+    } else {
+      await FirestoreUserService.photoURLUpdate();
     }
 
     return GoogleSignInResult(user: user, isNewUser: isNewUser);

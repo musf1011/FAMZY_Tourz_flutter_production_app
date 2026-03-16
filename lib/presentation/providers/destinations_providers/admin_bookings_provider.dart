@@ -65,6 +65,9 @@ class AdminBookingsProvider extends ChangeNotifier {
   List<BookingModel> get rejected =>
       _allBookings.where((b) => b.paymentStatus == 'rejected').toList();
 
+  List<BookingModel> get resubmit =>
+      _allBookings.where((b) => b.paymentStatus == 'resubmit').toList();
+
   StreamSubscription? _subscription;
 
   /// START REALTIME LISTENER
@@ -73,7 +76,9 @@ class AdminBookingsProvider extends ChangeNotifier {
       _allBookings = bookings;
 
       _isLoading = false;
-
+      debugPrint(
+        '*********bookings list in startlistening funct in admin booking provider: ${_allBookings.first}',
+      );
       notifyListeners();
     });
   }
@@ -83,12 +88,16 @@ class AdminBookingsProvider extends ChangeNotifier {
   //   await _service.approvePayment(bookingId);
   // }
   /// APPROVE PAYMENT
-  Future<void> approve(BuildContext context, String bookingId) async {
+  Future<void> approve(
+    BuildContext context,
+    String bookingId,
+    String packageId,
+  ) async {
     try {
       // 1. You might have a loading state to show a spinner on the admin side
       // _setLoading(true);
 
-      await _service.approvePayment(bookingId);
+      await _service.approvePayment(bookingId, packageId);
 
       // 2. Success Feedback
       if (context.mounted) {
@@ -123,8 +132,16 @@ class AdminBookingsProvider extends ChangeNotifier {
   }
 
   /// REJECT
-  Future<void> reject(String bookingId) async {
-    await _service.rejectPayment(bookingId);
+  Future<void> reject(
+    String bookingId,
+    String packageId,
+    bool permanentRejected,
+  ) async {
+    if (permanentRejected) {
+      await _service.rejectPaymentPermanently(bookingId, packageId);
+    } else {
+      await _service.rejectPaymentResubmission(bookingId, packageId);
+    }
   }
 
   @override

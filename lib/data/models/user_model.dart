@@ -52,7 +52,7 @@ class AppUser {
   final String email;
   final int age;
   final String gender;
-  final String photoURL;
+  final String photoUrl;
   final String role;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -64,7 +64,7 @@ class AppUser {
     required this.email,
     required this.age,
     required this.gender,
-    required this.photoURL,
+    required this.photoUrl,
     required this.role,
     required this.createdAt,
     required this.updatedAt,
@@ -79,7 +79,7 @@ class AppUser {
       age: map['age'],
       // age: _parseAge(map['age']),
       gender: map['gender'] ?? '',
-      photoURL: map['photoURL'] ?? '',
+      photoUrl: map['photoUrl'] ?? '',
       role: map['role'] ?? 'user',
       // createdAt: (map['createdAt'] as Timestamp).toDate(),
       // updatedAt: (map['updatedAt'] as Timestamp).toDate(),
@@ -109,7 +109,7 @@ class AppUser {
       'email': email,
       'age': age,
       'gender': gender,
-      'photoURL': photoURL,
+      'photoUrl': photoUrl,
       'role': role,
       'createdAt': createdAt,
       'updatedAt': updatedAt,

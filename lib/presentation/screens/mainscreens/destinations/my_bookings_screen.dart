@@ -361,10 +361,17 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                       ),
 
                       onTap: () async {
-                        if (booking.paymentStatus == 'pending') {
+                        if (booking.paymentStatus == 'pending' ||
+                            booking.paymentStatus == 'resubmit') {
+                          debugPrint(
+                            '*****pendign and now ready to navigate bookingid: ${booking.bookingId} , ***packageid = ${booking.packageId}',
+                          );
                           await NavigationService().navigateTo(
                             AppRoutes.payment,
-                            arguments: booking.bookingId,
+                            arguments: {
+                              'bookingId': booking.bookingId,
+                              'packageId': booking.packageId,
+                            },
                           );
                         } else {
                           final bookingProvider = context
@@ -375,7 +382,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                             user.userId,
                           );
                           debugPrint(
-                            '****__________****${bookingProvider.alreadyBooked}',
+                            '****_____already booked statue_____****::::${bookingProvider.alreadyBooked}',
                           );
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             NavigationService().navigateTo(

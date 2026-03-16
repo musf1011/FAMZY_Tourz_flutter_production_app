@@ -1,125 +1,141 @@
-// created by: FAMZY CodeWorks
+// // created by: FAMZY CodeWorks
 
-import 'package:famzy_tourz_v2/constants.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:famzy_tourz_v2/constants.dart';
+// import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
+// import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // class SignOutButton extends StatelessWidget {
-//   final String title;
-//   final String message;
 //   final String buttonText;
+//   final IconData icon;
+
+//   final String dialogTitle;
+//   final String dialogMessage;
+
+//   // final bool isDanger;
+//   final Color iconColor;
 //   final Color confirmColor;
+//   final bool isLoading;
+
+//   final Future<void> Function() onConfirmed;
 
 //   const SignOutButton({
 //     super.key,
-//     this.title = 'Sign Out',
-//     this.message = 'Are you sure you want to log out of FAMZY Tourz?',
-//     this.buttonText = 'Sign Out',
-//     this.confirmColor = Colors.red,
+//     required this.buttonText,
+//     required this.icon,
+//     required this.dialogTitle,
+//     required this.dialogMessage,
+//     required this.onConfirmed,
+//     // this.isDanger = true, //default it was false
+//     this.iconColor = AppConstants.lightRed,
+//     this.confirmColor = AppConstants.lightRed,
+//     this.isLoading = false,
 //   });
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return Consumer<AuthProvider>(
-//       builder: (context, auth, _) {
-//         return CustomLoadingButton(
-//           isLoading: auth.loading,
-//           onPressed: auth.loading
-//               ? () {}
-//               : () async {
-//                   final confirmed = await AppConfirmDialog.show(
-//                     context,
-//                     title: title,
-//                     message: message,
-//                     confirmText: buttonText,
-//                     confirmColor: confirmColor,
-//                     icon: Icons.logout_rounded,
-//                     isDanger: true,
-//                   );
+//     return CustomLoadingButton(
+//       isLoading: isLoading,
+//       onPressed: isLoading
+//           ? () {}
+//           : () async {
+//               final confirmed = await AppConfirmDialog.show(
+//                 context,
+//                 title: dialogTitle,
+//                 message: dialogMessage,
+//                 confirmText: buttonText,
+//                 confirmColor: confirmColor,
+//                 icon: icon,
+//                 iconColor: iconColor,
+//               );
 
-//                   if (confirmed) {
-//                     await auth.emailSignOut();
-//                   }
-//                 },
-//           child: auth.loading
-//               ? const SpinKitSpinningLines(
-//                   color: Colors.white,
-//                   size: 28,
-//                 )
-//               : Row(
-//                   mainAxisAlignment:  .center,
-//                   children: [
-//                     Text(
-//                       buttonText,
-//                       style: AppConstants.elevatedButtonTextStyle,
-//                     ),
-//                     SizedBox(width: 10.w),
-//                     Icon(
-//                       Icons.logout_rounded,
-//                       color: Colors.white,
-//                       size: 22.sp,
-//                     ),
-//                   ],
-//                 ),
-//         );
-//       },
+//               if (confirmed) {
+//                 await onConfirmed();
+//               }
+//             },
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Text(buttonText, style: AppConstants.elevatedButtonTextStyle),
+//           SizedBox(width: 10.w),
+//           Icon(icon, color: Colors.white, size: 28.r),
+//         ],
+//       ),
 //     );
 //   }
 // }
-class ConfirmActionButton extends StatelessWidget {
-  final String buttonText;
-  final IconData icon;
 
-  final String dialogTitle;
-  final String dialogMessage;
+// created by: FAMZY CodeWorks
 
-  final bool isDanger;
-  final Color confirmColor;
-  final bool isLoading;
+import 'package:famzy_tourz_v2/constants.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-  final Future<void> Function() onConfirmed;
+class SignOutButton extends StatelessWidget {
+  final double height;
+  final double width;
+  // final String buttonText;
+  // final IconData icon;
 
-  const ConfirmActionButton({
+  // final String dialogTitle;
+  // final String dialogMessage;
+
+  // // final bool isDanger;
+  // final Color iconColor;
+  // final Color confirmColor;
+  // final bool isLoading;
+
+  // final Future<void> Function() onConfirmed;
+
+  const SignOutButton({
     super.key,
-    required this.buttonText,
-    required this.icon,
-    required this.dialogTitle,
-    required this.dialogMessage,
-    required this.onConfirmed,
-    this.isDanger = true, //default it was false
-    this.confirmColor = AppConstants.lightRed,
-    this.isLoading = false,
+    required this.height,
+    required this.width,
+    // required this.buttonText,
+    // required this.icon,
+    // required this.dialogTitle,
+    // required this.dialogMessage,
+    // required this.onConfirmed,
+    // // this.isDanger = true, //default it was false
+    // this.iconColor = AppConstants.lightRed,
+    // this.confirmColor = AppConstants.lightRed,
+    // this.isLoading = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.read<AuthProvider>();
     return CustomLoadingButton(
-      isLoading: isLoading,
-      onPressed: isLoading
+      height: height,
+      width: width,
+      isLoading: authProvider.loading,
+      onPressed: authProvider.loading
           ? () {}
           : () async {
               final confirmed = await AppConfirmDialog.show(
                 context,
-                title: dialogTitle,
-                message: dialogMessage,
-                confirmText: buttonText,
-                confirmColor: confirmColor,
-                icon: icon,
-                isDanger: isDanger,
+                title: 'Sign Out',
+                message: 'Are you sure you want to log out of FAMZY Tourz?',
+                confirmText: 'Sign Out',
+                icon: Icons.logout_rounded,
+                iconColor: AppConstants.lightRed,
               );
 
               if (confirmed) {
-                await onConfirmed();
+                await authProvider.emailSignOut();
               }
             },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(buttonText, style: AppConstants.elevatedButtonTextStyle),
+          Text('Sign Out', style: AppConstants.elevatedButtonTextStyle),
           SizedBox(width: 10.w),
-          Icon(icon, color: Colors.white, size: 28.r),
+          Icon(Icons.logout_rounded, color: AppConstants.lightRed, size: 28.r),
         ],
       ),
     );

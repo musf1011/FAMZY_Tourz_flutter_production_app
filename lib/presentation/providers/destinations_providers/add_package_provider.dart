@@ -177,7 +177,7 @@ class AddPackageProvider extends ChangeNotifier {
     // (In edit mode, we want to keep the original creator's name)
     if (!isEditMode) {
       companyName = user.name;
-      companyPhotoURL = user.photoURL;
+      companyPhotoURL = user.photoUrl;
       // No notifyListeners() needed here if called during build/init
     }
   }

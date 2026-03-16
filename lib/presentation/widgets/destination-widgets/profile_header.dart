@@ -27,7 +27,7 @@ class ProfileHeader extends StatelessWidget {
     final companyName = isEditMode ? packageProvider.companyName : user.name;
     final companyPhotoURL = isEditMode
         ? packageProvider.companyPhotoURL
-        : user.photoURL;
+        : user.photoUrl;
     return Column(
       children: [
         // --- Profile Photo ---
@@ -48,7 +48,7 @@ class ProfileHeader extends StatelessWidget {
         //   ),
         // ),
         CustomProfileAvatar(
-          imageUrl: isEditMode ? companyPhotoURL : user.photoURL,
+          imageUrl: isEditMode ? companyPhotoURL : user.photoUrl,
         ),
 
         SizedBox(height: 8.h),

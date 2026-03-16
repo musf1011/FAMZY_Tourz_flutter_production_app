@@ -133,8 +133,11 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    _userId = doc.id; //for future use
+    _userId = doc.id; //for future use not implemented now
     _user = AppUser.fromMap(doc.data()!);
+    debugPrint(
+      '***load user function: user name ${_user!.name}, age ${user!.age}, email: ${user!.email}, userId inside doc: ${user!.userId}, userid as doc name:: ${doc.id}***',
+    );
     // // 2. THE FIX: Pass both the data map AND the doc.id
     // // This ensures userId in your model is NEVER an empty string.
     // _user = AppUser.fromMap(doc.data()!, doc.id);

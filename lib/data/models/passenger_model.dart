@@ -1,5 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
+//created by: FAMZY Tourz
 class PassengerModel {
   final String name;
   final String gender;
@@ -20,7 +19,7 @@ class PassengerModel {
       'idNumber': idNumber,
       'age': age,
       'bookedBy': bookedBy,
-      'timestamp': FieldValue.serverTimestamp(),
+      // 'timestamp': FieldValue.serverTimestamp(),
     };
   }
 }

@@ -17,8 +17,9 @@ import 'package:provider/provider.dart';
 
 class PaymentScreen extends StatelessWidget {
   final String bookingId;
+  final String packageId;
   final _formKey = GlobalKey<FormState>();
-  PaymentScreen({super.key, required this.bookingId});
+  PaymentScreen({super.key, required this.bookingId, required this.packageId});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,8 @@ class PaymentScreen extends StatelessWidget {
     final destProvider = context.read<DestinationsProvider>();
 
     return DestinationBackgroundWrapper(
-      imagePath: destProvider.selectedDestination.image,
+      // imagePath: destProvider.selectedDestination.image, //removed as if you come from bookings screen the selected destination may difffer which cause showing different destination picture
+      imagePath: 'assets/images/bg-conversation.jpg',
       titleText: 'Complete Payment',
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -55,6 +57,19 @@ class PaymentScreen extends StatelessWidget {
                 'assets/payment/nayapay_qr.jpeg',
                 height: 250.h,
               ),
+            ),
+            Text(
+              'Account Number: 03143094341\nIBAN Number: PK78 1234 5031 4309 4341',
+              style: TextStyle(
+                color: AppConstants.whiteColorP7,
+                fontSize: 16.sp,
+                fontWeight: .bold,
+                // decorationColor: AppConstants.famzyGold,
+                // decoration: TextDecoration.underline,
+                // decorationStyle: TextDecorationStyle.solid,
+                // fontStyle: FontStyle.italic,
+              ),
+              textAlign: .center,
             ),
 
             SizedBox(height: 20.h),
@@ -131,7 +146,7 @@ class PaymentScreen extends StatelessWidget {
               text: 'Confirm Payment',
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  await paymentProvider.submitTransaction(bookingId);
+                  await paymentProvider.submitTransaction(bookingId, packageId);
 
                   // Only navigate if the context is still valid
                   if (context.mounted) {

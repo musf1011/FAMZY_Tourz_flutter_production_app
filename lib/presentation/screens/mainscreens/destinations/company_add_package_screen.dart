@@ -489,7 +489,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
               'Are you sure you want to leave? Your package details will not be saved.',
           confirmText: 'Discard',
           cancelText: 'Stay',
-          isDanger: true,
+          iconColor: AppConstants.lightRed,
           icon: Icons.warning_amber_rounded,
         );
         // If user confirms, use the Navigator to leave

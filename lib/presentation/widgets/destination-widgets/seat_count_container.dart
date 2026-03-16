@@ -14,9 +14,11 @@ class SeatCountContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final availableSeats = bookingProvider.package?.availableSeats ?? 0;
     final isMaxReached =
-        bookingProvider.seatCount >= bookingProvider.package!.availableSeats ||
+        bookingProvider.seatCount >= availableSeats ||
         bookingProvider.seatCount >= 5;
+    if (bookingProvider.package == null) return const SizedBox.shrink();
     return Container(
       width: 0.6.sw,
       padding: EdgeInsets.symmetric(horizontal: 10.h),

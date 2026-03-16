@@ -9,7 +9,7 @@ class PaymentProvider extends ChangeNotifier {
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
 
-  Future<void> submitTransaction(String bookingId) async {
+  Future<void> submitTransaction(String bookingId, String packageId) async {
     final transactionId = transactionController.text.trim();
 
     if (transactionId.isEmpty) return;
@@ -19,6 +19,7 @@ class PaymentProvider extends ChangeNotifier {
 
     try {
       await _service.submitTransaction(
+        packageId: packageId,
         bookingId: bookingId,
         transactionId: transactionId,
       );

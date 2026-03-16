@@ -185,7 +185,9 @@ class BookingProvider extends ChangeNotifier {
       // final passengerData = passengerModels.map((p) => p.toMap(user.userId)).toList();
       final bookingId =
           ('${user.name.replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch.toString()}');
-      debugPrint('***** user id: ${user.userId} *** user name: ${user.name}');
+      debugPrint(
+        '***** user id: ${user.userId} *** user name: ${user.name} *** and bookingId : $bookingId ***** user:::: $user',
+      );
       await _bookingService.createBooking(
         bookingId: bookingId,
         package: _package!,
@@ -275,7 +277,7 @@ class BookingProvider extends ChangeNotifier {
     _controllers.clear();
 
     // Reset state variables
-    _package = null;
+    // _package = null;  // it caused error of null check as if user go back it not found any error
     _seatCount = 1;
     _alreadyBooked = false;
 

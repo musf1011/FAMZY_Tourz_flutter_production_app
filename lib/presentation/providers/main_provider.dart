@@ -65,9 +65,9 @@ class MainProvider extends ChangeNotifier {
 
   MainProvider() {
     // pageController = PageController(initialPage: _selectedIndex);
-    _initController();
+    initController();
   }
-  void _initController() {
+  void initController() {
     pageController = PageController(initialPage: _selectedIndex);
   }
 
@@ -76,7 +76,7 @@ class MainProvider extends ChangeNotifier {
     _selectedIndex = index; // Or 0, wherever your 'Destinations' screen is
 
     pageController.dispose();
-    _initController();
+    initController();
     notifyListeners();
   }
 

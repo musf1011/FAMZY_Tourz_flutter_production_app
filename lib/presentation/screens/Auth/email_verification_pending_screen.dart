@@ -644,21 +644,21 @@ class _EmailVerificationPendingScreenState
 
           SizedBox(height: 60.h),
 
-          Consumer<AuthProvider>(
-            builder: (context, auth, _) {
-              return ConfirmActionButton(
-                buttonText: 'Sign Out',
-                icon: Icons.logout_rounded,
-                dialogTitle: 'Sign Out',
-                dialogMessage:
-                    'Are you sure you want to log out of FAMZY Tourz?',
-                isDanger: true,
-                // confirmColor: Colors.red,
-                // isLoading: auth.loading,
-                onConfirmed: () => auth.emailSignOut(),
-              );
-            },
-          ),
+          // Consumer<AuthProvider>(
+          //   builder: (context, auth, _) {
+          //     return ConfirmActionButton(
+          //       buttonText: 'Sign Out',
+          //       icon: Icons.logout_rounded,
+          //       dialogTitle: 'Sign Out',
+          //       dialogMessage:
+          //           'Are you sure you want to log out of FAMZY Tourz?',
+          //       // confirmColor: Colors.red,
+          //       // isLoading: auth.loading,
+          //       onConfirmed: () => auth.emailSignOut(),
+          //     );
+          //   },
+          // ),
+          SignOutButton(height: 60.h, width: .8.sw),
         ],
       ),
     );

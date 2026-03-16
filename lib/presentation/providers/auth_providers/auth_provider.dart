@@ -215,6 +215,7 @@ class AuthProvider extends ChangeNotifier {
           _navigation.navigateAndClearStack(AppRoutes.additionalInfoScreen);
         });
       }
+
       //load user info if already registered
       // final firebaseUser = _auth.currentUser;
 
@@ -314,7 +315,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //if new, signn up using email & password
-  Future<void> signUpWithEmail(
+  Future<bool> signUpWithEmail(
     // {
     // required String fullName,
     // required String email,
@@ -332,10 +333,10 @@ class AuthProvider extends ChangeNotifier {
       );
       //create firebase user
       final userCred = await EmailAuthService.instance.signUpWithEmail(
-        email,
-        password,
+        email.trim(),
+        password.trim(),
       );
-      if (currentSessionId != _requestSessionId) return;
+      if (currentSessionId != _requestSessionId) return false;
       debugPrint('***2nd step');
       final user = userCred.user;
       // if (user == null) {
@@ -358,15 +359,15 @@ class AuthProvider extends ChangeNotifier {
       debugPrint('***2nd step');
 
       await EmailAuthService.instance.saveUserToFirestore(
-        uid: user!.uid,
-        fullName: fullName,
-        email: email,
+        userId: user!.uid,
+        fullName: fullName.trim(),
+        email: email.trim(),
         age: age.isEmpty ? 0 : int.parse(age),
         gender: selectedGender ?? 'other',
       );
 
       debugPrint('***3.5th step');
-      if (currentSessionId != _requestSessionId) return;
+      if (currentSessionId != _requestSessionId) return false;
       debugPrint('***4thst step');
       //logged in saved locally
       final prefs = await SharedPreferences.getInstance();
@@ -379,7 +380,7 @@ class AuthProvider extends ChangeNotifier {
         message: 'Verification email has been sent',
         type: ContentType.success,
       );
-      debugPrint('***5th step');
+      debugPrint('***5th step the last step succes is true now');
       // await prefs.setBool('isProfileCompleted', true);
       // print('*****is logged in: ${getbool}');
 
@@ -405,6 +406,7 @@ class AuthProvider extends ChangeNotifier {
       // WidgetsBinding.instance.addPostFrameCallback((_) {
       //   _navigation.navigateAndClearStack(AppRoutes.emailVerification);
       // });
+      return true;
     } on FirebaseAuthException catch (e) {
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
@@ -412,6 +414,7 @@ class AuthProvider extends ChangeNotifier {
         message: _getFirebaseErrorMessage(e.code),
         type: ContentType.failure,
       );
+      return false;
     } on PlatformException catch (e) {
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
@@ -419,6 +422,7 @@ class AuthProvider extends ChangeNotifier {
         message: _getFirebaseErrorMessage(e.code),
         type: ContentType.failure,
       );
+      return false;
     } catch (e) {
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
@@ -426,6 +430,7 @@ class AuthProvider extends ChangeNotifier {
         message: 'Sign up failed. Please try again',
         type: ContentType.failure,
       );
+      return false;
     } finally {
       _setLoading(false);
     }
@@ -805,8 +810,8 @@ class AuthProvider extends ChangeNotifier {
   String? _selectedGender;
   String? get selectedGender => _selectedGender;
   void selectGender(String? selectedGender) {
-    debugPrint('****$_selectedGender ******');
     _selectedGender = selectedGender;
+    debugPrint('**** selected gender: $_selectedGender ******');
   }
 
   /// RESET ALL FIELDS

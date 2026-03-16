@@ -10,10 +10,12 @@ import 'package:famzy_tourz_v2/presentation/screens/Auth/signup_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/admin-screens/admin_bookings_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/company_add_package_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/hotel_placeholder_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/my_bookings_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/package_detail_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/packages_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/passenger_info_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/main_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/profile/profile_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/payment-screens/payment_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +42,10 @@ class AppRoutes {
   static const packageDetail = '/package-detail';
   static const passengerInfo = '/passenger-info';
   static const String payment = '/payment';
+
+  static const String myBookings = '/my-bookings';
+  static const String profile = '/profile';
+  static const String settings = '/settings';
   // ________________ADMIN screens__________
   static const String adminBookings = '/admin-bookings';
 
@@ -101,13 +107,23 @@ class AppRoutes {
       case passengerInfo:
         return MaterialPageRoute(builder: (_) => const PassengerInfoScreen());
       case payment:
-        final bookingId = settings.arguments as String;
+        // final bookingId = settings.arguments as String;
+        // final packageId = settings.arguments as String;
+        final args = settings.arguments as Map<String, String>?;
+        final bookingId = args?['bookingId'] as String;
+        final packageId = args?['packageId'] as String;
         return MaterialPageRoute(
-          builder: (_) => PaymentScreen(bookingId: bookingId),
+          builder: (_) =>
+              PaymentScreen(bookingId: bookingId, packageId: packageId),
         );
       case adminBookings:
         return MaterialPageRoute(builder: (_) => const AdminBookingsScreen());
-
+      case myBookings:
+        return MaterialPageRoute(builder: (_) => const MyBookingsScreen());
+      case profile:
+        return MaterialPageRoute(builder: (_) => const ProfileScreen());
+      // case settings:
+      //   return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case _:
         // default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());

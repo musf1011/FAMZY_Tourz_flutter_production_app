@@ -105,13 +105,19 @@ class BookingService {
   /// SUBMIT TRANSACTION ID
   Future<void> submitTransaction({
     required String bookingId,
+    required String packageId,
     required String transactionId,
   }) async {
-    await _firestore.collection('bookings').doc(bookingId).update({
-      'transactionId': transactionId,
-      'paymentStatus': 'submitted',
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
+    await _firestore
+        .collection('tourPackages')
+        .doc(packageId)
+        .collection('bookings')
+        .doc(bookingId)
+        .update({
+          'transactionId': transactionId,
+          'paymentStatus': 'submitted',
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
   }
 
   /// CHECK if user already booked this package
@@ -120,6 +126,8 @@ class BookingService {
     required String packageId,
   }) async {
     final snapshot = await _firestore
+        .collection('tourPackages')
+        .doc(packageId)
         .collection('bookings')
         .where('userId', isEqualTo: userId)
         .where('packageId', isEqualTo: packageId)
@@ -127,6 +135,7 @@ class BookingService {
         .get();
 
     return snapshot.docs.isNotEmpty;
+    // return false; //for testing purpose
   }
 
   // //get all bookings for admin
@@ -142,15 +151,26 @@ class BookingService {
   // }
   /// REALTIME ADMIN BOOKINGS STREAM
   Stream<List<BookingModel>> streamAllBookings() {
-    return _firestore
-        .collection('bookings')
-        .orderBy('createdAt', descending: true)
+    // 1. Calculate the date 30 days ago from today
+    final DateTime thirtyDaysAgo = DateTime.now().subtract(
+      const Duration(days: 30),
+    );
+    final Stream<List<BookingModel>> serviceReturnStream = _firestore
+        .collectionGroup('bookings')
+        // .orderBy('createdAt', descending: true)
+        .where('createdAt', isGreaterThanOrEqualTo: thirtyDaysAgo)
+        .orderBy('departureDate', descending: true)
         .snapshots()
+        .handleError((e) {
+          debugPrint('********Bookings stream error: $e');
+        })
         .map(
           (snapshot) => snapshot.docs
               .map((doc) => BookingModel.fromMap(doc.data()))
               .toList(),
         );
+    debugPrint('****** booking services return : ${serviceReturnStream.first}');
+    return serviceReturnStream;
   }
 
   // //admin approve payment
@@ -161,8 +181,12 @@ class BookingService {
   //   });
   // }
 
-  Future<void> approvePayment(String bookingId) async {
-    final bookingRef = _firestore.collection('bookings').doc(bookingId);
+  Future<void> approvePayment(String bookingId, String packageId) async {
+    final bookingRef = _firestore
+        .collection('tourPackages')
+        .doc(packageId)
+        .collection('bookings')
+        .doc(bookingId);
 
     await _firestore.runTransaction((transaction) async {
       final bookingSnapshot = await transaction.get(bookingRef);
@@ -211,11 +235,37 @@ class BookingService {
     });
   }
 
-  //admin reject payment
-  Future<void> rejectPayment(String bookingId) async {
-    await _firestore.collection('bookings').doc(bookingId).update({
-      'paymentStatus': 'rejected',
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
+  //admin reject payment resubmission
+  Future<void> rejectPaymentResubmission(
+    String bookingId,
+    String packageId,
+  ) async {
+    await _firestore
+        .collection('tourPackages')
+        .doc(packageId)
+        .collection('bookings')
+        .doc(bookingId)
+        .update({
+          'paymentStatus': 'resubmit',
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
   }
+
+  //admin reject payment permanently
+  Future<void> rejectPaymentPermanently(
+    String bookingId,
+    String packageId,
+  ) async {
+    await _firestore
+        .collection('tourPackages')
+        .doc(packageId)
+        .collection('bookings')
+        .doc(bookingId)
+        .update({
+          'paymentStatus': 'rejected',
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+  }
+
+  //
 }

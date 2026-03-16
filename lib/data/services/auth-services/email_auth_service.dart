@@ -21,7 +21,7 @@ class EmailAuthService {
 
   //save user data into firestor
   Future<void> saveUserToFirestore({
-    required String uid,
+    required String userId,
     required String fullName,
     required String email,
     required int age,
@@ -29,10 +29,10 @@ class EmailAuthService {
     String photoUrl = '',
   }) async {
     debugPrint(
-      '***1st step $email and $uid , **$fullName , ** $age , ***$gender ,',
+      '***1st step $email and $userId , **$fullName , ** $age , ***$gender ,',
     );
-    await _firestore.collection('usersInfo').doc(uid).set({
-      'uid': uid,
+    await _firestore.collection('usersInfo').doc(userId).set({
+      'userId': userId,
       'name': fullName,
       'email': email,
       'age': age,
