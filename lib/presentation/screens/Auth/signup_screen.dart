@@ -2,6 +2,7 @@ import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/back_logo_row.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_date_time_picker.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_drop_down_field.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_glass_wrapper.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
@@ -11,6 +12,7 @@ import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_providers/auth_provider.dart';
@@ -43,7 +45,7 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.read<AuthProvider>();
-    return AppBackground(
+    return AppAuthBackground(
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -188,27 +190,119 @@ class SignUpScreen extends StatelessWidget {
                             padding: .only(top: 6.h),
                             child: SizedBox(
                               width: .455.sw,
+                              // child: CustTextFormField(
+                              //   // controller: _age,
+                              //   onChanged: (v) {
+                              //     authProvider.age = v;
+                              //   },
+                              //   label: 'Age',
+                              //   hint: '18',
+                              //   keyboardType: .number,
+                              //   inputFormatters: [
+                              //     FilteringTextInputFormatter.digitsOnly,
+                              //   ],
+                              //   validator: (v) {
+                              //     if (v == null || v.isEmpty) {
+                              //       return 'Enter age';
+                              //     }
+                              //     final n = int.tryParse(v);
+                              //     if (n == null || n < 13 || n > 130) {
+                              //       return 'Invalid age';
+                              //     }
+                              //     return null;
+                              //   },
+                              // ),
                               child: CustTextFormField(
-                                // controller: _age,
+                                label: 'Date',
+                                hint: 'YYYY-MM-DD',
+                                // controller: _dateController,
                                 onChanged: (v) {
                                   authProvider.age = v;
                                 },
-                                label: 'Age',
-                                hint: '18',
-                                keyboardType: .number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                validator: (v) {
-                                  if (v == null || v.isEmpty) {
-                                    return 'Enter age';
+
+                                readOnly: true,
+                                // onTap: () async {
+                                //   final pickedDate = await showDatePicker(
+                                //     onDatePickerModeChange: (value) {
+                                //       authProvider.age = value.toString();
+                                //     },
+                                //     context: context,
+                                //     initialDate: DateTime.now().subtract(
+                                //       const Duration(days: 12 * 365),
+                                //     ),
+                                //     firstDate: DateTime(1900),
+                                //     lastDate: DateTime.now().subtract(
+                                //       const Duration(days: 12 * 365),
+                                //     ),
+                                //     builder: (context, child) {
+                                //       return Theme(
+                                //         data: Theme.of(context).copyWith(
+                                //           colorScheme: const ColorScheme.dark(
+                                //             primary: AppConstants
+                                //                 .famzyGold, // FAMZY Gold
+                                //             onPrimary: Colors.white,
+                                //             surface: AppConstants
+                                //                 .secondaryColor, // Dark Surface
+                                //             onSurface: Colors.white,
+                                //           ),
+                                //           textButtonTheme: TextButtonThemeData(
+                                //             style: TextButton.styleFrom(
+                                //               foregroundColor:
+                                //                   AppConstants.famzyGold,
+                                //             ),
+                                //           ),
+                                //           datePickerTheme: DatePickerThemeData(
+                                //             shape: RoundedRectangleBorder(
+                                //               borderRadius:
+                                //                   BorderRadius.circular(50.r),
+                                //               side: BorderSide(
+                                //                 color: Colors.white,
+                                //                 width: 2.r,
+                                //               ),
+                                //             ),
+                                //           ),
+                                //           dialogTheme: const DialogThemeData(
+                                //             backgroundColor:
+                                //                 AppConstants.primaryTransGColor,
+                                //           ),
+                                //         ),
+
+                                //         child: child!,
+                                //       );
+                                //     },
+                                //   );
+
+                                //   if (pickedDate != null) {
+                                //     final formatted = DateFormat(
+                                //       'yyyy-MM-dd',
+                                //     ).format(pickedDate);
+                                //     authProvider.age = formatted;
+                                //     // packageProvider.departureDate = formatted;
+                                //   }
+                                // },
+                                onTap: () async {
+                                  final pickedDate =
+                                      await DatePickerUtil.showFamzyDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now().subtract(
+                                          const Duration(days: 12 * 365),
+                                        ),
+                                        firstDate: DateTime(1900),
+                                        lastDate: DateTime.now().subtract(
+                                          const Duration(days: 12 * 365),
+                                        ),
+                                      );
+
+                                  if (pickedDate != null) {
+                                    final formatted = DateFormat(
+                                      'yyyy-MM-dd',
+                                    ).format(pickedDate);
+                                    authProvider.age = formatted;
                                   }
-                                  final n = int.tryParse(v);
-                                  if (n == null || n < 13 || n > 130) {
-                                    return 'Invalid age';
-                                  }
-                                  return null;
                                 },
+                                validator: (v) => v == null || v.isEmpty
+                                    ? 'Select date'
+                                    : null,
                               ),
                             ),
                           ),

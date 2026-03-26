@@ -431,7 +431,7 @@ import 'package:famzy_tourz_v2/presentation/screens/admin-screens/admin_bookings
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/destinations_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/my_bookings_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/profile/profile_screen.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_app_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -33,7 +33,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     return Stack(
       children: [
-        AppBackground(
+        AppAuthBackground(
           child: Column(
             children: [
               const BackAndLogoRow(),
@@ -171,7 +171,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         // ✅ SUCCESS OVERLAY (Now using the reusable component)
         if (auth.showResetSuccessAnimation)
           LottieOverlay(
-            assetPath: 'assets/animations/success.json',
+            assetPath: AppConstants.successAnimation,
             size: 150.w, // Matches your original design
             onAnimationComplete: () {
               auth.onResetAnimationComplete();

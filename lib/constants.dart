@@ -114,4 +114,19 @@ class AppConstants {
     fontWeight: FontWeight.w400,
     color: AppConstants.whiteColorP9,
   );
+
+  //background image path
+  static const String mainScreenBgImage = 'assets/images/bg-mainscreen.jpg';
+  static const String conversationsScreenBgImage =
+      'assets/images/bg-conversations.jpg';
+  static const String bookingsScreenBgImage = 'assets/images/bg-bookings.jpg';
+  static const String appBgImage = 'assets/images/bg-app.webp';
+
+  //logo image path
+  static const String famzyLogoimage = 'assets/logos/FAMZYLogo.png';
+  static const String googleLogoimage = 'assets/logos/google_logo.png';
+
+  //animation path
+  static const String successAnimation = 'assets/animations/success.json';
+  static const String errorAnimation = 'assets/animations/error.json';
 }

@@ -30,7 +30,6 @@ class FamzySnackBar {
         icon = Icons.warning_amber_rounded;
         break;
       case SnackBarStatus.info:
-      default:
         color = AppConstants.googleBlue;
         icon = Icons.info_outline;
     }
@@ -41,7 +40,7 @@ class FamzySnackBar {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        elevation: 0,
+        elevation: 10,
         behavior: SnackBarBehavior.floating,
         backgroundColor:
             Colors.transparent, // We use a Container for custom styling

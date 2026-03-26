@@ -7,8 +7,10 @@ import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/enter_em
 import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/reset_email_sent_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/reset_password_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/signup_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/admin-screens/add_company_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/admin-screens/admin_bookings_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/company_add_package_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/companies_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/hotel_placeholder_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/my_bookings_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/package_detail_screen.dart';
@@ -17,7 +19,7 @@ import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/pas
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/main_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/profile/profile_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/payment-screens/payment_screen.dart';
-import 'package:famzy_tourz_v2/presentation/screens/welcome/welcome_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/Auth/welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,12 +44,14 @@ class AppRoutes {
   static const packageDetail = '/package-detail';
   static const passengerInfo = '/passenger-info';
   static const String payment = '/payment';
+  static const String companies = '/companies';
 
   static const String myBookings = '/my-bookings';
   static const String profile = '/profile';
   static const String settings = '/settings';
   // ________________ADMIN screens__________
   static const String adminBookings = '/admin-bookings';
+  static const String addCompany = '/add-company';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -116,8 +120,12 @@ class AppRoutes {
           builder: (_) =>
               PaymentScreen(bookingId: bookingId, packageId: packageId),
         );
+      case companies:
+        return MaterialPageRoute(builder: (_) => const CompaniesScreen());
       case adminBookings:
         return MaterialPageRoute(builder: (_) => const AdminBookingsScreen());
+      case addCompany:
+        return MaterialPageRoute(builder: (_) => const AddCompanyScreen());
       case myBookings:
         return MaterialPageRoute(builder: (_) => const MyBookingsScreen());
       case profile:

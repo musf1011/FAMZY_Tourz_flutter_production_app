@@ -71,7 +71,7 @@
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_app_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';

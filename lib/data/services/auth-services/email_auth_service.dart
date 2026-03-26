@@ -38,6 +38,7 @@ class EmailAuthService {
       'age': age,
       'gender': gender,
       'photoUrl': photoUrl,
+      'role': 'user',
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     });

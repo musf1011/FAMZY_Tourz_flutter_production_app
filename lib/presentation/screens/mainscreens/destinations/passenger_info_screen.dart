@@ -10,7 +10,7 @@ import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_text_form_field.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/dest_bg_wrapper.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/seat_count_container.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_app_confirm_dialog.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -168,7 +168,7 @@ import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_profile_avatar.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/booking_closed_snack_bar.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/info_chip.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_app_confirm_dialog.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

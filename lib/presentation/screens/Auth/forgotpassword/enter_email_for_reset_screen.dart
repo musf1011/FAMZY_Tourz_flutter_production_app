@@ -29,7 +29,7 @@ class _EnterEmailForResetScreenState extends State<EnterEmailForResetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppBackground(
+    return AppAuthBackground(
       child: Column(
         children: [
           const BackAndLogoRow(),

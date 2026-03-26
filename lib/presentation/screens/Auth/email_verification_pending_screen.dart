@@ -550,18 +550,14 @@ class _EmailVerificationPendingScreenState
 
   @override
   Widget build(BuildContext context) {
-    return AppBackground(
+    return AppAuthBackground(
       notAllowPop: true,
       child: Column(
         children: [
           SizedBox(height: 30.h),
 
           /// LOGO
-          Image.asset(
-            'assets/logos/FAMZYLogo.png',
-            width: .8.sw,
-            height: .2.sh,
-          ),
+          Image.asset(AppConstants.famzyLogoimage, width: .8.sw, height: .2.sh),
 
           SizedBox(height: 20.h),
 

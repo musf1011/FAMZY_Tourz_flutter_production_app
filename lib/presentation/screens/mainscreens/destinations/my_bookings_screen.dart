@@ -267,7 +267,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       ),
       backgroundColor: Colors.grey,
       body: CustomBackgroundWrapper(
-        imagePath: 'assets/images/bg-conversation.jpg',
+        imagePath: AppConstants.bookingsScreenBgImage,
         // // decoration: const BoxDecoration(
         // //   image: DecorationImage(
         // //     image: AssetImage(),

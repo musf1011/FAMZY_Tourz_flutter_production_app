@@ -13,7 +13,7 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBackground(
+    return AppAuthBackground(
       notAllowPop: true,
       child: Column(
         children: [
@@ -22,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 20.w),
             child: Image.asset(
-              'assets/logos/FAMZYLogo.png',
+              AppConstants.famzyLogoimage,
               width: 300.w,
               height: 220.w,
             ),

@@ -45,6 +45,7 @@
 //   }
 // }
 
+import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/presentation/providers/splash_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_app_background.dart';
 import 'package:flutter/material.dart';
@@ -75,13 +76,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void didChangeDependencies() {
     // PRE-CACHE: Loads the optimized background image into memory
     // immediately to prevent the "white flash" or frame skipping.
-    precacheImage(const AssetImage('assets/images/bg_app.webp'), context);
+    precacheImage(const AssetImage(AppConstants.appBgImage), context);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AppBackground(
+    return AppAuthBackground(
       child: Center(
         child: Column(
           mainAxisAlignment: .center,

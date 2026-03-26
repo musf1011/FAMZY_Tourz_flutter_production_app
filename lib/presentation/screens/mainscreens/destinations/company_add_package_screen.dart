@@ -385,14 +385,16 @@
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/company_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_date_time_picker.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_glass_wrapper.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_text_form_field.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/dest_bg_wrapper.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/profile_header.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_app_confirm_dialog.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/lottie_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -417,6 +419,9 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CompanyProvider>().listenToCompanies();
+    });
   }
 
   // @override
@@ -453,9 +458,9 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
     final user = context.read<UserProvider>().user;
     final packageProvider = context.read<AddPackageProvider>();
 
-    if (user != null) {
-      packageProvider.setCompanyInfo(user);
-    }
+    // if (user != null) {
+    //   packageProvider.setCompanyInfo(user);
+    // }
 
     if (packageProvider.isEditMode) {
       _dateController.text = packageProvider.departureDate;
@@ -539,6 +544,44 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                     height: .5.sh,
                     child: Column(
                       children: [
+                        // 🏢 Company Selection
+                        Consumer<CompanyProvider>(
+                          builder: (context, companyProv, _) {
+                            final companies = companyProv.companies;
+
+                            return DropdownButtonFormField<String>(
+                              initialValue: packageProvider.companyId.isEmpty
+                                  ? null
+                                  : packageProvider.companyId,
+                              decoration: const InputDecoration(
+                                labelText: 'Select Company',
+                                labelStyle: TextStyle(color: Colors.white70),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white24),
+                                ),
+                              ),
+                              dropdownColor: AppConstants.secondaryColor,
+                              style: const TextStyle(color: Colors.white),
+                              items: companies.map((c) {
+                                return DropdownMenuItem(
+                                  value: c.companyId,
+                                  child: Text(c.companyName),
+                                );
+                              }).toList(),
+                              onChanged: (val) {
+                                if (val != null) {
+                                  final selected = companies.firstWhere(
+                                    (c) => c.companyId == val,
+                                  );
+                                  packageProvider.setCompanyInfo(selected);
+                                }
+                              },
+                              validator: (v) =>
+                                  v == null ? 'Please select a company' : null,
+                            );
+                          },
+                        ),
+                        SizedBox(height: 10.h),
                         CustTextFormField(
                           label: 'Package Name',
                           hint: 'e.g. Summer Special',
@@ -585,49 +628,66 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                           hint: 'YYYY-MM-DD',
                           controller: _dateController,
                           readOnly: true,
-                          onTap: () async {
-                            final pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(2050),
-                              builder: (context, child) {
-                                return Theme(
-                                  data: Theme.of(context).copyWith(
-                                    colorScheme: const ColorScheme.dark(
-                                      primary:
-                                          AppConstants.famzyGold, // FAMZY Gold
-                                      onPrimary: Colors.white,
-                                      surface: AppConstants
-                                          .secondaryColor, // Dark Surface
-                                      onSurface: Colors.white,
-                                    ),
-                                    textButtonTheme: TextButtonThemeData(
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: AppConstants.famzyGold,
-                                      ),
-                                    ),
-                                    datePickerTheme: DatePickerThemeData(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          50.r,
-                                        ),
-                                        side: BorderSide(
-                                          color: Colors.white,
-                                          width: 2.r,
-                                        ),
-                                      ),
-                                    ),
-                                    dialogTheme: const DialogThemeData(
-                                      backgroundColor:
-                                          AppConstants.primaryTransGColor,
-                                    ),
-                                  ),
+                          // onTap: () async {
+                          //   final pickedDate = await showDatePicker(
+                          //     context: context,
+                          //     initialDate: DateTime.now(),
+                          //     firstDate: DateTime.now(),
+                          //     lastDate: DateTime(2050),
+                          //     builder: (context, child) {
+                          //       return Theme(
+                          //         data: Theme.of(context).copyWith(
+                          //           colorScheme: const ColorScheme.dark(
+                          //             primary:
+                          //                 AppConstants.famzyGold, // FAMZY Gold
+                          //             onPrimary: Colors.white,
+                          //             surface: AppConstants
+                          //                 .secondaryColor, // Dark Surface
+                          //             onSurface: Colors.white,
+                          //           ),
+                          //           textButtonTheme: TextButtonThemeData(
+                          //             style: TextButton.styleFrom(
+                          //               foregroundColor: AppConstants.famzyGold,
+                          //             ),
+                          //           ),
+                          //           datePickerTheme: DatePickerThemeData(
+                          //             shape: RoundedRectangleBorder(
+                          //               borderRadius: BorderRadius.circular(
+                          //                 50.r,
+                          //               ),
+                          //               side: BorderSide(
+                          //                 color: Colors.white,
+                          //                 width: 2.r,
+                          //               ),
+                          //             ),
+                          //           ),
+                          //           dialogTheme: const DialogThemeData(
+                          //             backgroundColor:
+                          //                 AppConstants.primaryTransGColor,
+                          //           ),
+                          //         ),
 
-                                  child: child!,
+                          //         child: child!,
+                          //       );
+                          //     },
+                          //   );
+
+                          //   if (pickedDate != null) {
+                          //     final formatted = DateFormat(
+                          //       'yyyy-MM-dd',
+                          //     ).format(pickedDate);
+                          //     _dateController.text = formatted;
+                          //     packageProvider.departureDate = formatted;
+                          //   }
+                          // },
+                          onTap: () async {
+                            final pickedDate =
+                                await DatePickerUtil.showFamzyDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2050),
                                 );
-                              },
-                            );
 
                             if (pickedDate != null) {
                               final formatted = DateFormat(

@@ -265,7 +265,7 @@ class AdditionalInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.read<AuthProvider>();
-    return AppBackground(
+    return AppAuthBackground(
       notAllowPop: true,
       child: Column(
         children: [

@@ -30,7 +30,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.read<AuthProvider>();
-    return AppBackground(
+    return AppAuthBackground(
       child: Column(
         children: [
           // back and logo row

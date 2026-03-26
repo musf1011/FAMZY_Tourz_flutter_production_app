@@ -190,7 +190,7 @@ import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/hotel_se
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/osm_map_card.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/package_card.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/weather_block.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_app_confirm_dialog.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

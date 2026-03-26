@@ -9,7 +9,7 @@ import 'package:famzy_tourz_v2/data/services/auth-services/password_reset_servic
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/data/services/session_service.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_app_confirm_dialog.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

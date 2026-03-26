@@ -173,8 +173,6 @@ import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
 
-import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
-
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
@@ -296,6 +294,30 @@ class AppDrawer extends StatelessWidget {
                   },
                 ),
 
+                /// COMPANIES
+                _drawerButton(
+                  icon: Icons.business_rounded,
+                  iconColor: AppConstants.lightGreen,
+                  title: 'COMPANIES',
+                  onTap: () {
+                    NavigationService()
+                        .pop(); // Optional: Close drawer before navigating
+                    NavigationService().navigateTo(AppRoutes.companies);
+                  },
+                ),
+
+                /// COMPANIES
+                _drawerButton(
+                  icon: Icons.business_rounded,
+                  iconColor: AppConstants.lightGreen,
+                  title: 'ADD COMPANY',
+                  onTap: () {
+                    NavigationService()
+                        .pop(); // Optional: Close drawer before navigating
+                    NavigationService().navigateTo(AppRoutes.addCompany);
+                  },
+                ),
+
                 /// MY BOOKINGS
                 _drawerButton(
                   icon: Icons.confirmation_number,
@@ -321,7 +343,7 @@ class AppDrawer extends StatelessWidget {
             /// LOGOUT
             Padding(
               // padding: EdgeInsets.only(left: 10.w, right: 90.w, bottom: 25.h),
-              padding: EdgeInsetsGeometry.only(bottom: 25.h),
+              padding: EdgeInsetsGeometry.only(bottom: 25.h, right: 10.w),
               // child: _drawerButton(
               //   icon: Icons.logout_rounded,
               //   title: 'LOGOUT',
@@ -331,7 +353,7 @@ class AppDrawer extends StatelessWidget {
               //     // await FirebaseAuth.instance.signOut();
               //   },
               // ),
-              child: SignOutButton(height: 40.h, width: .4.sw),
+              child: SignOutButton(height: 40.h, width: .5.sw),
             ),
           ],
         ),

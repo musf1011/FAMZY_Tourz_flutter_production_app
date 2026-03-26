@@ -131,6 +131,7 @@
 // }
 
 import 'package:famzy_tourz_v2/data/models/package_model.dart';
+import 'package:famzy_tourz_v2/data/models/company_model.dart';
 import 'package:famzy_tourz_v2/data/models/user_model.dart';
 import 'package:famzy_tourz_v2/data/services/packages-services/packages_service.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
@@ -158,7 +159,8 @@ class AddPackageProvider extends ChangeNotifier {
   int price = 0;
   int totalSeats = 0;
 
-  /// COMPANY INFO (auto-filled)
+  /// COMPANY INFO (auto-filled in production, selected by admin in B2B flow)
+  String companyId = '';
   String companyName = '';
   String companyPhotoURL = '';
 
@@ -171,14 +173,13 @@ class AddPackageProvider extends ChangeNotifier {
   bool showSuccess = false;
   bool showError = false;
 
-  /// Set Company Info from UserProvider
-  void setCompanyInfo(AppUser user) {
-    // We only set this if we aren't in edit mode
-    // (In edit mode, we want to keep the original creator's name)
+  /// Set Company Info from selected CompanyModel
+  void setCompanyInfo(CompanyModel company) {
     if (!isEditMode) {
-      companyName = user.name;
-      companyPhotoURL = user.photoUrl;
-      // No notifyListeners() needed here if called during build/init
+      companyId = company.companyId;
+      companyName = company.companyName;
+      companyPhotoURL = company.companyLogoUrl!;
+      notifyListeners();
     }
   }
 
@@ -195,6 +196,7 @@ class AddPackageProvider extends ChangeNotifier {
     description = pkg.description;
     price = pkg.price;
     totalSeats = pkg.totalSeats;
+    companyId = pkg.companyId;
     companyName = pkg.companyName;
     companyPhotoURL = pkg.companyPhotoURL;
     notifyListeners();
@@ -213,6 +215,7 @@ class AddPackageProvider extends ChangeNotifier {
     description = '';
     price = 0;
     totalSeats = 0;
+    companyId = '';
     companyName = '';
     companyPhotoURL = '';
     showSuccess = false;
@@ -279,13 +282,17 @@ class AddPackageProvider extends ChangeNotifier {
       final String finalId = isEditMode
           ? editingPackage!.packageId
           : '${packageName.toLowerCase().replaceAll(' ', '_')}_${companyName.toLowerCase().replaceAll(' ', '_')}_${destinationName}_${DateTime.now().millisecondsSinceEpoch}';
-      setCompanyInfo(user);
+
+      // If we are strictly using option A, the admin selects the company in UI
+      // and we just pass the values to the PackageModel below.
+
       debugPrint(
         '***id:$finalId,\n***company: $companyName,\n***companyphoto: $companyPhotoURL,\n***duration:$duration,\n***depTime:$departureTime,\n***depDate:$departureDate,\n***total seats = $totalSeats\n***keyspot:$keySpots,\n***vehicle:$vehicle,\n***description:$description,\n***destinationName:$destinationName',
       );
 
       final package = PackageModel(
         packageId: finalId,
+        companyId: companyId,
         companyName: companyName,
         companyPhotoURL: companyPhotoURL,
         packageName: packageName,

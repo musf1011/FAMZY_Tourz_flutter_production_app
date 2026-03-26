@@ -328,10 +328,11 @@
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/models/booking_model.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/admin_bookings_provider.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/custom_action_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_background_wrapper.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_glass_wrapper.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_text.dart';
-import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_alert_dialogs.dart';
+import 'package:famzy_tourz_v2/presentation/widgets/dialogs/custom_app_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -395,7 +396,7 @@ class _AdminBookingsScreenState extends State<AdminBookingsScreen>
         ),
       ),
       body: CustomBackgroundWrapper(
-        imagePath: 'assets/images/bg-conversation.jpg',
+        imagePath: AppConstants.bookingsScreenBgImage,
         child: provider.isLoading
             ? const Center(child: CircularProgressIndicator())
             : TabBarView(
@@ -566,7 +567,7 @@ class _AdminBookingsScreenState extends State<AdminBookingsScreen>
                 // ),
                 Row(
                   children: [
-                    _adminActionButton(
+                    FamzyButton(
                       label: 'Approve',
                       color: AppConstants.lightGreen,
                       onPressed: () => _handleAction(
@@ -585,7 +586,7 @@ class _AdminBookingsScreenState extends State<AdminBookingsScreen>
                       ),
                     ),
                     SizedBox(width: 8.w),
-                    _adminActionButton(
+                    FamzyButton(
                       label: 'Retry ID',
                       color: AppConstants.famzyGold,
                       onPressed: () => _handleAction(
@@ -604,7 +605,7 @@ class _AdminBookingsScreenState extends State<AdminBookingsScreen>
                       ),
                     ),
                     SizedBox(width: 8.w),
-                    _adminActionButton(
+                    FamzyButton(
                       label: 'Reject',
                       color: AppConstants.lightRed,
                       onPressed: () => _handleAction(
@@ -629,34 +630,6 @@ class _AdminBookingsScreenState extends State<AdminBookingsScreen>
           ),
         );
       },
-    );
-  }
-
-  Widget _adminActionButton({
-    required String label,
-    required Color color,
-    required VoidCallback onPressed,
-  }) {
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          padding: EdgeInsets.symmetric(vertical: 10.h),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 11.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
     );
   }
 

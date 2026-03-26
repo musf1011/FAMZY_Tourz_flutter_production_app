@@ -1,4 +1,5 @@
 // created by: FAMZY CodeWorks
+import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/routes/app_routes.dart';
@@ -6,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class AppBackground extends StatelessWidget {
+class AppAuthBackground extends StatelessWidget {
   final Widget child;
   final bool notAllowPop;
   // final PreferredSizeWidget? appBar; //in case some screens need an AppBar
 
-  const AppBackground({
+  const AppAuthBackground({
     super.key,
     required this.child,
     this.notAllowPop = false,
@@ -39,7 +40,7 @@ class AppBackground extends StatelessWidget {
         // and the user triggered a back event.
 
         // 1. Cancel the active auth session and reset loading state
-        debugPrint('****cancelling auth reached');
+        debugPrint('****cancelling auth reached in app auth background class');
         final authProvider = context.read<AuthProvider>();
         authProvider.cancelAuthentication();
         authProvider.reset();
@@ -56,7 +57,7 @@ class AppBackground extends StatelessWidget {
           width: 1.sw,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/bg_app.webp'),
+              image: AssetImage(AppConstants.appBgImage),
               // fit: BoxFit.fill,
               fit: BoxFit.cover,
             ),

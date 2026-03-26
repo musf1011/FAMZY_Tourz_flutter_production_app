@@ -43,6 +43,7 @@ import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
 class PackageModel {
+  final String companyId;
   final String companyName;
   final String companyPhotoURL;
   final String packageId;
@@ -64,6 +65,7 @@ class PackageModel {
   final double? longitude;
 
   PackageModel({
+    required this.companyId,
     required this.companyName,
     required this.companyPhotoURL,
     required this.packageId,
@@ -124,6 +126,7 @@ class PackageModel {
   factory PackageModel.fromMap(Map<String, dynamic> map) {
     return PackageModel(
       packageId: map['packageId'] ?? '',
+      companyId: map['companyId'] ?? '',
       companyPhotoURL: map['companyPhotoURL'] ?? '',
       companyName: map['companyName'] ?? '',
       packageName: map['packageName'] ?? '',
@@ -144,6 +147,7 @@ class PackageModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'companyId': companyId,
       'companyName': companyName,
       'companyPhotoURL': companyPhotoURL,
       'packageId': packageId,

@@ -15,7 +15,7 @@ class ResetEmailSentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBackground(
+    return AppAuthBackground(
       child: Column(
         children: [
           const BackAndLogoRow(),

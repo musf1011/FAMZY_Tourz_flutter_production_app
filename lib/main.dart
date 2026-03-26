@@ -100,6 +100,7 @@ import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
 import 'package:famzy_tourz_v2/firebase_options.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/auth_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
+import 'package:famzy_tourz_v2/presentation/providers/company_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/admin_bookings_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/booking_provider.dart';
@@ -178,6 +179,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => UserBookingsProvider()),
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
         ChangeNotifierProvider(create: (_) => AdminBookingsProvider()),
+        ChangeNotifierProvider(create: (_) => CompanyProvider()),
       ],
       child: const FamzyApp(),
     ),
