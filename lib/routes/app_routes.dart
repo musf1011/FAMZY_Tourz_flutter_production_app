@@ -1,4 +1,5 @@
 //created by: FAMZY CodeWorks
+import 'package:famzy_tourz_v2/data/models/company_model.dart';
 import 'package:famzy_tourz_v2/data/models/package_model.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/add_package_provider.dart';
 import 'package:famzy_tourz_v2/presentation/screens/Auth/additional_info_screen.dart';
@@ -9,6 +10,7 @@ import 'package:famzy_tourz_v2/presentation/screens/Auth/forgotpassword/reset_pa
 import 'package:famzy_tourz_v2/presentation/screens/Auth/signup_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/admin-screens/add_company_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/admin-screens/admin_bookings_screen.dart';
+import 'package:famzy_tourz_v2/presentation/screens/mainscreens/company_detail_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/company_add_package_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/companies_screen.dart';
 import 'package:famzy_tourz_v2/presentation/screens/mainscreens/destinations/hotel_placeholder_screen.dart';
@@ -45,6 +47,7 @@ class AppRoutes {
   static const passengerInfo = '/passenger-info';
   static const String payment = '/payment';
   static const String companies = '/companies';
+  static const String companyDetailScreen = '/company-detail';
 
   static const String myBookings = '/my-bookings';
   static const String profile = '/profile';
@@ -122,6 +125,14 @@ class AppRoutes {
         );
       case companies:
         return MaterialPageRoute(builder: (_) => const CompaniesScreen());
+      case companyDetailScreen:
+        final company = settings.arguments as CompanyModel;
+        // if (company == null) {
+        //   return MaterialPageRoute(builder: (_) => const SplashScreen());
+        // }
+        return MaterialPageRoute(
+          builder: (_) => CompanyDetailScreen(company: company),
+        );
       case adminBookings:
         return MaterialPageRoute(builder: (_) => const AdminBookingsScreen());
       case addCompany:

@@ -37,7 +37,7 @@ class WeatherService {
         'weathercode': data['current_weather']['weathercode'],
         'precipitation': data['hourly']['precipitation'][0],
         'uv_index': data['hourly']['uv_index'][0],
-        // Format the strings right here in the service
+        // Format the strings
         'sunrise': _formatTime(data['daily']['sunrise'][0]),
         'sunset': _formatTime(data['daily']['sunset'][0]),
       };

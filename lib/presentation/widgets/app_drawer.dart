@@ -162,6 +162,7 @@
 //   }
 // }
 
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -178,7 +179,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final user = context.watch<UserProvider>().user;
+    final isAdmin = context.watch<UserProvider>().isAdmin ?? false;
 
     return Drawer(
       width: .75.sw,
@@ -307,16 +308,18 @@ class AppDrawer extends StatelessWidget {
                 ),
 
                 /// COMPANIES
-                _drawerButton(
-                  icon: Icons.business_rounded,
-                  iconColor: AppConstants.lightGreen,
-                  title: 'ADD COMPANY',
-                  onTap: () {
-                    NavigationService()
-                        .pop(); // Optional: Close drawer before navigating
-                    NavigationService().navigateTo(AppRoutes.addCompany);
-                  },
-                ),
+                isAdmin
+                    ? _drawerButton(
+                        icon: Icons.business_rounded,
+                        iconColor: AppConstants.lightGreen,
+                        title: 'ADD COMPANY',
+                        onTap: () {
+                          NavigationService()
+                              .pop(); // Optional: Close drawer before navigating
+                          NavigationService().navigateTo(AppRoutes.addCompany);
+                        },
+                      )
+                    : const SizedBox.shrink(),
 
                 /// MY BOOKINGS
                 _drawerButton(

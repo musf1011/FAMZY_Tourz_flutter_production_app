@@ -329,6 +329,12 @@ class DestinationsProvider extends ChangeNotifier {
     await loadPackages();
   }
 
+  /// ================= PACKAGE REACTIVATE =================
+  Future<void> reactivatePackage(PackageModel package) async {
+    // await _packagesService.reactivatePackage(package.packageId);
+    await loadPackages();
+  }
+
   /// ================= INIT FOR PACKAGE SCREEN =================
   Future<void> initPackagesScreen() async {
     await checkUserRole();

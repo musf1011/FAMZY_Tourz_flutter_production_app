@@ -16,105 +16,107 @@ class ResetEmailSentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppAuthBackground(
-      child: Column(
-        children: [
-          const BackAndLogoRow(),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const BackAndLogoRow(),
 
-          /// Icon
-          Icon(
-            Icons.mark_email_read_rounded,
-            size: 80.r,
-            color: AppConstants.primaryColor,
-          ),
+            /// Icon
+            Icon(
+              Icons.mark_email_read_rounded,
+              size: 80.r,
+              color: AppConstants.primaryColor,
+            ),
 
-          SizedBox(height: 10.h),
+            SizedBox(height: 10.h),
 
-          /// Title
-          Text(
-            'Check Your Email',
-            textAlign: TextAlign.center,
-            style: AppConstants.screenTitleTextStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(.03.sw, .03.sh, .03.sw, .02.sh),
-            child: Container(
-              padding: EdgeInsets.all(24.w),
-              decoration: BoxDecoration(
-                color: AppConstants.primaryTransGColor,
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(color: AppConstants.whiteColorP5),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 12.h),
+            /// Title
+            Text(
+              'Check Your Email',
+              textAlign: TextAlign.center,
+              style: AppConstants.screenTitleTextStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(.03.sw, .03.sh, .03.sw, .02.sh),
+              child: Container(
+                padding: EdgeInsets.all(24.w),
+                decoration: BoxDecoration(
+                  color: AppConstants.primaryTransGColor,
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(color: AppConstants.whiteColorP5),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 12.h),
 
-                  /// Message
-                  Text(
-                    'We’ve sent a password reset link to:',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14.sp,
-                      color: Colors.white70,
+                    /// Message
+                    Text(
+                      'We’ve sent a password reset link to:',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        color: Colors.white70,
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 6.h),
+                    SizedBox(height: 6.h),
 
-                  Text(
-                    email,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                    Text(
+                      email,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 20.h),
+                    SizedBox(height: 20.h),
 
-                  Text(
-                    'Open the link in your email to reset your password.\n'
-                    'You’ll be redirected back to FAMZY Tourz automatically.',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontSize: 13.sp,
-                      color: Colors.white60,
+                    Text(
+                      'Open the link in your email to reset your password.\n'
+                      'You’ll be redirected back to FAMZY Tourz automatically.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontSize: 13.sp,
+                        color: Colors.white60,
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 20.h),
-                ],
+                    SizedBox(height: 20.h),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          // Suggestion: Change your middle text to this:
-          Text(
-            'Once you have reset your password in your browser,\n '
-            'return here and tap the button below to sign in.',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              fontSize: 13.sp,
-              color: AppConstants.transRColor,
-            ),
-          ),
-
-          /// Back to Login
-          TextButton(
-            onPressed: () {
-              NavigationService().navigateAndClearStack(AppRoutes.welcome);
-            },
-            child: Text(
-              'Back to Login',
+            // Suggestion: Change your middle text to this:
+            Text(
+              'Once you have reset your password in your browser,\n '
+              'return here and tap the button below to sign in.',
+              textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
-                fontSize: 14.sp,
-                color: AppConstants.tertiaryColor,
-                decoration: TextDecoration.underline,
+                fontSize: 13.sp,
+                color: AppConstants.transRColor,
               ),
             ),
-          ),
-        ],
+
+            /// Back to Login
+            TextButton(
+              onPressed: () {
+                NavigationService().navigateAndClearStack(AppRoutes.welcome);
+              },
+              child: Text(
+                'Back to Login',
+                style: GoogleFonts.poppins(
+                  fontSize: 14.sp,
+                  color: AppConstants.tertiaryColor,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -95,6 +95,10 @@ class UserProvider extends ChangeNotifier {
   AppUser? get user => _user;
   String? _userId; //for future use
   String? get userId => _userId;
+  bool? _isAdmin;
+  bool? get isAdmin => _isAdmin;
+  bool? _isCompany;
+  bool? get isCompany => _isCompany;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -109,9 +113,11 @@ class UserProvider extends ChangeNotifier {
   Future<void> _initialize() async {
     //if already login
     final firebaseUser = _auth.currentUser;
-
+    debugPrint('****initializing user provider started*******');
     if (firebaseUser != null) {
+      debugPrint('****initializing user provider loading started*******');
       await loadUserFromFirestore(firebaseUser.uid);
+      debugPrint('****initializing user provider loading ends*******');
     }
     //listen auth changes
     _auth.authStateChanges().listen((firebaseUser) async {
@@ -134,7 +140,13 @@ class UserProvider extends ChangeNotifier {
       return;
     }
     _userId = doc.id; //for future use not implemented now
+
     _user = AppUser.fromMap(doc.data()!);
+    debugPrint(
+      '****initializing user provider loading user function got doc: ${doc.id}*******',
+    );
+    _isAdmin = _user!.role == 'admin' ? true : false;
+    _isCompany = _user!.role == 'company' ? true : false;
     debugPrint(
       '***load user function: user name ${_user!.name}, age ${user!.age}, email: ${user!.email}, userId inside doc: ${user!.userId}, userid as doc name:: ${doc.id}***',
     );

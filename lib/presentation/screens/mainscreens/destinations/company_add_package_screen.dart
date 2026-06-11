@@ -420,7 +420,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CompanyProvider>().listenToCompanies();
+      context.read<CompanyProvider>().listenToActiveCompanies();
     });
   }
 
@@ -561,6 +561,11 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                                 ),
                               ),
                               dropdownColor: AppConstants.secondaryColor,
+
+                              // disabledHint: Text(
+                              //   'dot',
+                              //   style: TextStyle(color: Colors.white70),
+                              // ),
                               style: const TextStyle(color: Colors.white),
                               items: companies.map((c) {
                                 return DropdownMenuItem(
@@ -569,11 +574,13 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                                 );
                               }).toList(),
                               onChanged: (val) {
-                                if (val != null) {
-                                  final selected = companies.firstWhere(
-                                    (c) => c.companyId == val,
-                                  );
-                                  packageProvider.setCompanyInfo(selected);
+                                if (destProvider.isAdmin) {
+                                  if (val != null) {
+                                    final selected = companies.firstWhere(
+                                      (c) => c.companyId == val,
+                                    );
+                                    packageProvider.setCompanyInfo(selected);
+                                  }
                                 }
                               },
                               validator: (v) =>

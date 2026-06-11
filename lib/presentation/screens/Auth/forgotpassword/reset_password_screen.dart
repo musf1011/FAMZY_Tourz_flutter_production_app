@@ -34,92 +34,97 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return Stack(
       children: [
         AppAuthBackground(
-          child: Column(
-            children: [
-              const BackAndLogoRow(),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const BackAndLogoRow(),
 
-              Text('Reset Password', style: AppConstants.screenTitleTextStyle),
+                Text(
+                  'Reset Password',
+                  style: AppConstants.screenTitleTextStyle,
+                ),
 
-              Padding(
-                padding: EdgeInsets.fromLTRB(.03.sw, .05.sh, .03.sw, .07.sh),
-                child: Container(
-                  decoration: AppConstants.glassCardDecoration,
-                  child: Form(
-                    key: _formKey,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: .05.sw,
-                        vertical: .01.sh,
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 20.h),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(.03.sw, .05.sh, .03.sw, .07.sh),
+                  child: Container(
+                    decoration: AppConstants.glassCardDecoration,
+                    child: Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: .05.sw,
+                          vertical: .01.sh,
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20.h),
 
-                          CustTextFormField(
-                            controller: _password,
-                            label: 'New Password',
-                            hint: 'Enter new password',
-                            obscureText: true,
-                            isPasswordHidden: _hidePassword,
-                            toggleVisibility: () {
-                              setState(() {
-                                _hidePassword = !_hidePassword;
-                              });
-                            },
-                            validator: (v) => v == null || v.length < 6
-                                ? 'Minimum 6 characters'
-                                : null,
-                          ),
+                            CustTextFormField(
+                              controller: _password,
+                              label: 'New Password',
+                              hint: 'Enter new password',
+                              obscureText: true,
+                              isPasswordHidden: _hidePassword,
+                              toggleVisibility: () {
+                                setState(() {
+                                  _hidePassword = !_hidePassword;
+                                });
+                              },
+                              validator: (v) => v == null || v.length < 6
+                                  ? 'Minimum 6 characters'
+                                  : null,
+                            ),
 
-                          SizedBox(height: 12.h),
+                            SizedBox(height: 12.h),
 
-                          CustTextFormField(
-                            controller: _confirmPassword,
-                            label: 'Confirm Password',
-                            hint: 'Re-enter password',
-                            obscureText: true,
-                            isPasswordHidden: _hidePassword,
-                            toggleVisibility: () {
-                              setState(() {
-                                _hidePassword = !_hidePassword;
-                              });
-                            },
-                            validator: (v) {
-                              if (v == null || v.isEmpty) {
-                                return 'Confirm password';
-                              }
-                              if (v != _password.text) {
-                                return 'Passwords do not match';
-                              }
-                              return null;
-                            },
-                          ),
+                            CustTextFormField(
+                              controller: _confirmPassword,
+                              label: 'Confirm Password',
+                              hint: 'Re-enter password',
+                              obscureText: true,
+                              isPasswordHidden: _hidePassword,
+                              toggleVisibility: () {
+                                setState(() {
+                                  _hidePassword = !_hidePassword;
+                                });
+                              },
+                              validator: (v) {
+                                if (v == null || v.isEmpty) {
+                                  return 'Confirm password';
+                                }
+                                if (v != _password.text) {
+                                  return 'Passwords do not match';
+                                }
+                                return null;
+                              },
+                            ),
 
-                          SizedBox(height: 30.h),
-                        ],
+                            SizedBox(height: 30.h),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
 
-              CustomLoadingButton(
-                text: 'UPDATE PASSWORD',
-                isLoading: auth.loading,
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
+                CustomLoadingButton(
+                  text: 'UPDATE PASSWORD',
+                  isLoading: auth.loading,
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
 
-                  if (_formKey.currentState!.validate()) {
-                    auth.confirmResetPassword(
-                      oobCode: widget.oob,
-                      newPassword: _password.text.trim(),
-                    );
-                  }
-                },
-              ),
+                    if (_formKey.currentState!.validate()) {
+                      auth.confirmResetPassword(
+                        oobCode: widget.oob,
+                        newPassword: _password.text.trim(),
+                      );
+                    }
+                  },
+                ),
 
-              SizedBox(height: 20.h),
-            ],
+                SizedBox(height: 20.h),
+              ],
+            ),
           ),
         ),
         // // ✅ SUCCESS OVERLAY

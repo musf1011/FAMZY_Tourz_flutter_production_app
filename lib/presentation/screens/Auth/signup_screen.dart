@@ -21,7 +21,7 @@ class SignUpScreen extends StatelessWidget {
   // final _formKey = GlobalKey<FormState>();
   // This ensures it isn't recreated when build() runs
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  // 1. Create a controller
   SignUpScreen({super.key});
   // final TextEditingController _fullName = TextEditingController();
   // final TextEditingController _email = TextEditingController();
@@ -215,10 +215,15 @@ class SignUpScreen extends StatelessWidget {
                               child: CustTextFormField(
                                 label: 'Date',
                                 hint: 'YYYY-MM-DD',
-                                // controller: _dateController,
+                                controller: authProvider.ageController,
                                 onChanged: (v) {
-                                  authProvider.age = v;
+                                  // authProvider.age = v;
+                                  context.read<AuthProvider>().age = v;
                                 },
+                                keyboardType: .number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
 
                                 readOnly: true,
                                 // onTap: () async {
@@ -284,6 +289,7 @@ class SignUpScreen extends StatelessWidget {
                                   final pickedDate =
                                       await DatePickerUtil.showFamzyDatePicker(
                                         context: context,
+                                        // fieldLabelText: 'Date of Birth',
                                         initialDate: DateTime.now().subtract(
                                           const Duration(days: 12 * 365),
                                         ),
@@ -297,7 +303,11 @@ class SignUpScreen extends StatelessWidget {
                                     final formatted = DateFormat(
                                       'yyyy-MM-dd',
                                     ).format(pickedDate);
-                                    authProvider.age = formatted;
+                                    authProvider.ageController.text = formatted;
+                                    if (context.mounted) {
+                                      context.read<AuthProvider>().age =
+                                          formatted;
+                                    }
                                   }
                                 },
                                 validator: (v) => v == null || v.isEmpty
@@ -307,14 +317,14 @@ class SignUpScreen extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: .only(left: .03.sw),
+                            padding: .only(left: .03.sw, bottom: 10.h),
                             child: SizedBox(
                               width: .25.sw,
                               child: CustomGenderDropdownField(
                                 value: authProvider.selectedGender,
                                 validator: (v) {
                                   if (v == null || v.isEmpty) {
-                                    return 'Please select your gender';
+                                    return 'Select Gender';
                                   }
                                   return null;
                                 },
@@ -586,7 +596,9 @@ class SignUpScreen extends StatelessWidget {
                         //   age: intAge,
                         //   gender: authProvider.selectedGender,
                       );
-                      auth.reset();
+                      if (success) {
+                        auth.reset();
+                      }
                     }
                   },
                   isLoading: auth.loading,
@@ -642,7 +654,7 @@ class SignUpScreen extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: 30.h),
           ],
         ),
       ),

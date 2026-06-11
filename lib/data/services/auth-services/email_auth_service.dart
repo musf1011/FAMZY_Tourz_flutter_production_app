@@ -24,7 +24,7 @@ class EmailAuthService {
     required String userId,
     required String fullName,
     required String email,
-    required int age,
+    required String age,
     required String gender,
     String photoUrl = '',
   }) async {

@@ -51,7 +51,7 @@ class SplashProvider extends ChangeNotifier {
 
   Future<void> initialize(BuildContext context) async {
     final userProvider = context.read<UserProvider>();
-    // 1️⃣ WAIT until UserProvider finishes initializing
+    //  WAIT until UserProvider finishes initializing
     while (userProvider.initializing) {
       await Future.delayed(const Duration(milliseconds: 100));
     }
@@ -63,7 +63,7 @@ class SplashProvider extends ChangeNotifier {
       return;
     }
 
-    // 2. NORMAL SESSION FLOW
+    //   NORMAL SESSION FLOW
     final status = await SessionService.getSessionStatus();
 
     debugPrint('******splash provider is logged in: ${status.isLoggedIn}');

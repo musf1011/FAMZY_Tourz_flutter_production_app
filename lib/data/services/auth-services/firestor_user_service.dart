@@ -35,16 +35,16 @@ class FirestoreUserService {
       'userId': user.uid,
       'name': user.displayName ?? '',
       'email': user.email,
-      'photoURL': user.photoURL,
+      'photoUrl': user.photoURL,
       'role': 'user',
-      'age': 0,
+      'age': '',
       'gender': '',
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 
-  static Future<void> addInfo(int age, String gender) async {
+  static Future<void> addInfo(String age, String gender) async {
     final user = _auth.currentUser;
     debugPrint('*****submitting user got user: $user');
     if (user == null) return;

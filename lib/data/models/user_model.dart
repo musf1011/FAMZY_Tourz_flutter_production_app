@@ -50,7 +50,7 @@ class AppUser {
   final String idPassport;
   final String name;
   final String email;
-  final int age;
+  final String age;
   final String gender;
   final String photoUrl;
   final String role;
@@ -95,11 +95,12 @@ class AppUser {
   }
 
   // // Helper to prevent crashes if age is stored as a String "" in Firestore
-  // static int _parseAge(dynamic age) {
-  //   if (age == null || age == '') return 0;
-  //   if (age is int) return age;
-  //   return int.tryParse(age.toString()) ?? 0;
-  // }
+  static int _parseAge(dynamic age) {
+    if (age == null || age == '') return 0;
+    if (age is int) return age;
+
+    return int.tryParse(age.toString()) ?? 0;
+  }
 
   Map<String, dynamic> toMap() {
     return {

@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
+
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:famzy_tourz_v2/data/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/company_model.dart';
@@ -21,9 +24,18 @@ class CompanyProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isLoadingPackages => _isLoadingPackages;
 
-  void listenToCompanies() {
-    _companyService.getCompanies().listen((companyList) {
-      _companies = companyList;
+  void listenToActiveCompanies() {
+    _companyService.getActiveCompanies().listen((companyList) {
+      _companies = _companies + companyList;
+      removeDuplicateCompanies();
+      notifyListeners();
+    });
+  }
+
+  void listenToInActiveCompanies() {
+    _companyService.getInActiveCompanies().listen((companyList) {
+      _companies = _companies + companyList;
+      removeDuplicateCompanies();
       notifyListeners();
     });
   }
@@ -79,6 +91,18 @@ class CompanyProvider with ChangeNotifier {
     }
   }
 
+  Future<void> updateCompanyStatus(String companyId, bool isActive) async {
+    try {
+      await _companyService.updateCompanyStatus(companyId, isActive);
+    } catch (e) {
+      NavigationService().showSnackBar(
+        message: 'Error updating company status: $e',
+        title: 'Failed to update status',
+        type: ContentType.failure,
+      );
+    }
+  }
+
   void listenToCompanyPackages(String companyId) {
     _isLoadingPackages = true;
     // Don't notify here if it causes build issues during navigation, but usually fine
@@ -88,5 +112,15 @@ class CompanyProvider with ChangeNotifier {
       _isLoadingPackages = false;
       notifyListeners();
     });
+  }
+
+  void removeDuplicateCompanies() {
+    final Map<String, CompanyModel> uniqueCompaniesMap = {};
+
+    for (var company in _companies) {
+      uniqueCompaniesMap[company.companyId] = company;
+    }
+
+    _companies = uniqueCompaniesMap.values.toList();
   }
 }

@@ -188,8 +188,8 @@ class _PackageCardState extends State<PackageCard> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.read<DestinationsProvider>();
-    final isAdmin = provider.isAdmin;
+    final desitinationProvider = context.read<DestinationsProvider>();
+    final isAdmin = desitinationProvider.isAdmin;
     final nav = NavigationService();
 
     return Card(
@@ -340,9 +340,8 @@ class _PackageCardState extends State<PackageCard> {
               onPressed: () {
                 if (widget.package.isExpired) {
                   showBookingClosedSnackBar(context, isFull: false);
-                }
-
-                if (widget.package.isFull) {
+                  debugPrint('***package is expired');
+                } else if (widget.package.isFull) {
                   showBookingClosedSnackBar(context, isFull: true);
                 } else {
                   final bookingProvider = context.read<BookingProvider>();
@@ -370,10 +369,31 @@ class _PackageCardState extends State<PackageCard> {
                       color: AppConstants.accentColor,
                     ),
                     onPressed: () {
-                      nav.navigateTo(
-                        AppRoutes.companyAddPackage,
-                        arguments: widget.package,
-                      );
+                      widget.package.isExpired
+                          ? AppConfirmDialog.show(
+                              context,
+                              title: 'Package Expired',
+                              message:
+                                  'This package is expired. Do you want to reactivate and edit it?',
+                              confirmText: 'Reactivate & Edit',
+                              cancelText: 'Cancel',
+                              icon: Icons.warning_amber_rounded,
+                              iconColor: AppConstants.transRColor,
+                            ).then((confirmed) {
+                              if (confirmed == true) {
+                                desitinationProvider.reactivatePackage(
+                                  widget.package,
+                                );
+                                nav.navigateTo(
+                                  AppRoutes.companyAddPackage,
+                                  arguments: widget.package,
+                                );
+                              }
+                            })
+                          : nav.navigateTo(
+                              AppRoutes.companyAddPackage,
+                              arguments: widget.package,
+                            );
                     },
                   ),
                 if (isAdmin)
@@ -395,7 +415,9 @@ class _PackageCardState extends State<PackageCard> {
                       );
 
                       if (confirmed == true) {
-                        await provider.deletePackage(widget.package);
+                        await desitinationProvider.deletePackage(
+                          widget.package,
+                        );
                         if (context.mounted) {
                           nav.showSnackBar(
                             title: 'Package Deleted',

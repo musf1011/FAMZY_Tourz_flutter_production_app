@@ -30,92 +30,98 @@ class _EnterEmailForResetScreenState extends State<EnterEmailForResetScreen> {
   @override
   Widget build(BuildContext context) {
     return AppAuthBackground(
-      child: Column(
-        children: [
-          const BackAndLogoRow(),
-          // screen title
-          Text('Forgot Password?', style: AppConstants.screenTitleTextStyle),
-          Padding(
-            padding: EdgeInsets.fromLTRB(.03.sw, .04.sh, .03.sw, .06.sh),
-            child: Container(
-              decoration: AppConstants.glassCardDecoration,
-              padding: EdgeInsets.fromLTRB(.05.sw, .03.sh, .05.sw, .03.sh),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 15.h),
-                  Text(
-                    'Enter your email to receive a password reset link.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white70, fontSize: 14.sp),
-                  ),
-                  SizedBox(height: 30.h),
-
-                  /// Email Field
-                  Form(
-                    key: _formKey,
-                    child: CustTextFormField(
-                      controller: _emailController,
-                      label: 'Email',
-                      hint: 'you@example.com',
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (val) =>
-                          val == null || val.isEmpty ? 'Email required' : null,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const BackAndLogoRow(),
+            // screen title
+            Text('Forgot Password?', style: AppConstants.screenTitleTextStyle),
+            Padding(
+              padding: EdgeInsets.fromLTRB(.03.sw, .04.sh, .03.sw, .06.sh),
+              child: Container(
+                decoration: AppConstants.glassCardDecoration,
+                padding: EdgeInsets.fromLTRB(.05.sw, .03.sh, .05.sw, .03.sh),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 15.h),
+                    Text(
+                      'Enter your email to receive a password reset link.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white70, fontSize: 14.sp),
                     ),
-                  ),
+                    SizedBox(height: 30.h),
 
-                  SizedBox(height: 40.h),
-                ],
+                    /// Email Field
+                    Form(
+                      key: _formKey,
+                      child: CustTextFormField(
+                        controller: _emailController,
+                        label: 'Email',
+                        hint: 'you@example.com',
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (val) => val == null || val.isEmpty
+                            ? 'Email required'
+                            : null,
+                      ),
+                    ),
+
+                    SizedBox(height: 40.h),
+                  ],
+                ),
               ),
             ),
-          ),
-          //  Button
-          Consumer<AuthProvider>(
-            builder: (context, auth, _) {
-              return CustomLoadingButton(
-                isLoading: auth.loading,
-                onPressed: auth.loading
-                    ? () {}
-                    : () {
-                        if (!_formKey.currentState!.validate()) {
-                          return;
-                        }
-                        auth.resetPassword(
-                          email: _emailController.text,
-                          context: context,
-                        );
-                      },
-                // child: auth.loading
-                //     ? const SpinKitSpinningLines(color: Colors.white)
-                //     :   'Send Reset Email',
-                text: 'Send Rest Email',
-              );
-            },
-          ),
-          SizedBox(height: .07.sh),
+            //  Button
+            Consumer<AuthProvider>(
+              builder: (context, auth, _) {
+                return CustomLoadingButton(
+                  isLoading: auth.loading,
+                  onPressed: auth.loading
+                      ? () {}
+                      : () {
+                          if (!_formKey.currentState!.validate()) {
+                            return;
+                          }
+                          auth.resetPassword(
+                            email: _emailController.text,
+                            context: context,
+                          );
+                        },
+                  // child: auth.loading
+                  //     ? const SpinKitSpinningLines(color: Colors.white)
+                  //     :   'Send Reset Email',
+                  text: 'Send Rest Email',
+                );
+              },
+            ),
+            SizedBox(height: .07.sh),
 
-          Text(
-            'Or continue with',
-            style: TextStyle(color: AppConstants.whiteColorP9, fontSize: 12.sp),
-          ),
-          SizedBox(height: 12.h),
+            Text(
+              'Or continue with',
+              style: TextStyle(
+                color: AppConstants.whiteColorP9,
+                fontSize: 12.sp,
+              ),
+            ),
+            SizedBox(height: 12.h),
 
-          // // google button
-          Consumer<AuthProvider>(
-            builder: (context, auth, child) {
-              return GoogleButtonInkWell(auth: auth);
-            },
-          ),
+            // // google button
+            Consumer<AuthProvider>(
+              builder: (context, auth, child) {
+                return GoogleButtonInkWell(auth: auth);
+              },
+            ),
 
-          SizedBox(height: 10.h),
+            SizedBox(height: 10.h),
 
-          const Text(
-            'G O O G L E',
-            style: TextStyle(color: Colors.white, fontWeight: .bold),
-          ),
+            const Text(
+              'G O O G L E',
+              style: TextStyle(color: Colors.white, fontWeight: .bold),
+            ),
 
-          SizedBox(height: 20.h),
-        ],
+            SizedBox(height: 20.h),
+          ],
+        ),
       ),
     );
   }

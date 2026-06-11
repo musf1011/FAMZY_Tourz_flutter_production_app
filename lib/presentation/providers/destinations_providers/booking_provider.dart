@@ -111,7 +111,7 @@ class BookingProvider extends ChangeNotifier {
       _genderPrefilled = true;
     }
 
-    if (first['age']!.text.isEmpty && user.age > 0) {
+    if (first['age']!.text.isEmpty && user.age == 18) {
       first['age']!.text = user.age.toString();
       _agePrefiled = true;
     }

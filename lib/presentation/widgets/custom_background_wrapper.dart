@@ -31,7 +31,7 @@ class CustomBackgroundWrapper extends StatelessWidget {
             ],
           ),
         ),
-        child: child, // 3. The Screen Content
+        child: child,
       ),
     );
   }

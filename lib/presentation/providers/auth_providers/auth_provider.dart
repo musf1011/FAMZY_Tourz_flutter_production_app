@@ -28,13 +28,8 @@ class AuthProvider extends ChangeNotifier {
   String password = '';
   String confirmPassword = '';
   String age = '';
-  // String fullName = '';
-  // String fullName = '';
-  // String fullName = '';
-  // String fullName = '';
-  // String fullName = '';
-  // String fullName = '';
 
+  final TextEditingController ageController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final NavigationService _navigation = NavigationService();
   final GoogleAuthService _googleAuth = GoogleAuthService.instance;
@@ -270,7 +265,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> submitAdditionalInfo(
+  Future<bool> submitAdditionalInfo(
     // {
     // required int age,
     // required String gender,
@@ -282,11 +277,8 @@ class AuthProvider extends ChangeNotifier {
 
       debugPrint('*****submitting');
       // await FirestoreUserService.addInfo(age, gender);
-      await FirestoreUserService.addInfo(
-        int.parse(age),
-        selectedGender ?? 'other',
-      );
-      if (currentSessionId != _requestSessionId) return;
+      await FirestoreUserService.addInfo(age, selectedGender ?? 'other');
+      if (currentSessionId != _requestSessionId) return false;
       debugPrint('*****submitted');
       await HapticFeedback.lightImpact();
 
@@ -302,6 +294,7 @@ class AuthProvider extends ChangeNotifier {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _navigation.navigateReplacement(AppRoutes.main);
       });
+      return true;
     } catch (_) {
       await HapticFeedback.mediumImpact();
       _navigation.showSnackBar(
@@ -309,6 +302,7 @@ class AuthProvider extends ChangeNotifier {
         message: 'Failed to save information',
         type: ContentType.failure,
       );
+      return false;
     } finally {
       _setLoading(false);
     }
@@ -362,7 +356,7 @@ class AuthProvider extends ChangeNotifier {
         userId: user!.uid,
         fullName: fullName.trim(),
         email: email.trim(),
-        age: age.isEmpty ? 0 : int.parse(age),
+        age: age.isEmpty ? '' : age,
         gender: selectedGender ?? 'other',
       );
 
@@ -822,9 +816,15 @@ class AuthProvider extends ChangeNotifier {
     age = '';
     _selectedGender = null;
     fullName = '';
+    // 1. DO NOT call ageController.dispose() here!
+    // Just clear the text instead.
+    ageController.clear();
+
+    // 2. REMOVE super.dispose();
+    // 3. REMOVE any other logic that "kills" the class
     notifyListeners();
   }
 }
 
 // Define an enum for clarity
-enum UserType { company, tourist }
+enum UserType { company, tourist } //

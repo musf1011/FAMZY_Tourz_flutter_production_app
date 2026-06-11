@@ -5,10 +5,22 @@ import '../models/package_model.dart';
 class CompanyService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Stream<List<CompanyModel>> getCompanies() {
+  Stream<List<CompanyModel>> getActiveCompanies() {
     return _firestore
         .collection('companies')
         .where('isActive', isEqualTo: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => CompanyModel.fromFirestore(doc.data()))
+              .toList(),
+        );
+  }
+
+  Stream<List<CompanyModel>> getInActiveCompanies() {
+    return _firestore
+        .collection('companies')
+        .where('isActive', isEqualTo: false)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
@@ -30,6 +42,16 @@ class CompanyService {
         .collection('companies')
         .doc(company.companyId)
         .set(company.toMap());
+  }
+
+  Future<void> updateCompanyStatus(String companyId, bool isActive) async {
+    try {
+      await _firestore.collection('companies').doc(companyId).update({
+        'isActive': isActive,
+      });
+    } catch (e) {
+      throw Exception('Error updating company status: $e');
+    }
   }
 
   Stream<List<PackageModel>> getPackagesByCompany(String companyId) {

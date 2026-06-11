@@ -28,7 +28,7 @@ class CustomGlassWrapper extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppConstants.primaryTransGColor,
         borderRadius: BorderRadius.circular(15.r),
-        border: Border.all(color: AppConstants.whiteColorP5, width: 0.5.w),
+        border: Border.all(color: AppConstants.whiteColorP5, width: 0.7.w),
       ),
 
       margin: EdgeInsets.fromLTRB(
