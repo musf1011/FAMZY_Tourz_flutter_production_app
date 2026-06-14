@@ -303,19 +303,19 @@ class DestinationsProvider extends ChangeNotifier {
     }
   }
 
-  /// ================= ADMIN STATE =================
-  String? _userRole;
-  String? get userRole => _userRole;
+  // /// ================= ADMIN STATE =================
+  // String? _userRole;
+  // String? get userRole => _userRole;
 
-  bool get canManagePackages => _userRole == 'admin' || _userRole == 'company';
-  // Specific role checks for UI logic
-  bool get isAdmin => _userRole == 'admin';
-  bool get isCompany => _userRole == 'company';
-  bool get isUser => _userRole == 'user' || _userRole == null;
-  Future<void> checkUserRole() async {
-    _userRole = await AdminService.getUserRole();
-    notifyListeners();
-  }
+  // bool get canManagePackages => _userRole == 'admin' || _userRole == 'company';
+  // // Specific role checks for UI logic
+  // bool get isAdmin => _userRole == 'admin';
+  // bool get isCompany => _userRole == 'company';
+  // bool get isUser => _userRole == 'user' || _userRole == null;
+  // Future<void> checkUserRole() async {
+  //   _userRole = await AdminService.getUserRole();
+  //   notifyListeners();
+  // }
 
   /// ================= PACKAGE ADD =================
   Future<void> addNewPackage(PackageModel package) async {
@@ -337,7 +337,7 @@ class DestinationsProvider extends ChangeNotifier {
 
   /// ================= INIT FOR PACKAGE SCREEN =================
   Future<void> initPackagesScreen() async {
-    await checkUserRole();
+    // await checkUserRole();
     await loadPackages();
     await loadWeather();
   }

@@ -31,6 +31,8 @@ class AdminService {
         .doc(uid)
         .get();
 
+    // if(doc.data()?['email'] == )
+
     return doc.data()?['role']; // 'admin', 'company', 'user'
   }
 }

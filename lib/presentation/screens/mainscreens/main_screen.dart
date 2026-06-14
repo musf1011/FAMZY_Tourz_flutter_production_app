@@ -425,6 +425,7 @@
 // created by: FAMZY CodeWorks
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/main_provider.dart';
 import 'package:famzy_tourz_v2/presentation/screens/admin-screens/admin_bookings_screen.dart';
@@ -443,8 +444,9 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<DestinationsProvider>().checkUserRole();
-    final userRole = context.read<DestinationsProvider>().userRole;
+    // context.watch<DestinationsProvider>().checkUserRole();
+    // final userRole = context.read<DestinationsProvider>().userRole;
+    final isAdmin = context.read<UserProvider>().isAdmin ?? false;
     return Consumer<MainProvider>(
       builder: (context, main, _) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -506,7 +508,7 @@ class MainScreen extends StatelessWidget {
                   //     },
                   //   ),
                   // ),
-                  userRole == 'admin'
+                  isAdmin
                       ? const AdminBookingsScreen()
                       : const Center(child: Text('Chat List')),
                   // const Center(child: Text('Profile')),

@@ -183,6 +183,7 @@
 
 import 'package:famzy_tourz_v2/constants.dart';
 import 'package:famzy_tourz_v2/data/services/navigation_service.dart';
+import 'package:famzy_tourz_v2/presentation/providers/auth_providers/user_provider.dart';
 import 'package:famzy_tourz_v2/presentation/providers/destinations_providers/desstinations_provider.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/custom_loading_button.dart';
 import 'package:famzy_tourz_v2/presentation/widgets/destination-widgets/dest_bg_wrapper.dart';
@@ -219,6 +220,9 @@ class _PackagesScreenState extends State<PackagesScreen> {
   Widget build(BuildContext context) {
     final provider = context.watch<DestinationsProvider>();
     final destination = provider.selectedDestination;
+    final isAllowed =
+        context.read<UserProvider>().isAdmin == true ||
+        context.read<UserProvider>().isCompany == true;
     final nav = NavigationService();
     return DefaultTabController(
       length: 2,
@@ -227,40 +231,36 @@ class _PackagesScreenState extends State<PackagesScreen> {
         titleText: destination.name,
         onRefresh: provider.initPackagesScreen,
         actions: [
-          Consumer<DestinationsProvider>(
-            builder: (_, provider, _) {
-              if (!provider.canManagePackages) return const SizedBox();
-
-              return Row(
-                children: [
-                  Text(
-                    'Add Package',
-                    style: TextStyle(
-                      color: AppConstants.whiteColorP5,
-                      fontSize: 16.sp,
+          isAllowed
+              ? Row(
+                  children: [
+                    Text(
+                      'Add Package',
+                      style: TextStyle(
+                        color: AppConstants.whiteColorP5,
+                        fontSize: 16.sp,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.add_box_rounded,
-                      color: AppConstants.whiteColorP5,
-                      size: 24.h,
-                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.add_box_rounded,
+                        color: AppConstants.whiteColorP5,
+                        size: 24.h,
+                      ),
 
-                    onPressed: () {
-                      nav.navigateTo(
-                        AppRoutes.companyAddPackage,
-                        arguments: {
-                          'name': destination.name,
-                          'image': destination.image,
-                        },
-                      );
-                    },
-                  ),
-                ],
-              );
-            },
-          ),
+                      onPressed: () {
+                        nav.navigateTo(
+                          AppRoutes.companyAddPackage,
+                          arguments: {
+                            'name': destination.name,
+                            'image': destination.image,
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                )
+              : const SizedBox.shrink(),
         ],
 
         child: Column(

@@ -22,11 +22,11 @@ class _CompaniesScreenState extends State<CompaniesScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = context.read<CompanyProvider>();
-      if (provider.companies.isEmpty) {
-        provider.listenToActiveCompanies();
+      final companyProvider = context.read<CompanyProvider>();
+      if (companyProvider.companies.isEmpty) {
+        companyProvider.listenToActiveCompanies();
         if (context.read<UserProvider>().isAdmin ?? false) {
-          provider.listenToInActiveCompanies();
+          companyProvider.listenToInActiveCompanies();
         }
       }
     });
@@ -34,7 +34,7 @@ class _CompaniesScreenState extends State<CompaniesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isAdmin = context.read<UserProvider>().isAdmin ?? false;
+    // final isAdmin = context.read<UserProvider>().isAdmin ?? false;
     return Scaffold(
       appBar: AppBar(
         title: Text('Our Partners', style: AppConstants.appBarTextStyle),
@@ -43,8 +43,8 @@ class _CompaniesScreenState extends State<CompaniesScreen> {
       body: CustomBackgroundWrapper(
         imagePath: AppConstants.mainScreenBgImage,
         child: Consumer<CompanyProvider>(
-          builder: (context, provider, child) {
-            final companies = provider.companies;
+          builder: (context, companyProvider, child) {
+            final companies = companyProvider.companies;
             if (companies.isEmpty) {
               return const Center(
                 child: Text(
@@ -58,7 +58,7 @@ class _CompaniesScreenState extends State<CompaniesScreen> {
               itemCount: companies.length,
               itemBuilder: (context, index) {
                 final company = companies[index];
-                return _CompanyCard(company: company, isAdmin: isAdmin);
+                return _CompanyCard(company: company);
               },
             );
           },
@@ -70,13 +70,17 @@ class _CompaniesScreenState extends State<CompaniesScreen> {
 
 class _CompanyCard extends StatelessWidget {
   final CompanyModel company;
-  final bool isAdmin;
-  const _CompanyCard({required this.company, required this.isAdmin});
+  // final bool isAdmin;
+  const _CompanyCard({
+    required this.company, // required this.isAdmin
+  });
 
   @override
   Widget build(BuildContext context) {
     final bool isActive = company.isActive;
     final companyProvider = context.read<CompanyProvider>();
+    final isAdmin = context.read<UserProvider>().isAdmin ?? false;
+
     return Card(
       color: AppConstants.primaryTransGColor,
       margin: EdgeInsets.symmetric(vertical: 8.h),

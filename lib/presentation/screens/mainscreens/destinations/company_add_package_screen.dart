@@ -479,6 +479,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
   Widget build(BuildContext context) {
     final destProvider = context.watch<DestinationsProvider>();
     final packageProvider = context.watch<AddPackageProvider>();
+    final isAdmin = context.read<UserProvider>().isAdmin ?? false;
     final destination = destProvider.selectedDestination;
     final nav = NavigationService();
 
@@ -574,7 +575,7 @@ class _CompanyAddPackageScreenState extends State<CompanyAddPackageScreen> {
                                 );
                               }).toList(),
                               onChanged: (val) {
-                                if (destProvider.isAdmin) {
+                                if (isAdmin) {
                                   if (val != null) {
                                     final selected = companies.firstWhere(
                                       (c) => c.companyId == val,

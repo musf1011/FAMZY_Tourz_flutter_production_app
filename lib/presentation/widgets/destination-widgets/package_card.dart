@@ -189,7 +189,8 @@ class _PackageCardState extends State<PackageCard> {
   @override
   Widget build(BuildContext context) {
     final desitinationProvider = context.read<DestinationsProvider>();
-    final isAdmin = desitinationProvider.isAdmin;
+    // final isAdmin = desitinationProvider.isAdmin;
+    final isAdmin = context.read<UserProvider>().isAdmin ?? false;
     final nav = NavigationService();
 
     return Card(
